@@ -1,8 +1,11 @@
+presentacion\FrmVentaProductos.class
 presentacion\FrmLogin.class
 utils\BotonMenu.class
+presentacion\FrmVentaProductos$1.class
 utils\ImagenPerfil.class
 com\mycompany\chazzboutique\ChazzBoutique.class
 presentacion\FrmRegistro.class
 presentacion\FrmLogin$1.class
 presentacion\FrmRegistro$1.class
 utils\BotonMenu$1.class
+presentacion\FrmLogin$2.class
