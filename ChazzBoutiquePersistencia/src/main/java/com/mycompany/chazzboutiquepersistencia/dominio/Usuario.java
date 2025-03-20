@@ -5,22 +5,58 @@
 package com.mycompany.chazzboutiquepersistencia.dominio;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  *
  * @author carli
  */
 @Entity
+@Table(name = "tblUsuario")
 public class Usuario implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "usuario_id", nullable = false, unique = true)
     private Long id;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.PERSIST)
+    private List<Venta> ventas;
+    
+    @Column(name = "nombreUsuario", nullable = false, length = 50)
+    private String nombreUsuario;
+
+    @Column(name = "contraseña", nullable = false, length = 50)
+    private String contraseña;
+
+    @Column(name = "rol", nullable = false, length = 50)
+    private String rol;
+
+    @Column(name = "activo", nullable = false)
+    private Boolean activo;
+
+    @Column(name = "fechaCreacion", nullable = false)
+    private LocalDate fechaCreacion;
+
+    public Usuario() {
+    }
+
+    public Usuario(String nombreUsuario, String contraseña, String rol, Boolean activo, LocalDate fechaCreacion) {
+        this.nombreUsuario = nombreUsuario;
+        this.contraseña = contraseña;
+        this.rol = rol;
+        this.activo = activo;
+        this.fechaCreacion = fechaCreacion;
+    }
 
     public Long getId() {
         return id;
@@ -30,33 +66,44 @@ public class Usuario implements Serializable {
         this.id = id;
     }
 
-    public Usuario(Long id) {
-        this.id = id;
+    public String getNombreUsuario() {
+        return nombreUsuario;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Usuario)) {
-            return false;
-        }
-        Usuario other = (Usuario) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+    public String getContraseña() {
+        return contraseña;
     }
 
-    @Override
-    public String toString() {
-        return "com.mycompany.chazzboutiquepersistencia.dominio.Usuario[ id=" + id + " ]";
+    public void setContraseña(String contraseña) {
+        this.contraseña = contraseña;
     }
-    
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
 }

@@ -5,11 +5,17 @@
 package com.mycompany.chazzboutiquepersistencia.dominio;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -19,13 +25,27 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tblProducto")
 public class Producto implements Serializable {
+
     @Id
-    @Column(name = "id_producto", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "producto_id", nullable = false, unique = true)
     private Long id;
-    
-     @Column(name = "nombreProducto", nullable = false, length = 50)
+
+    @Column(name = "nombreProducto", nullable = false, length = 100)
     private String nombreProducto;
+
+    @Column(name = "descripcionProducto", length = 300)
+    private String descripcionProducto;
+
+    @Column(name = "fechaCreacion", nullable = false)
+    private LocalDate fechaCreacion;
+
+    @ManyToOne
+    @JoinColumn(name = "proveedor_id", nullable = false)
+    private Proveedor proveedor;
+
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.PERSIST)
+    private List<VarianteProducto> variantes;
 
     public Producto() {
     }
@@ -38,13 +58,44 @@ public class Producto implements Serializable {
         this.id = id;
     }
 
-    public String getNombreProducto() {
+    public String getNombre() {
         return nombreProducto;
     }
 
-    public void setNombreProducto(String nombreProducto) {
+    public void setNombre(String nombreProducto) {
         this.nombreProducto = nombreProducto;
     }
-     
-     
+
+    public String getDescripcion() {
+        return descripcionProducto;
+    }
+
+    public void setDescripcion(String descripcionProducto) {
+        this.descripcionProducto = descripcionProducto;
+    }
+
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public Proveedor getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(Proveedor proveedor) {
+        this.proveedor = proveedor;
+    }
+
+    public List<VarianteProducto> getVariantes() {
+        return variantes;
+    }
+
+    public void setVariantes(List<VarianteProducto> variantes) {
+        this.variantes = variantes;
+    }
+
 }

@@ -18,7 +18,7 @@ public class ConexionBD implements IConexionBD {
 
     public ConexionBD() {
         try {
-            this.entityManagerFactory = Persistence.createEntityManagerFactory("CiscoJPA");
+            this.entityManagerFactory = Persistence.createEntityManagerFactory("ChazzBoutique");
         } catch (Exception e) {
             System.err.println("Error al inicializar el EntityManagerFactory: " + e.getMessage());
             e.printStackTrace();
