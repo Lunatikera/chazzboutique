@@ -4,17 +4,67 @@
  */
 package presentacion;
 
+import com.mycompany.chazzboutiquenegocio.dtos.UsuarioDTO;
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProductoNegocio;
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IUsuarioNegocio;
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVarianteProductoNegocio;
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVentaNegocio;
+import java.awt.Dimension;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import utils.ScrollBar;
+
 /**
  *
  * @author carli
  */
 public class FrmMain extends javax.swing.JFrame {
 
-    /**
-     * Creates new form FrmVentaProductos
-     */
-    public FrmMain() {
+    public IUsuarioNegocio usuarioNegocio;
+    public IVentaNegocio ventaNegocio;
+    public IVarianteProductoNegocio varianteProductoNegocio;
+    public IProductoNegocio productoNegocio;
+    private UsuarioDTO usuarioRegistrado;
+
+    public FrmMain(IUsuarioNegocio usuarioNegocio, IVentaNegocio ventaNegocio, IVarianteProductoNegocio varianteProductoNegocio, IProductoNegocio productoNegocio, UsuarioDTO usuarioRegistrado) {
         initComponents();
+        this.setTitle("ChazzBoutique");
+        this.setLocationRelativeTo(null);
+        this.usuarioNegocio = usuarioNegocio;
+        this.ventaNegocio = ventaNegocio;
+        this.varianteProductoNegocio = varianteProductoNegocio;
+        this.productoNegocio = productoNegocio;
+        this.usuarioRegistrado = usuarioRegistrado;
+        this.btnVentaActionPerformed(null);
+        this.jScrollPane1.setVerticalScrollBar(new ScrollBar());
+
+    }
+
+    public void pintarPanelPrincipal(JPanel panel) {
+
+        jScrollPane1.setViewportView(panel);
+
+//        this.setSize(this.menuBar.getWidth()+panel.getPreferredSize().width, this.getHeight());
+        panel.setPreferredSize(new Dimension(0, panel.getPreferredSize().height));  // Set appropriate size for your content
+        jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        jScrollPane1.revalidate();
+        jScrollPane1.repaint();
+    }
+
+    public JScrollPane getPanelPrincipal() {
+        return jScrollPane1;
+    }
+
+
+// Y que tenga una instancia de VentaNegocio
+    public IVentaNegocio getVentaNegocio() {
+        return ventaNegocio;
+    }
+
+    public UsuarioDTO getUsuarioRegistrado() {
+        return usuarioRegistrado;
     }
 
     /**
@@ -27,6 +77,10 @@ public class FrmMain extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel3 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        btnVenta = new utils.BotonMenu();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
@@ -36,15 +90,59 @@ public class FrmMain extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(176, 50, 53));
         jPanel3.setPreferredSize(new java.awt.Dimension(277, 1080));
 
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/chazzLogoBlack.png"))); // NOI18N
+
+        jPanel4.setBackground(new java.awt.Color(176, 50, 53));
+
+        jPanel7.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel7.setPreferredSize(new java.awt.Dimension(277, 55));
+
+        btnVenta.setForeground(new java.awt.Color(255, 255, 255));
+        btnVenta.setText("Venta");
+        btnVenta.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        btnVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVentaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addComponent(btnVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel4.add(jPanel7);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 277, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1080, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(31, 31, 31)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 809, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(72, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.LINE_START);
@@ -71,46 +169,19 @@ public class FrmMain extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
+    private void btnVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentaActionPerformed
+        this.pintarPanelPrincipal(new PanelVenta(this));
+    }//GEN-LAST:event_btnVentaActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmMain().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private utils.BotonMenu btnVenta;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
