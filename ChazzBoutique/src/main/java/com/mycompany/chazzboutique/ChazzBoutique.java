@@ -16,11 +16,13 @@ import com.mycompany.chazzboutiquenegocio.objetosNegocio.VarianteProductoNegocio
 import com.mycompany.chazzboutiquenegocio.objetosNegocio.VentaNegocio;
 import com.mycompany.chazzboutiquepersistencia.conexion.ConexionBD;
 import com.mycompany.chazzboutiquepersistencia.conexion.IConexionBD;
+import com.mycompany.chazzboutiquepersistencia.daos.DetalleVentaDAO;
 import com.mycompany.chazzboutiquepersistencia.daos.ProductoDAO;
 import com.mycompany.chazzboutiquepersistencia.daos.UsuarioDAO;
 import com.mycompany.chazzboutiquepersistencia.daos.VarianteProductoDAO;
 import com.mycompany.chazzboutiquepersistencia.daos.VentaDAO;
 import com.mycompany.chazzboutiquepersistencia.dominio.VarianteProducto;
+import com.mycompany.chazzboutiquepersistencia.interfacesDAO.IDetalleVentaDAO;
 import com.mycompany.chazzboutiquepersistencia.interfacesDAO.IProductoDAO;
 import com.mycompany.chazzboutiquepersistencia.interfacesDAO.IUsuarioDAO;
 import com.mycompany.chazzboutiquepersistencia.interfacesDAO.IVarianteProductoDAO;
@@ -41,9 +43,10 @@ public class ChazzBoutique {
         IVentaDAO ventaDAO = new VentaDAO(conexionBD);
         IVarianteProductoDAO varianteProductoDAO = new VarianteProductoDAO(conexionBD);
         IProductoDAO productoDAO = new ProductoDAO(conexionBD);
+        IDetalleVentaDAO detalleVentaDAO=new DetalleVentaDAO(conexionBD);
         
         IUsuarioNegocio usuarioNegocio = new UsuarioNegocio(usuarioDAO);
-        IVentaNegocio ventaNegocio = new VentaNegocio(ventaDAO);
+        IVentaNegocio ventaNegocio = new VentaNegocio(ventaDAO, detalleVentaDAO, varianteProductoDAO, usuarioDAO);
         IVarianteProductoNegocio varianteProductoNegocio = new VarianteProductoNegocio(varianteProductoDAO);
         IProductoNegocio productoNegocio= new ProductoNegocio(productoDAO);
 

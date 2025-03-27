@@ -4,15 +4,14 @@
  */
 package com.mycompany.chazzboutiquepersistencia.interfacesDAO;
 
-import com.mycompany.chazzboutiquepersistencia.dominio.Venta;
+import com.mycompany.chazzboutiquepersistencia.dominio.DetalleVenta;
 import com.mycompany.chazzboutiquepersistencia.excepciones.PersistenciaException;
 
 /**
  *
  * @author carli
  */
-public interface IVentaDAO {
-
-    public Venta registrarVenta(Venta venta) throws PersistenciaException;
+public interface IDetalleVentaDAO {
+        public DetalleVenta registrarDetalle(DetalleVenta detalle) throws PersistenciaException ;
 
 }

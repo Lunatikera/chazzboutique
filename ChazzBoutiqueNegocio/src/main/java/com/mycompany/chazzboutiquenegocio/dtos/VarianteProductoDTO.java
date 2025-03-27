@@ -11,10 +11,13 @@ import java.math.BigDecimal;
  * @author carli
  */
 public class VarianteProductoDTO {
-   private String codigoBarra;
+
+    private Long id;
+    private String codigoBarra;
     private int stock;
     private BigDecimal precioCompra;
     private String talla;
+    private String color;
     private BigDecimal precioVenta;
     private Long productoId;
 
@@ -26,6 +29,24 @@ public class VarianteProductoDTO {
         this.talla = talla;
         this.precioVenta = precioVenta;
         this.productoId = productoId;
+    }
+
+    public VarianteProductoDTO(String codigoBarra, int stock, BigDecimal precioCompra, String talla, String color, BigDecimal precioVenta, Long productoId) {
+        this.codigoBarra = codigoBarra;
+        this.stock = stock;
+        this.precioCompra = precioCompra;
+        this.talla = talla;
+        this.color = color;
+        this.precioVenta = precioVenta;
+        this.productoId = productoId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     // Getters y Setters
@@ -47,6 +68,14 @@ public class VarianteProductoDTO {
 
     public BigDecimal getPrecioCompra() {
         return precioCompra;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public void setPrecioCompra(BigDecimal precioCompra) {
@@ -76,5 +105,5 @@ public class VarianteProductoDTO {
     public void setProductoId(Long productoId) {
         this.productoId = productoId;
     }
- 
+
 }

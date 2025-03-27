@@ -5,11 +5,9 @@
 package com.mycompany.chazzboutiquepersistencia.daos;
 
 import com.mycompany.chazzboutiquepersistencia.conexion.IConexionBD;
-import com.mycompany.chazzboutiquepersistencia.dominio.Venta;
+import com.mycompany.chazzboutiquepersistencia.dominio.DetalleVenta;
 import com.mycompany.chazzboutiquepersistencia.excepciones.PersistenciaException;
-import com.mycompany.chazzboutiquepersistencia.interfacesDAO.IVentaDAO;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.mycompany.chazzboutiquepersistencia.interfacesDAO.IDetalleVentaDAO;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
@@ -17,32 +15,29 @@ import javax.persistence.EntityTransaction;
  *
  * @author carli
  */
-public class VentaDAO implements IVentaDAO {
+public class DetalleVentaDAO implements IDetalleVentaDAO{
 
     IConexionBD conexionBD;
 
-    public VentaDAO(IConexionBD conexionBD) {
+    public DetalleVentaDAO(IConexionBD conexionBD) {
         this.conexionBD = conexionBD;
     }
 
     @Override
-    public Venta registrarVenta(Venta venta) throws PersistenciaException {
+    public DetalleVenta registrarDetalle(DetalleVenta detalle) throws PersistenciaException {
         EntityManager entityManager = conexionBD.getEntityManager();
         EntityTransaction transaccion = null;
-        System.out.println(venta);
         try {
             transaccion = entityManager.getTransaction();
             transaccion.begin();
-            entityManager.persist(venta);
+            entityManager.persist(detalle);
             transaccion.commit();
-            return venta;
+            return detalle;
         } catch (Exception e) {
-            Logger.getLogger(VentaDAO.class.getName()).log(Level.SEVERE, null, e);
             if (transaccion != null && transaccion.isActive()) {
                 transaccion.rollback();
             }
-            throw new PersistenciaException("Error al registrar venta jaja", e);
-
+            throw new PersistenciaException("Error al registrar detalle de venta", e);
         } finally {
             entityManager.close();
         }

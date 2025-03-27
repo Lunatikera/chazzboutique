@@ -33,7 +33,7 @@ public class VarianteProductoNegocio implements IVarianteProductoNegocio{
                     variante.getCodigoBarra(),
                     variante.getStock(),
                     variante.getPrecioCompra(),
-                    variante.getTalla(),
+                    variante.getTalla(),variante.getColor(),
                     variante.getPrecioVenta(),
                     variante.getProducto().getId()
                 );

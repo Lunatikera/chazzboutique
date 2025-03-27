@@ -26,14 +26,14 @@ public class FrmMain extends javax.swing.JFrame {
     public IProductoNegocio productoNegocio;
     private UsuarioDTO usuarioRegistrado;
 
-    public FrmMain(IUsuarioNegocio usuarioNegocio, IVentaNegocio ventaNegocio, IVarianteProductoNegocio varianteProductoNegocio,IProductoNegocio productoNegocio, UsuarioDTO usuarioRegistrado) {
+    public FrmMain(IUsuarioNegocio usuarioNegocio, IVentaNegocio ventaNegocio, IVarianteProductoNegocio varianteProductoNegocio, IProductoNegocio productoNegocio, UsuarioDTO usuarioRegistrado) {
         initComponents();
         this.setTitle("ChazzBoutique");
         this.setLocationRelativeTo(null);
         this.usuarioNegocio = usuarioNegocio;
         this.ventaNegocio = ventaNegocio;
         this.varianteProductoNegocio = varianteProductoNegocio;
-        this.productoNegocio= productoNegocio;
+        this.productoNegocio = productoNegocio;
         this.usuarioRegistrado = usuarioRegistrado;
         this.btnVentaActionPerformed(null);
         this.jScrollPane1.setVerticalScrollBar(new ScrollBar());
@@ -55,6 +55,16 @@ public class FrmMain extends javax.swing.JFrame {
 
     public JScrollPane getPanelPrincipal() {
         return jScrollPane1;
+    }
+
+
+// Y que tenga una instancia de VentaNegocio
+    public IVentaNegocio getVentaNegocio() {
+        return ventaNegocio;
+    }
+
+    public UsuarioDTO getUsuarioRegistrado() {
+        return usuarioRegistrado;
     }
 
     /**
@@ -163,7 +173,6 @@ public class FrmMain extends javax.swing.JFrame {
         this.pintarPanelPrincipal(new PanelVenta(this));
     }//GEN-LAST:event_btnVentaActionPerformed
 
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private utils.BotonMenu btnVenta;

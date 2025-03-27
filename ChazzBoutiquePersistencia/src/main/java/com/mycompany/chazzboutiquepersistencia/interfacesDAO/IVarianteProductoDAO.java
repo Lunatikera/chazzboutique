@@ -13,6 +13,11 @@ import javax.persistence.PersistenceException;
  * @author carli
  */
 public interface IVarianteProductoDAO {
-       public VarianteProducto obtenerPorCodigoBarra(String codigoBarra) throws PersistenciaException;
- 
+
+    public VarianteProducto obtenerPorCodigoBarra(String codigoBarra) throws PersistenciaException;
+
+    public VarianteProducto actualizar(VarianteProducto variante) throws PersistenciaException;
+
+    public VarianteProducto buscarPorId(Long id) throws PersistenciaException;
+
 }

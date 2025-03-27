@@ -42,14 +42,13 @@ public class Venta implements Serializable {
     @Column(name = "fechaVenta", nullable = false)
     private LocalDate fechaVenta;
 
-    @Column(name = "totalCompra", nullable = false)
-    private BigDecimal totalCompra;
+    @Column(name = "ventaTotal", nullable = false)
+    private BigDecimal ventaTotal;
 
     @Column(name = "estadoVenta", nullable = false)
     private String estadoVenta;
 
-    @OneToMany(mappedBy = "venta")
-    private List<DetalleVenta> detalles;
+   
 
     public Venta() {
     }
@@ -70,36 +69,37 @@ public class Venta implements Serializable {
         this.usuario = usuario;
     }
 
-    public LocalDate getFecha() {
+    public List<DetalleVenta> getDetallesVentas() {
+        return detallesVentas;
+    }
+
+    public void setDetallesVentas(List<DetalleVenta> detallesVentas) {
+        this.detallesVentas = detallesVentas;
+    }
+
+    public LocalDate getFechaVenta() {
         return fechaVenta;
     }
 
-    public void setFecha(LocalDate fecha) {
-        this.fechaVenta = fecha;
+    public void setFechaVenta(LocalDate fechaVenta) {
+        this.fechaVenta = fechaVenta;
     }
 
-    public BigDecimal getTotal() {
-        return totalCompra;
+    public BigDecimal getVentaTotal() {
+        return ventaTotal;
     }
 
-    public void setTotal(BigDecimal total) {
-        this.totalCompra = totalCompra;
+    public void setVentaTotal(BigDecimal ventaTotal) {
+        this.ventaTotal = ventaTotal;
     }
 
-    public String getEstado() {
+    public String getEstadoVenta() {
         return estadoVenta;
     }
 
-    public void setEstado(String estadoVenta) {
+    public void setEstadoVenta(String estadoVenta) {
         this.estadoVenta = estadoVenta;
     }
 
-    public List<DetalleVenta> getDetalles() {
-        return detalles;
-    }
-
-    public void setDetalles(List<DetalleVenta> detalles) {
-        this.detalles = detalles;
-    }
-
+  
 }

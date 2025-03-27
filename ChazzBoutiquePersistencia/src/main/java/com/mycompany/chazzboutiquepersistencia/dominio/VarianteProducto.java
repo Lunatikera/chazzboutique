@@ -30,23 +30,25 @@ public class VarianteProducto implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "varianteproducto_id", nullable = false, unique = true)
     private Long id;
-    
-    
+
     @OneToMany(mappedBy = "varianteProducto", cascade = CascadeType.PERSIST)
     private List<DetalleVenta> detallesVentas;
-    
+
     @Column(name = "codigoBarra", nullable = false, length = 50)
     private String codigoBarra;
-    
+
     @Column(name = "stock", nullable = false)
     private Integer stock;
-    
+
     @Column(name = "precioCompra", nullable = false)
     private BigDecimal precioCompra;
-    
+
     @Column(name = "talla", nullable = false)
     private String talla;
-    
+
+    @Column(name = "color", nullable = false)
+    private String color;
+
     @Column(name = "precioVenta", nullable = false)
     private BigDecimal precioVenta;
 
@@ -109,8 +111,29 @@ public class VarianteProducto implements Serializable {
         return precioVenta;
     }
 
+    public List<DetalleVenta> getDetallesVentas() {
+        return detallesVentas;
+    }
+
+    public void setDetallesVentas(List<DetalleVenta> detallesVentas) {
+        this.detallesVentas = detallesVentas;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     public void setPrecioVenta(BigDecimal precioVenta) {
         this.precioVenta = precioVenta;
+    }
+
+    @Override
+    public String toString() {
+        return "VarianteProducto{" + "id=" + id + ", detallesVentas=" + detallesVentas + ", codigoBarra=" + codigoBarra + ", stock=" + stock + ", precioCompra=" + precioCompra + ", talla=" + talla + ", color=" + color + ", precioVenta=" + precioVenta + ", producto=" + producto + '}';
     }
 
 }
