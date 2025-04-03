@@ -38,6 +38,7 @@ public class VentaNegocio implements IVentaNegocio {
         this.usuarioDAO = usuarioDAO;
     }
 
+    @Override
     public VentaDTO registrarVenta( VentaDTO ventaDTO) throws NegocioException {
         try {
             // Validaciones
@@ -54,7 +55,7 @@ public class VentaNegocio implements IVentaNegocio {
 
             // Registrar venta primero para obtener ID
             venta = ventaDAO.registrarVenta(venta);
-
+            ventaDTO.setId(venta.getId());
             // Procesar detalles
             for (DetalleVentaDTO detalleDTO : ventaDTO.getDetalles()) {
                 System.out.println(detalleDTO.toString());

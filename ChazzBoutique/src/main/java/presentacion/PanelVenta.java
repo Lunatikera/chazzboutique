@@ -4,20 +4,47 @@
  */
 package presentacion;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Rectangle;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import com.mycompany.chazzboutiquenegocio.dtos.DetalleVentaDTO;
 import com.mycompany.chazzboutiquenegocio.dtos.ProductoDTO;
 import com.mycompany.chazzboutiquenegocio.dtos.VarianteProductoDTO;
 import com.mycompany.chazzboutiquenegocio.dtos.VentaDTO;
 import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
-import com.mycompany.chazzboutiquepersistencia.dominio.Venta;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.Font;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Currency;
@@ -37,6 +64,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import utils.ModeloTablaVentas;
 import utils.SpinnerCellEditor;
 import utils.SpinnerRenderer;
@@ -52,7 +83,8 @@ public class PanelVenta extends javax.swing.JPanel {
     private boolean descuentoAplicado = false;
     private BigDecimal descuentoActual = BigDecimal.ZERO;
     private BigDecimal totalSinDescuento;
-    private Map<Integer, String> filaCodigoMap = new HashMap<>(); // Mapea índice de fila a código de barras
+    private List<String> filaCodigos = new ArrayList<>();
+    private File ultimoTicketGenerado = null;
 
     public PanelVenta(FrmMain frmPrincipal) {
         initComponents();
@@ -61,7 +93,7 @@ public class PanelVenta extends javax.swing.JPanel {
         this.habilitarCampos(false);
         this.configurarFormatoMoneda(txtMontoPago);
         this.configurarFormatoMoneda(txtDescuento);
-
+        btnAplicarDescuento.setEnabled(false);
         // En el constructor, después de inicializar el spinner:
         spnCantidad.setModel(new SpinnerNumberModel(1, 1, 100, 1)); // Valores de 1 a 100, incremento de 1
         // En el constructor, después de inicializar el spinner:
@@ -92,7 +124,7 @@ public class PanelVenta extends javax.swing.JPanel {
 
         // Configurar header
         JTableHeader header = jTable.getTableHeader();
-        header.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        header.setFont(new java.awt.Font("Segoe UI", Font.BOLD, 20));
         header.setForeground(Color.WHITE);
         header.setBackground(Color.BLACK);
         header.setPreferredSize(new Dimension(header.getWidth(), 35));
@@ -147,8 +179,11 @@ public class PanelVenta extends javax.swing.JPanel {
                     JOptionPane.YES_NO_OPTION);
 
             if (confirmacion == JOptionPane.YES_OPTION) {
-                modelo.setRowCount(0); 
-                filaCodigoMap.clear();
+                modelo.setRowCount(0);
+                filaCodigos.clear();
+                descuentoAplicado = false;
+                descuentoActual = BigDecimal.ZERO;
+                btnAplicarDescuento.setSelected(false);
                 actualizarTotales();
             }
         });
@@ -176,13 +211,55 @@ public class PanelVenta extends javax.swing.JPanel {
         txtDescuento.addActionListener(e -> aplicarDescuento());
         botonMenu3.addActionListener(e -> registrarVenta());
 
-// Listener para el campo de descuento
+// En el constructor, después de configurar txtDescuento:
+        txtDescuento.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                actualizarEstadoBotonDescuento();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                actualizarEstadoBotonDescuento();
+            }
+
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                actualizarEstadoBotonDescuento();
+            }
+        });
+        // Aplicar filtros después de inicializar los campos
+        ((AbstractDocument) txtDescuento.getDocument()).setDocumentFilter(new NumerosDecimalesFilter());
+        ((AbstractDocument) txtMontoPago.getDocument()).setDocumentFilter(new NumerosDecimalesFilter());
+
+        btnImprimir.addActionListener(e -> {
+            if (ultimoTicketGenerado == null) {
+                JOptionPane.showMessageDialog(this,
+                        "No hay tickets generados en esta sesión",
+                        "Sin tickets",
+                        JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            try {
+                if (ultimoTicketGenerado.exists()) {
+                    Desktop.getDesktop().open(ultimoTicketGenerado);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "El archivo del ticket ha sido eliminado",
+                            "Ticket no encontrado",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Error al abrir el ticket: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
     private void registrarVenta() {
         try {
             // 1. Validar que haya productos en la venta
-            if (filaCodigoMap.isEmpty()) {
+            if (filaCodigos.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
                         "No hay productos en la venta",
                         "Venta vacía",
@@ -208,6 +285,8 @@ public class PanelVenta extends javax.swing.JPanel {
             ventaDTO.setUsuarioId(frmPrincipal.getUsuarioRegistrado().getId());
             ventaDTO.setFecha(LocalDate.now());
             ventaDTO.setTotal(total);
+            ventaDTO.setMontoPago(montoPago);
+            ventaDTO.setCambio(montoPago.subtract(total));
             ventaDTO.setEstado("COMPLETADA");
             ventaDTO.setDescuento(descuentoAplicado ? descuentoActual : BigDecimal.ZERO);
 
@@ -215,7 +294,7 @@ public class PanelVenta extends javax.swing.JPanel {
             List<DetalleVentaDTO> detalles = new ArrayList<>();
 
             for (int i = 0; i < modelo.getRowCount(); i++) {
-                String codigoBarras = filaCodigoMap.get(i);
+                String codigoBarras = filaCodigos.get(i);
                 if (codigoBarras == null) {
                     continue;
                 }
@@ -245,6 +324,7 @@ public class PanelVenta extends javax.swing.JPanel {
                     "Éxito",
                     JOptionPane.INFORMATION_MESSAGE);
 
+            imprimirTicket(ventaregistrada);
             // 7. Resetear la venta
             resetearVenta();
 
@@ -263,9 +343,8 @@ public class PanelVenta extends javax.swing.JPanel {
     }
 
     private void resetearVenta() {
-        // Limpiar tabla y mapa
         modelo.setRowCount(0);
-        filaCodigoMap.clear();
+        filaCodigos.clear();
 
         // Resetear campos
         txtCodigo.setText("");
@@ -276,12 +355,12 @@ public class PanelVenta extends javax.swing.JPanel {
         lblTotalResult2.setText("$0.00");
         jLabel13.setText("$0.00");
 
-        // Resetear estado de descuento
+        // Resetear estado
         descuentoAplicado = false;
         descuentoActual = BigDecimal.ZERO;
         btnAplicarDescuento.setSelected(false);
+        btnAplicarDescuento.setEnabled(false);
 
-        // Poner foco en código de barras
         txtCodigo.requestFocus();
     }
 
@@ -321,30 +400,15 @@ public class PanelVenta extends javax.swing.JPanel {
                 int fila = filasSeleccionadas[i];
                 if (fila >= 0 && fila < modelo.getRowCount()) {
                     // Eliminar del mapa
-                    filaCodigoMap.remove(fila);
+                    filaCodigos.remove(fila);
                     // Eliminar fila de la tabla
                     modelo.removeRow(fila);
                 }
             }
 
             // Reindexar el mapa después de eliminar filas
-            reindexarMapa();
             actualizarTotales();
         }
-    }
-
-    private void reindexarMapa() {
-        Map<Integer, String> nuevoMapa = new HashMap<>();
-        int nuevaFila = 0;
-
-        for (int i = 0; i < modelo.getRowCount(); i++) {
-            if (filaCodigoMap.containsKey(i)) {
-                nuevoMapa.put(nuevaFila, filaCodigoMap.get(i));
-                nuevaFila++;
-            }
-        }
-
-        filaCodigoMap = nuevoMapa;
     }
 
     private void agregarProductoATabla() {
@@ -360,7 +424,7 @@ public class PanelVenta extends javax.swing.JPanel {
             }
 
             // Verificar si el producto ya está en la tabla
-            if (filaCodigoMap.containsValue(codigo)) {
+            if (filaCodigos.contains(codigo)) {
                 JOptionPane.showMessageDialog(this,
                         "Este producto ya está en la venta",
                         "Producto duplicado",
@@ -423,7 +487,7 @@ public class PanelVenta extends javax.swing.JPanel {
             });
 
             // Mapear fila a código de barras
-            filaCodigoMap.put(filaIndex, codigo);
+            filaCodigos.add(filaIndex, codigo);
 
             actualizarTotales();
 
@@ -450,54 +514,73 @@ public class PanelVenta extends javax.swing.JPanel {
 
     private BigDecimal obtenerValorMoneda(JTextField textField) {
         try {
-            String text = textField.getText().replace("$", "").replace(",", "");
+            String text = textField.getText().replace("$", "").replace(",", "").trim();
+            if (text.isEmpty()) {
+                return BigDecimal.ZERO;
+            }
             return new BigDecimal(text);
         } catch (NumberFormatException e) {
-            return BigDecimal.ZERO;
+            return null; // Retornar null en caso de error
         }
     }
 
-   
-
     private void aplicarDescuento() {
         try {
+            // Verificar si hay productos en la tabla
+            if (modelo.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this,
+                        "No hay productos en la venta para aplicar descuento",
+                        "Venta vacía",
+                        JOptionPane.WARNING_MESSAGE);
+                btnAplicarDescuento.setSelected(false);
+                btnAplicarDescuento.setIcon(btnAplicarDescuento.getNormalIcon());
+                return;
+            }
+
+            BigDecimal totalActual = obtenerTotalDeLabel(lblTotalResult2);
+            BigDecimal descuento = obtenerValorMoneda(txtDescuento);
+
+            // Validar que haya un total y un descuento válido
+            if (totalActual.compareTo(BigDecimal.ZERO) <= 0 || descuento == null || descuento.compareTo(BigDecimal.ZERO) <= 0) {
+                JOptionPane.showMessageDialog(this,
+                        "El total debe ser mayor a cero y el descuento debe ser un valor válido",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                btnAplicarDescuento.setSelected(false);
+                return;
+            }
+
+            // Validar que el descuento no sea mayor al total
+            if (descuento.compareTo(totalActual) > 0) {
+                JOptionPane.showMessageDialog(this,
+                        "El descuento no puede ser mayor al total",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                btnAplicarDescuento.setSelected(false);
+                return;
+            }
+
             if (!descuentoAplicado) {
-                // Obtener el valor del descuento del campo txtDescuento
-                BigDecimal descuento = obtenerValorMoneda(txtDescuento);
-
-                // Validar el descuento
-                if (descuento.compareTo(BigDecimal.ZERO) <= 0) {
-                    JOptionPane.showMessageDialog(this,
-                            "Ingrese un descuento válido",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (descuento.compareTo(totalSinDescuento) > 0) {
-                    JOptionPane.showMessageDialog(this,
-                            "El descuento no puede ser mayor al total",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
                 // Aplicar descuento
                 this.descuentoActual = descuento;
-                BigDecimal totalConDescuento = totalSinDescuento.subtract(descuento);
+                BigDecimal totalConDescuento = totalActual.subtract(descuento);
+
+                // Asegurarnos de que el total no sea negativo
+                if (totalConDescuento.compareTo(BigDecimal.ZERO) < 0) {
+                    totalConDescuento = BigDecimal.ZERO;
+                }
+
                 lblTotalResult.setText(formatoMoneda(totalConDescuento));
 
                 // Cambiar estado
                 descuentoAplicado = true;
-                btnAplicarDescuento.setSelected(true); // Cambiar apariencia del botón
-
+                btnAplicarDescuento.setSelected(true);
             } else {
                 // Quitar descuento
-                lblTotalResult.setText(formatoMoneda(totalSinDescuento));
-
-                // Cambiar estado
+                lblTotalResult.setText(formatoMoneda(totalActual));
                 descuentoAplicado = false;
                 btnAplicarDescuento.setSelected(false);
+                descuentoActual = BigDecimal.ZERO;
             }
 
             // Recalcular cambio si hay monto de pago
@@ -505,9 +588,10 @@ public class PanelVenta extends javax.swing.JPanel {
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this,
-                    "Error: " + ex.getMessage(),
+                    "Error en el formato del descuento: " + ex.getMessage(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
+            btnAplicarDescuento.setSelected(false);
         }
     }
 
@@ -539,22 +623,48 @@ public class PanelVenta extends javax.swing.JPanel {
         // Calcular total sin descuentos
         totalSinDescuento = calcularTotalTabla();
 
-        // Mostrar valores
-        lblTotalResult2.setText(formatoMoneda(totalSinDescuento));
+        // Mostrar valores - asegurar que no sea negativo
+        BigDecimal totalMostrar = totalSinDescuento.compareTo(BigDecimal.ZERO) > 0
+                ? totalSinDescuento : BigDecimal.ZERO;
+        lblTotalResult2.setText(formatoMoneda(totalMostrar));
 
         if (descuentoAplicado) {
-            // Si hay descuento aplicado, mantenerlo
+            // Si hay descuento aplicado, mantenerlo pero asegurar que no sea negativo
             BigDecimal totalConDescuento = totalSinDescuento.subtract(descuentoActual);
-            lblTotalResult.setText(formatoMoneda(totalConDescuento));
+            BigDecimal totalFinal = totalConDescuento.compareTo(BigDecimal.ZERO) > 0
+                    ? totalConDescuento : BigDecimal.ZERO;
+            lblTotalResult.setText(formatoMoneda(totalFinal));
         } else {
-            // Sin descuento
-            lblTotalResult.setText(formatoMoneda(totalSinDescuento));
+            // Sin descuento - asegurar que no sea negativo
+            BigDecimal totalFinal = totalSinDescuento.compareTo(BigDecimal.ZERO) > 0
+                    ? totalSinDescuento : BigDecimal.ZERO;
+            lblTotalResult.setText(formatoMoneda(totalFinal));
         }
+
+        // Actualizar estado del botón de descuento
+        actualizarEstadoBotonDescuento();
 
         calcularCambio();
     }
 
+    private void actualizarEstadoBotonDescuento() {
+        BigDecimal total = obtenerTotalDeLabel(lblTotalResult2);
+        BigDecimal descuento = obtenerValorMoneda(txtDescuento);
+
+        // Habilitar solo si hay total positivo y descuento válido (mayor a 0 y menor que el total)
+        boolean habilitar = total.compareTo(BigDecimal.ZERO) > 0
+                && descuento != null
+                && descuento.compareTo(BigDecimal.ZERO) > 0
+                && descuento.compareTo(total) <= 0;
+
+        btnAplicarDescuento.setEnabled(habilitar);
+    }
+
     private BigDecimal calcularTotalTabla() {
+        if (jTable.getRowCount() == 0) {
+            return BigDecimal.ZERO;
+        }
+
         BigDecimal total = BigDecimal.ZERO;
         NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("es-MX"));
 
@@ -582,7 +692,7 @@ public class PanelVenta extends javax.swing.JPanel {
 
         try {
             // 1. Verificar si el producto ya está en la venta
-            if (filaCodigoMap.containsValue(codigo)) {
+            if (filaCodigos.contains(codigo)) {
                 JOptionPane.showMessageDialog(this,
                         "Este producto ya está en la venta",
                         "Producto duplicado",
@@ -1236,20 +1346,17 @@ public class PanelVenta extends javax.swing.JPanel {
     }//GEN-LAST:event_btnBorrarTablaActionPerformed
     private BigDecimal obtenerTotalDeLabel(JLabel label) {
         try {
-            // Eliminar símbolo de moneda y comas
             String texto = label.getText()
                     .replace("$", "")
                     .replace(",", "")
                     .trim();
 
-            // Convertir a BigDecimal
+            if (texto.isEmpty()) {
+                return BigDecimal.ZERO;
+            }
             return new BigDecimal(texto);
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this,
-                    "Error al convertir el total: " + e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return BigDecimal.ZERO; // Retornar 0 en caso de error
+            return BigDecimal.ZERO;
         }
     }
 
@@ -1268,29 +1375,49 @@ public class PanelVenta extends javax.swing.JPanel {
 
     private void configurarFormatoMoneda(JTextField textField) {
         textField.setText("$0.00");
+
+        // Aplicar filtro para solo números y un punto decimal
+        ((AbstractDocument) textField.getDocument()).setDocumentFilter(new NumerosDecimalesFilter());
+
         textField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 if (textField.getText().equals("$0.00")) {
                     textField.setText("");
                 }
             }
 
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
-                if (textField.getText().isEmpty()) {
-                    textField.setText("$0.00");
-                } else {
-                    try {
-                        // Formatear el texto como moneda
-                        String text = textField.getText().replace("$", "").replace(",", "");
-                        BigDecimal amount = new BigDecimal(text);
-                        textField.setText(formatoMoneda(amount));
-                    } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(PanelVenta.this,
-                                "Ingrese un valor numérico válido",
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                        textField.setText("$0.00");
+                String texto = textField.getText()
+                        .replace("$", "")
+                        .replace(",", "")
+                        .trim();
+
+                try {
+                    // Corregir formato de decimales
+                    if (texto.isEmpty() || texto.equals(".")) {
+                        texto = "0.00";
+                    } else if (texto.startsWith(".")) {
+                        texto = "0" + texto;
+                    } else if (!texto.contains(".")) {
+                        texto += ".00";
+                    } else if (texto.split("\\.")[1].length() == 1) {
+                        texto += "0"; // Agregar cero faltante (ej: 5.1 -> 5.10)
                     }
+
+                    // Validar y formatear
+                    BigDecimal amount = new BigDecimal(texto)
+                            .setScale(2, RoundingMode.HALF_UP);
+
+                    textField.setText(formatoMoneda(amount));
+
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(PanelVenta.this,
+                            "Valor numérico inválido",
+                            "Error de formato",
+                            JOptionPane.ERROR_MESSAGE);
+                    textField.setText("$0.00");
                 }
             }
         });
@@ -1313,6 +1440,162 @@ public class PanelVenta extends javax.swing.JPanel {
         txtPrecio.setText("");
         spnCantidad.setValue(1);
         btnColor.setBackground(Color.WHITE);
+    }
+
+    private void imprimirTicket(VentaDTO ventaDTO) throws IOException {
+        try {
+            String fileName = "TicketVenta_" + ventaDTO.getId() + ".pdf";
+            File ticketFile = new File(fileName);
+            Document document = new Document(new Rectangle(227f, 700f));
+            final float MARGIN = 15f;
+
+            PdfWriter.getInstance(document, new FileOutputStream(fileName));
+            document.setMargins(MARGIN, MARGIN, MARGIN, MARGIN);
+            document.open();
+
+            // Configurar fuentes
+            Font headerFont = new Font(Font.FontFamily.COURIER, 14, Font.BOLD);
+            Font normalFont = new Font(Font.FontFamily.COURIER, 10, Font.NORMAL);
+            Font boldFont = new Font(Font.FontFamily.COURIER, 10, Font.BOLD);
+            Font smallFont = new Font(Font.FontFamily.COURIER, 8, Font.NORMAL);
+
+            // Encabezado
+            Paragraph header = new Paragraph();
+            header.setAlignment(Element.ALIGN_CENTER);
+
+            try {
+                Image logo = Image.getInstance("src/main/resources/images/chazzLogoBlack.png");
+                logo.scaleToFit(100, 100);
+                header.add(logo);
+            } catch (Exception e) {
+                Logger.getLogger(PanelVenta.class.getName()).log(Level.SEVERE, "Error cargando logo", e);
+            }
+
+            header.add(new Paragraph("CHAZZ BOUTIQUE", headerFont));
+            header.add(new Paragraph("Calle Guillermo Prieto #339, Col. Centro, Los Mochis", normalFont));
+            header.add(new Paragraph("Tel: +52 1 668 253 1651 | RFC: CHA220401XYZ", normalFont));
+            header.add(new Paragraph("----------------------------------------------", normalFont));
+            document.add(header);
+
+            // Información de venta
+            Paragraph saleInfo = new Paragraph();
+            saleInfo.add(new Paragraph("Fecha: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")), normalFont));
+            saleInfo.add(new Paragraph("Ticket: #" + ventaDTO.getId(), normalFont));
+            saleInfo.add(new Paragraph("Vendedor: " + frmPrincipal.getUsuarioRegistrado().getNombreUsuario(), normalFont));
+            saleInfo.add(new Paragraph("----------------------------------------------", normalFont));
+            document.add(saleInfo);
+
+            // Detalle de productos
+            Paragraph products = new Paragraph();
+            products.add(new Paragraph(String.format("%-25s %3s %10s %10s",
+                    "ARTÍCULO", "CANT", "P.UNITARIO", "TOTAL"), boldFont));
+            products.add(new Paragraph("----------------------------------------------", normalFont));
+
+            for (DetalleVentaDTO detalle : ventaDTO.getDetalles()) {
+                try {
+                    VarianteProductoDTO producto = frmPrincipal.varianteProductoNegocio
+                            .obtenerVariantePorCodigoBarra(detalle.getCodigoVariante());
+
+                    String nombre = producto.getCodigoBarra();
+                    if (nombre.length() > 25) {
+                        nombre = nombre.substring(0, 22) + "...";
+                    }
+
+                    String linea = String.format("%-25s %3d %10s %10s",
+                            nombre,
+                            detalle.getCantidad(),
+                            formatoMonedaSimple(detalle.getPrecioUnitario()),
+                            formatoMonedaSimple(detalle.getPrecioUnitario()
+                                    .multiply(BigDecimal.valueOf(detalle.getCantidad()))));
+
+                    products.add(new Paragraph(linea, normalFont));
+
+                } catch (NegocioException e) {
+                    Logger.getLogger(PanelVenta.class.getName()).log(Level.SEVERE, "Error obteniendo producto", e);
+                }
+            }
+            document.add(products);
+
+            // Totales
+            Paragraph totals = new Paragraph();
+            totals.add(new Paragraph("----------------------------------------------", normalFont));
+            totals.add(new Paragraph(String.format("%-15s %15s", "SUBTOTAL:",
+                    formatoMonedaSimple(totalSinDescuento)), normalFont));
+            totals.add(new Paragraph(String.format("%-15s %15s", "DESCUENTO:",
+                    formatoMonedaSimple(ventaDTO.getDescuento())), normalFont));
+            totals.add(new Paragraph(String.format("%-15s %15s", "TOTAL:",
+                    formatoMonedaSimple(ventaDTO.getTotal())), boldFont));
+            totals.add(new Paragraph(String.format("%-15s %15s", "PAGO CON:",
+                    formatoMonedaSimple(ventaDTO.getMontoPago())), normalFont));
+            totals.add(new Paragraph(String.format("%-15s %15s", "CAMBIO:",
+                    formatoMonedaSimple(ventaDTO.getMontoPago().subtract(ventaDTO.getTotal()))), normalFont));
+            totals.add(new Paragraph("----------------------------------------------\n", normalFont));
+            document.add(totals);
+
+            // Footer
+            Paragraph footer = new Paragraph();
+            footer.setAlignment(Element.ALIGN_CENTER);
+            footer.add(new Paragraph("¡Gracias por su preferencia!", smallFont));
+            footer.add(new Paragraph("Devoluciones en 24 hrs con ticket y etiquetas", smallFont));
+            footer.add(new Paragraph("@chazz.boutique", smallFont));
+
+            try {
+                Image qr = Image.getInstance("src/main/resources/images/QRreal.png");
+                qr.scaleToFit(70, 70);
+                footer.add(qr);
+            } catch (Exception e) {
+                Logger.getLogger(PanelVenta.class.getName()).log(Level.SEVERE, "Error QR", e);
+            }
+
+            document.add(footer);
+
+            document.close();
+            this.ultimoTicketGenerado = ticketFile;
+
+            // Abrir automáticamente
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(new File(fileName));
+            }
+
+        } catch (DocumentException | FileNotFoundException e) {
+            Logger.getLogger(PanelVenta.class.getName()).log(Level.SEVERE, "Error generando ticket", e);
+        }
+    }
+// Método auxiliar para formato monetario simple
+
+    private String formatoMonedaSimple(BigDecimal cantidad) {
+        return "$" + cantidad.setScale(2, RoundingMode.HALF_UP);
+    }
+    // Clase interna para filtrar números y puntos
+
+    class NumerosDecimalesFilter extends DocumentFilter {
+
+        @Override
+        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+            StringBuilder sb = new StringBuilder();
+            sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+            sb.insert(offset, string);
+
+            if (esEntradaValida(sb.toString())) {
+                super.insertString(fb, offset, string, attr);
+            }
+        }
+
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+            StringBuilder sb = new StringBuilder();
+            sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+            sb.replace(offset, offset + length, text);
+
+            if (esEntradaValida(sb.toString())) {
+                super.replace(fb, offset, length, text, attrs);
+            }
+        }
+
+        private boolean esEntradaValida(String text) {
+            // Permite números, un solo punto, y no permite punto al inicio
+            return text.matches("^\\d*\\.?\\d*$") && !text.startsWith(".");
+        }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private utils.BotonMenu botonMenu3;

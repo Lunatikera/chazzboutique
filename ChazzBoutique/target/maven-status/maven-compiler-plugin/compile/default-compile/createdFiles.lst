@@ -6,6 +6,7 @@ utils\SpinnerCellEditor$1.class
 presentacion\FrmRegistro$1.class
 presentacion\PanelVenta$4.class
 utils\ModernScrollBarUI.class
+presentacion\PanelVenta$NumerosDecimalesFilter.class
 presentacion\FrmLogin$2.class
 utils\SpinnerRenderer.class
 presentacion\PanelVenta$2.class
@@ -19,6 +20,7 @@ presentacion\PanelVenta$6.class
 utils\ModernScrollBarUI$InvisibleScrollBarButton.class
 presentacion\FrmLogin.class
 utils\SpinnerCellEditor.class
+presentacion\PanelVenta$11.class
 presentacion\PanelVenta$9.class
 presentacion\FrmRegistro.class
 utils\BotonToggle$1.class

@@ -13,13 +13,16 @@ import java.util.List;
  * @author carli
  */
 public class VentaDTO {
-      private Long id;
+
+    private Long id;
     private Long usuarioId;
     private LocalDate fecha;
     private BigDecimal total;
     private BigDecimal descuento;
     private String estado;
     private List<DetalleVentaDTO> detalles;
+    private BigDecimal montoPago;
+    private BigDecimal cambio;
 
     // Constructores
     public VentaDTO() {
@@ -88,9 +91,25 @@ public class VentaDTO {
         this.detalles = detalles;
     }
 
+    public BigDecimal getMontoPago() {
+        return montoPago;
+    }
+
+    public void setMontoPago(BigDecimal montoPago) {
+        this.montoPago = montoPago;
+    }
+
+    public BigDecimal getCambio() {
+        return cambio;
+    }
+
+    public void setCambio(BigDecimal cambio) {
+        this.cambio = cambio;
+    }
+
     @Override
     public String toString() {
         return "VentaDTO{" + "id=" + id + ", usuarioId=" + usuarioId + ", fecha=" + fecha + ", total=" + total + ", descuento=" + descuento + ", estado=" + estado + ", detalles=" + detalles + '}';
     }
-    
+
 }
