@@ -275,7 +275,7 @@ public class PanelVenta extends javax.swing.JPanel {
         btnBusquedaNombre.addActionListener(e -> {
             busquedaPorNombre = btnBusquedaNombre.isSelected();
             actualizarModoBusqueda();
-            limpiarSeleccionCombo(); // Limpiar selección al cambiar modo
+            limpiarCampos(); // Método nuevo que limpiará todo
         });
 
         // Configurar listener para el combo box
@@ -950,12 +950,12 @@ public class PanelVenta extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
         lblTotal = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         lblTotalResult = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         txtMontoPago = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
         txtDescuento = new javax.swing.JTextField();
         jPanel12 = new javax.swing.JPanel();
         btnAplicarDescuento = new utils.BotonToggle();
@@ -1001,10 +1001,6 @@ public class PanelVenta extends javax.swing.JPanel {
         lblTotal.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         lblTotal.setText("TOTAL");
 
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(156, 156, 156));
-        jLabel8.setText("DESCUENTO");
-
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(156, 156, 156));
         jLabel9.setText("MONTO PAGO");
@@ -1029,6 +1025,10 @@ public class PanelVenta extends javax.swing.JPanel {
             }
         });
 
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(156, 156, 156));
+        jLabel8.setText("DESCUENTO");
+
         txtDescuento.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         txtDescuento.setPreferredSize(new java.awt.Dimension(92, 31));
         txtDescuento.addActionListener(new java.awt.event.ActionListener() {
@@ -1044,38 +1044,46 @@ public class PanelVenta extends javax.swing.JPanel {
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel10)
-                    .addComponent(lblTotal)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel8))
-                .addGap(38, 38, 38)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTotalResult)
-                    .addComponent(jLabel13)
-                    .addComponent(txtMontoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel8))
+                        .addGap(38, 38, 38)
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel13)
+                            .addComponent(txtMontoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addComponent(lblTotal)
+                        .addGap(38, 38, 38)
+                        .addComponent(lblTotalResult)
+                        .addGap(61, 61, 61)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(14, 14, 14)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTotal)
-                    .addComponent(lblTotalResult))
+                    .addComponent(jLabel8)
+                    .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(txtMontoPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(jLabel13))
-                .addGap(14, 14, 14))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTotal)
+                    .addComponent(lblTotalResult))
+                .addContainerGap())
         );
 
         jPanel12.setBackground(new java.awt.Color(255, 255, 255));
@@ -1203,7 +1211,7 @@ public class PanelVenta extends javax.swing.JPanel {
         cbNombreProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbNombreProducto.setPreferredSize(new java.awt.Dimension(311, 60));
 
-        btnBusquedaNombre.setText("habilitar");
+        btnBusquedaNombre.setText("Habilitar");
         btnBusquedaNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBusquedaNombreActionPerformed(evt);
