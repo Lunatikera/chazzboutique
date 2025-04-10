@@ -6,6 +6,7 @@ package com.mycompany.chazzboutiquepersistencia.interfacesDAO;
 
 import com.mycompany.chazzboutiquepersistencia.dominio.Producto;
 import com.mycompany.chazzboutiquepersistencia.excepciones.PersistenciaException;
+import java.util.List;
 
 /**
  *
@@ -14,5 +15,7 @@ import com.mycompany.chazzboutiquepersistencia.excepciones.PersistenciaException
 public interface IProductoDAO {
 
     public Producto buscarPorId(Long id) throws PersistenciaException;
+    public List<Producto> buscarPorNombre(String nombre) throws PersistenciaException ;
+    public List<Producto> obtenerTodosProductos() throws PersistenciaException ;
 
 }

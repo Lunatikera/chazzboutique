@@ -10,6 +10,8 @@ import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVarianteProd
 import com.mycompany.chazzboutiquepersistencia.dominio.VarianteProducto;
 import com.mycompany.chazzboutiquepersistencia.excepciones.PersistenciaException;
 import com.mycompany.chazzboutiquepersistencia.interfacesDAO.IVarianteProductoDAO;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -44,4 +46,32 @@ public class VarianteProductoNegocio implements IVarianteProductoNegocio{
             throw new NegocioException("Error al obtener la variante de producto por código de barra: " + codigoBarra, e);
         }
     }
+
+    @Override
+   public List<VarianteProductoDTO> obtenerVariantesPorProducto(Long productoId) throws NegocioException {
+    try {
+        // 1. Obtener las variantes desde el DAO
+        List<VarianteProducto> variantes = varianteProductoDAO.obtenerVariantesPorProducto(productoId);
+        
+        // 2. Convertir la lista de entidades a DTOs
+        List<VarianteProductoDTO> variantesDTO = new ArrayList<>();
+        
+        for (VarianteProducto variante : variantes) {
+            variantesDTO.add(new VarianteProductoDTO(
+                variante.getCodigoBarra(),
+                variante.getStock(),
+                variante.getPrecioCompra(),
+                variante.getTalla(),
+                variante.getColor(),
+                variante.getPrecioVenta(),
+                variante.getProducto().getId()
+            ));
+        }
+        
+        return variantesDTO;
+        
+    } catch (PersistenciaException e) {
+        throw new NegocioException("Error al obtener variantes para el producto ID: " + productoId, e);
+    }
+}
 }

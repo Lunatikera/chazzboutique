@@ -31,6 +31,7 @@ import com.mycompany.chazzboutiquenegocio.dtos.ProductoDTO;
 import com.mycompany.chazzboutiquenegocio.dtos.VarianteProductoDTO;
 import com.mycompany.chazzboutiquenegocio.dtos.VentaDTO;
 import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -55,10 +56,15 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
@@ -68,6 +74,7 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
+import utils.ColorNameDetector;
 import utils.ModeloTablaVentas;
 import utils.SpinnerCellEditor;
 import utils.SpinnerRenderer;
@@ -85,6 +92,7 @@ public class PanelVenta extends javax.swing.JPanel {
     private BigDecimal totalSinDescuento;
     private List<String> filaCodigos = new ArrayList<>();
     private File ultimoTicketGenerado = null;
+    private boolean busquedaPorNombre = false;
 
     public PanelVenta(FrmMain frmPrincipal) {
         initComponents();
@@ -93,13 +101,19 @@ public class PanelVenta extends javax.swing.JPanel {
         this.habilitarCampos(false);
         this.configurarFormatoMoneda(txtMontoPago);
         this.configurarFormatoMoneda(txtDescuento);
+        cargarNombresProductos();
+        configurarBusquedaToggle();
         btnAplicarDescuento.setEnabled(false);
         // En el constructor, después de inicializar el spinner:
         spnCantidad.setModel(new SpinnerNumberModel(1, 1, 100, 1)); // Valores de 1 a 100, incremento de 1
         // En el constructor, después de inicializar el spinner:
         spnCantidad.addChangeListener(e -> {
-            if (!txtNombreProducto.getText().isEmpty()) {
+            // Verificar si hay un ítem seleccionado en el JComboBox
+            if (cbNombreProducto.getSelectedItem() != null
+                    && !cbNombreProducto.getSelectedItem().toString().isEmpty()) {
                 btnAgregar.setEnabled(true);
+            } else {
+                btnAgregar.setEnabled(false);
             }
         });
 
@@ -130,12 +144,12 @@ public class PanelVenta extends javax.swing.JPanel {
         header.setPreferredSize(new Dimension(header.getWidth(), 35));
         txtCodigo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if (txtNombreProducto.getText().isEmpty()) {
-                    // Si no hay producto cargado, buscar
-                    buscarProductoPorCodigo();
-                } else {
-                    // Si ya hay producto cargado, agregar a la tabla
+                // Solo agregar directamente si estamos en modo NOMBRE y hay un producto seleccionado
+                if (busquedaPorNombre && cbNombreProducto.getSelectedItem() != null) {
                     agregarProductoATabla();
+                } else {
+                    // Modo CÓDIGO: Siempre buscar primero
+                    buscarProductoPorCodigo();
                 }
             }
         });
@@ -254,6 +268,76 @@ public class PanelVenta extends javax.swing.JPanel {
                         JOptionPane.ERROR_MESSAGE);
             }
         });
+
+    }
+
+    private void configurarBusquedaToggle() {
+        btnBusquedaNombre.addActionListener(e -> {
+            busquedaPorNombre = btnBusquedaNombre.isSelected();
+            actualizarModoBusqueda();
+            limpiarSeleccionCombo(); // Limpiar selección al cambiar modo
+        });
+
+        // Configurar listener para el combo box
+        cbNombreProducto.addActionListener(e -> {
+            if (busquedaPorNombre && cbNombreProducto.getSelectedItem() != null) {
+                buscarVariantesPorNombre();
+            }
+        });
+    }
+
+    private void actualizarModoBusqueda() {
+        txtCodigo.setEnabled(!busquedaPorNombre);
+        cbNombreProducto.setEnabled(busquedaPorNombre);
+
+        if (busquedaPorNombre) {
+            cbNombreProducto.requestFocus();
+        } else {
+            txtCodigo.requestFocus();
+        }
+    }
+
+    private void buscarVariantesPorNombre() {
+        String nombreSeleccionado = (String) cbNombreProducto.getSelectedItem();
+
+        try {
+            List<ProductoDTO> productos = frmPrincipal.productoNegocio.buscarPorNombre(nombreSeleccionado);
+
+            if (productos.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "No se encontraron variantes para este producto",
+                        "Búsqueda",
+                        JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            mostrarDialogoVariantes(productos);
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Error en búsqueda: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void cargarNombresProductos() {
+        try {
+            List<ProductoDTO> productos = frmPrincipal.productoNegocio.obtenerTodosProductos();
+            cbNombreProducto.removeAllItems();
+
+            for (ProductoDTO producto : productos) {
+                cbNombreProducto.addItem(producto.getNombreProducto());
+            }
+
+            if (!productos.isEmpty()) {
+                cbNombreProducto.setSelectedIndex(-1);
+            }
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al cargar productos: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void registrarVenta() {
@@ -345,15 +429,18 @@ public class PanelVenta extends javax.swing.JPanel {
     private void resetearVenta() {
         modelo.setRowCount(0);
         filaCodigos.clear();
+        if (descuentoAplicado) {
+            btnAplicarDescuento.setClicked(false);
+        }
+        // Resetear campos monetarios usando el formateador
+        reiniciarCampoMoneda(txtMontoPago);
+        reiniciarCampoMoneda(txtDescuento);
 
-        // Resetear campos
-        txtCodigo.setText("");
-        limpiarCampos();
-        txtMontoPago.setText("$0.00");
-        txtDescuento.setText("$0.00");
         lblTotalResult.setText("$0.00");
         lblTotalResult2.setText("$0.00");
         jLabel13.setText("$0.00");
+
+        limpiarCampos();
 
         // Resetear estado
         descuentoAplicado = false;
@@ -362,6 +449,38 @@ public class PanelVenta extends javax.swing.JPanel {
         btnAplicarDescuento.setEnabled(false);
 
         txtCodigo.requestFocus();
+    }
+
+    private void reiniciarCampoMoneda(JTextField campo) {
+        campo.setText("0.00"); // Establecer valor numérico
+        formatearCampoMoneda(campo); // Aplicar formato manualmente
+    }
+
+    private void formatearCampoMoneda(JTextField textField) {
+        String texto = textField.getText()
+                .replace("$", "")
+                .replace(",", "")
+                .trim();
+
+        try {
+            // Lógica de formato existente del focusLost
+            if (texto.isEmpty() || texto.equals(".")) {
+                texto = "0.00";
+            } else if (texto.startsWith(".")) {
+                texto = "0" + texto;
+            } else if (!texto.contains(".")) {
+                texto += ".00";
+            } else if (texto.split("\\.")[1].length() == 1) {
+                texto += "0";
+            }
+
+            BigDecimal amount = new BigDecimal(texto)
+                    .setScale(2, RoundingMode.HALF_UP);
+
+            textField.setText(formatoMoneda(amount));
+        } catch (NumberFormatException e) {
+            textField.setText("$0.00");
+        }
     }
 
     private BigDecimal obtenerTotalDeTextField(JTextField textField) {
@@ -413,102 +532,134 @@ public class PanelVenta extends javax.swing.JPanel {
 
     private void agregarProductoATabla() {
         try {
-            String codigo = txtCodigo.getText().trim();
+            if (busquedaPorNombre) {
+                if (cbNombreProducto.getSelectedItem() == null) {
+                    JOptionPane.showMessageDialog(this,
+                            "Seleccione un producto de la lista",
+                            "Producto no seleccionado",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
 
-            if (codigo.isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                        "Primero escanee un producto",
-                        "Advertencia",
-                        JOptionPane.WARNING_MESSAGE);
-                return;
+                // Verificar si ya tenemos un código seleccionado (después de haber elegido una variante)
+                String codigo = txtCodigo.getText().trim();
+                if (!codigo.isEmpty()) {
+                    // Si ya tenemos un código, agregar el producto directamente
+                    int cantidad = (int) spnCantidad.getValue();
+                    agregarProductoPorCodigo(codigo, cantidad);
+                } else {
+                    // Si no hay código, mostrar diálogo para seleccionar variante
+                    buscarVariantesPorNombre();
+                }
+            } else {
+                // Lógica original para búsqueda por código
+                String codigo = txtCodigo.getText().trim();
+                if (codigo.isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Escanee un código o active la búsqueda por nombre",
+                            "Campo vacío",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                int cantidad = (int) spnCantidad.getValue();
+                agregarProductoPorCodigo(codigo, cantidad);
             }
+        } catch (Exception ex) {
+            manejarErrorGenerico(ex);
+        }
+    }
 
-            // Verificar si el producto ya está en la tabla
+    private void agregarProductoPorCodigo(String codigo, int cantidad) {
+        try {
             if (filaCodigos.contains(codigo)) {
-                JOptionPane.showMessageDialog(this,
-                        "Este producto ya está en la venta",
+                int opcion = JOptionPane.showConfirmDialog(this,
+                        "Este producto ya está en la venta. ¿Desea agregar más unidades?",
                         "Producto duplicado",
-                        JOptionPane.WARNING_MESSAGE);
-                txtCodigo.setText("");
-                txtCodigo.requestFocus();
-                return;
-            }
+                        JOptionPane.YES_NO_OPTION);
 
-            int cantidad = (int) spnCantidad.getValue();
-            if (cantidad <= 0) {
-                JOptionPane.showMessageDialog(this,
-                        "La cantidad debe ser mayor a 0",
-                        "Advertencia",
-                        JOptionPane.WARNING_MESSAGE);
+                if (opcion == JOptionPane.YES_OPTION) {
+                    int rowIndex = filaCodigos.indexOf(codigo);
+                    int cantidadActual = (int) jTable.getValueAt(rowIndex, 1);
+                    int cantidadNueva = cantidad;
+
+                    // Actualizar cantidad sumando la nueva
+                    jTable.setValueAt(cantidadActual + cantidadNueva, rowIndex, 1);
+                    actualizarSubtotal(rowIndex);
+                    actualizarTotales();
+                }
+                limpiarCampos();
                 return;
             }
 
             VarianteProductoDTO variante = frmPrincipal.varianteProductoNegocio.obtenerVariantePorCodigoBarra(codigo);
-            if (variante == null) {
-                JOptionPane.showMessageDialog(this,
-                        "El producto ya no está disponible",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                limpiarCampos();
-                return;
+            validarYAgregarVariante(variante, codigo, cantidad);
+
+            if (busquedaPorNombre) {
+                limpiarSeleccionCombo();
+                actualizarModoBusqueda();
             }
-
-            ProductoDTO producto = frmPrincipal.productoNegocio.buscarPorId(variante.getProductoId());
-            if (producto == null) {
-                JOptionPane.showMessageDialog(this,
-                        "El producto ya no está disponible",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                limpiarCampos();
-                return;
-            }
-
-            if (variante.getStock() < cantidad) {
-                JOptionPane.showMessageDialog(this,
-                        String.format("Stock insuficiente para %s (Disponible: %d, Solicitado: %d)",
-                                producto.getNombreProducto(),
-                                variante.getStock(),
-                                cantidad),
-                        "Stock insuficiente",
-                        JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            BigDecimal precio = variante.getPrecioVenta();
-            BigDecimal subtotal = precio.multiply(new BigDecimal(cantidad));
-
-            // Agregar fila sin columna oculta
-            int filaIndex = modelo.getRowCount();
-            modelo.addRow(new Object[]{
-                producto.getNombreProducto(), // Columna 0: Nombre
-                cantidad, // Columna 1: Cantidad
-                formatoMoneda(precio), // Columna 2: Precio Unitario
-                formatoMoneda(subtotal) // Columna 3: Subtotal
-            });
-
-            // Mapear fila a código de barras
-            filaCodigos.add(filaIndex, codigo);
-
-            actualizarTotales();
-
-            txtCodigo.setText("");
-            limpiarCampos();
-            txtCodigo.requestFocus();
-            habilitarCampos(false);
-
         } catch (NegocioException ex) {
-            JOptionPane.showMessageDialog(this,
-                    "Error al agregar producto: " + ex.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(PanelVenta.class.getName()).log(Level.SEVERE, null, ex);
+            manejarErrorNegocio(ex);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this,
-                    "Error inesperado al agregar producto",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(PanelVenta.class.getName()).log(Level.SEVERE, null, ex);
+            manejarErrorGenerico(ex);
         }
+    }
+
+    private void validarYAgregarVariante(VarianteProductoDTO variante, String codigo, int cantidad) throws NegocioException {
+        if (variante == null) {
+            throw new NegocioException("El producto no existe");
+        }
+
+        ProductoDTO producto = frmPrincipal.productoNegocio.buscarPorId(variante.getProductoId());
+        if (cantidad <= 0) {
+            throw new NegocioException("Cantidad inválida");
+        }
+        if (variante.getStock() < cantidad) {
+            throw new NegocioException(String.format("Stock insuficiente. Disponible: %d", variante.getStock()));
+        }
+
+        agregarFilaTabla(producto, variante, cantidad, codigo);
+        actualizarInterfaz();
+    }
+
+    private void agregarFilaTabla(ProductoDTO producto, VarianteProductoDTO variante, int cantidad, String codigo) {
+        BigDecimal precio = variante.getPrecioVenta();
+        BigDecimal subtotal = precio.multiply(BigDecimal.valueOf(cantidad));
+
+        modelo.addRow(new Object[]{
+            producto.getNombreProducto(),
+            cantidad,
+            formatoMoneda(precio),
+            formatoMoneda(subtotal)
+        });
+
+        filaCodigos.add(codigo);
+        actualizarTotales();
+    }
+
+    private void actualizarInterfaz() {
+        limpiarCampos();
+        if (busquedaPorNombre) {
+            cbNombreProducto.requestFocus();
+        } else {
+            txtCodigo.requestFocus();
+        }
+    }
+
+    private void manejarErrorNegocio(NegocioException ex) {
+        JOptionPane.showMessageDialog(this,
+                "Error: " + ex.getMessage(),
+                "Error en operación",
+                JOptionPane.ERROR_MESSAGE);
+        limpiarCampos();
+    }
+
+    private void manejarErrorGenerico(Exception ex) {
+        Logger.getLogger(PanelVenta.class.getName()).log(Level.SEVERE, null, ex);
+        JOptionPane.showMessageDialog(this,
+                "Error inesperado: " + ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
     }
 // Método para actualizar los totales
 
@@ -687,22 +838,13 @@ public class PanelVenta extends javax.swing.JPanel {
         String codigo = txtCodigo.getText().trim();
 
         if (codigo.isEmpty()) {
-            return; // No hacer nada si el campo está vacío
+            return;
         }
 
         try {
-            // 1. Verificar si el producto ya está en la venta
-            if (filaCodigos.contains(codigo)) {
-                JOptionPane.showMessageDialog(this,
-                        "Este producto ya está en la venta",
-                        "Producto duplicado",
-                        JOptionPane.WARNING_MESSAGE);
-                txtCodigo.setText("");
-                txtCodigo.requestFocus();
-                return;
-            }
+            // Verificar si el producto ya está en la venta
 
-            // 2. Buscar la variante del producto
+            // Buscar la variante del producto
             VarianteProductoDTO variante = frmPrincipal.varianteProductoNegocio.obtenerVariantePorCodigoBarra(codigo);
 
             if (variante == null) {
@@ -715,7 +857,7 @@ public class PanelVenta extends javax.swing.JPanel {
                 return;
             }
 
-            // 3. Buscar información completa del producto
+            // Buscar información completa del producto
             ProductoDTO producto = frmPrincipal.productoNegocio.buscarPorId(variante.getProductoId());
 
             if (producto == null) {
@@ -728,18 +870,24 @@ public class PanelVenta extends javax.swing.JPanel {
                 return;
             }
 
-            // 4. Actualizar la interfaz con los datos del producto
-            txtNombreProducto.setText(producto.getNombreProducto());
-            txtPrecio.setText(formatoMoneda(variante.getPrecioVenta()));
-            spnCantidad.setValue(1); // Resetear a cantidad inicial
+            // Actualizar combo box con el nombre del producto
+            for (int i = 0; i < cbNombreProducto.getItemCount(); i++) {
+                if (cbNombreProducto.getItemAt(i).equals(producto.getNombreProducto())) {
+                    cbNombreProducto.setSelectedIndex(i);
+                    break;
+                }
+            }
 
-            // 5. Configurar el color del producto si está disponible
+            // Actualizar la interfaz con los datos del producto
+            txtPrecio.setText(formatoMoneda(variante.getPrecioVenta()));
+            spnCantidad.setValue(1);
+
+            // Configurar color
             if (variante.getColor() != null && !variante.getColor().isEmpty()) {
                 try {
                     Color color = Color.decode(variante.getColor());
                     btnColor.setBackground(color);
                 } catch (NumberFormatException e) {
-                    // Intentar convertir nombres de colores (RED, BLUE, etc.)
                     try {
                         Color color = (Color) Color.class.getField(variante.getColor().toUpperCase()).get(null);
                         btnColor.setBackground(color);
@@ -751,7 +899,6 @@ public class PanelVenta extends javax.swing.JPanel {
                 btnColor.setBackground(Color.WHITE);
             }
 
-            // 6. Habilitar campos para editar cantidad y agregar
             habilitarCampos(true);
 
         } catch (NegocioException ex) {
@@ -761,7 +908,6 @@ public class PanelVenta extends javax.swing.JPanel {
                     JOptionPane.ERROR_MESSAGE);
             limpiarCampos();
             habilitarCampos(false);
-            Logger.getLogger(PanelVenta.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
                     "Error inesperado al buscar producto",
@@ -769,7 +915,6 @@ public class PanelVenta extends javax.swing.JPanel {
                     JOptionPane.ERROR_MESSAGE);
             limpiarCampos();
             habilitarCampos(false);
-            Logger.getLogger(PanelVenta.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -823,8 +968,9 @@ public class PanelVenta extends javax.swing.JPanel {
         txtCodigo = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
-        txtNombreProducto = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
+        cbNombreProducto = new javax.swing.JComboBox<>();
+        btnBusquedaNombre = new javax.swing.JRadioButton();
         jPanel9 = new javax.swing.JPanel();
         txtPrecio = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
@@ -1049,13 +1195,20 @@ public class PanelVenta extends javax.swing.JPanel {
         jPanel3.add(jPanel4);
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel6.setPreferredSize(new java.awt.Dimension(330, 128));
-
-        txtNombreProducto.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
-        txtNombreProducto.setPreferredSize(new java.awt.Dimension(311, 60));
+        jPanel6.setPreferredSize(new java.awt.Dimension(330, 158));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel3.setText("Nombre");
+
+        cbNombreProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbNombreProducto.setPreferredSize(new java.awt.Dimension(311, 60));
+
+        btnBusquedaNombre.setText("habilitar");
+        btnBusquedaNombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBusquedaNombreActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -1063,19 +1216,24 @@ public class PanelVenta extends javax.swing.JPanel {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addComponent(jLabel3)
+                .addContainerGap(266, Short.MAX_VALUE))
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnBusquedaNombre)
+                    .addComponent(cbNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addContainerGap(24, Short.MAX_VALUE)
+                .addContainerGap(38, Short.MAX_VALUE)
                 .addComponent(jLabel3)
+                .addGap(5, 5, 5)
+                .addComponent(cbNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16))
+                .addComponent(btnBusquedaNombre)
+                .addContainerGap())
         );
 
         jPanel3.add(jPanel6);
@@ -1119,8 +1277,7 @@ public class PanelVenta extends javax.swing.JPanel {
         jLabel5.setText("Color");
 
         btnColor.setBackground(new java.awt.Color(249, 249, 249));
-        btnColor.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnColor.setBorderPainted(false);
+        btnColor.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, new java.awt.Color(0, 0, 0), null, null));
         btnColor.setPreferredSize(new java.awt.Dimension(60, 60));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -1183,8 +1340,8 @@ public class PanelVenta extends javax.swing.JPanel {
                 .addGap(79, 79, 79)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23))
         );
 
         add(jPanel2, java.awt.BorderLayout.PAGE_START);
@@ -1344,6 +1501,10 @@ public class PanelVenta extends javax.swing.JPanel {
     private void btnBorrarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarTablaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnBorrarTablaActionPerformed
+
+    private void btnBusquedaNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBusquedaNombreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnBusquedaNombreActionPerformed
     private BigDecimal obtenerTotalDeLabel(JLabel label) {
         try {
             String texto = label.getText()
@@ -1376,7 +1537,6 @@ public class PanelVenta extends javax.swing.JPanel {
     private void configurarFormatoMoneda(JTextField textField) {
         textField.setText("$0.00");
 
-        // Aplicar filtro para solo números y un punto decimal
         ((AbstractDocument) textField.getDocument()).setDocumentFilter(new NumerosDecimalesFilter());
 
         textField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1389,54 +1549,29 @@ public class PanelVenta extends javax.swing.JPanel {
 
             @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
-                String texto = textField.getText()
-                        .replace("$", "")
-                        .replace(",", "")
-                        .trim();
-
-                try {
-                    // Corregir formato de decimales
-                    if (texto.isEmpty() || texto.equals(".")) {
-                        texto = "0.00";
-                    } else if (texto.startsWith(".")) {
-                        texto = "0" + texto;
-                    } else if (!texto.contains(".")) {
-                        texto += ".00";
-                    } else if (texto.split("\\.")[1].length() == 1) {
-                        texto += "0"; // Agregar cero faltante (ej: 5.1 -> 5.10)
-                    }
-
-                    // Validar y formatear
-                    BigDecimal amount = new BigDecimal(texto)
-                            .setScale(2, RoundingMode.HALF_UP);
-
-                    textField.setText(formatoMoneda(amount));
-
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(PanelVenta.this,
-                            "Valor numérico inválido",
-                            "Error de formato",
-                            JOptionPane.ERROR_MESSAGE);
-                    textField.setText("$0.00");
-                }
+                formatearCampoMoneda(textField);
             }
         });
     }
 
     private void habilitarCampos(boolean habilitar) {
-        txtNombreProducto.setEnabled(false);  // Siempre de solo lectura
-        txtPrecio.setEnabled(false);         // Siempre de solo lectura
-        spnCantidad.setEnabled(habilitar);   // Solo habilitado cuando hay producto
-        btnAgregar.setEnabled(habilitar);    // Solo habilitado cuando hay producto
-        btnColor.setEnabled(false);          // Siempre visual
+        txtPrecio.setEnabled(false);
+        spnCantidad.setEnabled(habilitar);
+        btnAgregar.setEnabled(habilitar); // Habilitar el botón de agregar
+        btnColor.setEnabled(false);
+
+        // Mantener habilitados según modo búsqueda
+        txtCodigo.setEnabled(!busquedaPorNombre);
+        cbNombreProducto.setEnabled(busquedaPorNombre);
 
         if (habilitar) {
-            spnCantidad.requestFocus(); // Poner foco en el spinner cuando se habilita
+            spnCantidad.requestFocus();
         }
     }
 
     private void limpiarCampos() {
-        txtNombreProducto.setText("");
+        cbNombreProducto.setSelectedIndex(-1); // Dejar el ComboBox sin selección
+        txtCodigo.setText("");
         txtPrecio.setText("");
         spnCantidad.setValue(1);
         btnColor.setBackground(Color.WHITE);
@@ -1568,6 +1703,142 @@ public class PanelVenta extends javax.swing.JPanel {
     }
     // Clase interna para filtrar números y puntos
 
+    private void buscarProductoPorNombre() {
+        String nombre = cbNombreProducto.getSelectedItem().toString();
+        if (nombre.isEmpty()) {
+            return;
+        }
+
+        try {
+            List<ProductoDTO> productos = frmPrincipal.productoNegocio.buscarPorNombre(nombre);
+            if (productos.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "No se encontraron productos con ese nombre",
+                        "Búsqueda",
+                        JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            mostrarDialogoVariantes(productos);
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Error en búsqueda: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void mostrarDialogoVariantes(List<ProductoDTO> productos) {
+        JDialog dialog = new JDialog(frmPrincipal, true);
+        dialog.setTitle("Variantes de: " + cbNombreProducto.getSelectedItem());
+
+        DefaultTableModel model = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        model.addColumn("Color");
+        model.addColumn("Talla");
+        model.addColumn("Precio");
+        model.addColumn("Stock");
+        model.addColumn("Código");
+
+        for (ProductoDTO producto : productos) {
+            try {
+                List<VarianteProductoDTO> variantes = frmPrincipal.varianteProductoNegocio
+                        .obtenerVariantesPorProducto(producto.getId());
+
+                for (VarianteProductoDTO variante : variantes) {
+                    model.addRow(new Object[]{
+                        ColorNameDetector.getColorName(variante.getColor()),
+                        variante.getTalla(),
+                        formatoMoneda(variante.getPrecioVenta()),
+                        variante.getStock(),
+                        variante.getCodigoBarra()
+                    });
+                }
+            } catch (NegocioException ex) {
+                Logger.getLogger(PanelVenta.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        JTable table = new JTable(model);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Solo permitir selección simple
+
+        // Ocultar columna de código
+        table.removeColumn(table.getColumnModel().getColumn(4));
+
+        // Botón Aceptar
+        JButton btnAceptar = new JButton("Aceptar");
+        btnAceptar.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(dialog,
+                        "Seleccione una variante",
+                        "Advertencia",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Obtener el código de la variante seleccionada
+            String codigo = (String) model.getValueAt(selectedRow, 4);
+
+            // Cargar la variante en los campos pero no agregar a la tabla
+            cargarVarianteSeleccionada(codigo);
+
+            dialog.dispose();
+        });
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(btnAceptar);
+
+        dialog.setLayout(new BorderLayout());
+        dialog.add(new JScrollPane(table), BorderLayout.CENTER);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+
+    private void cargarVarianteSeleccionada(String codigo) {
+        try {
+            VarianteProductoDTO variante = frmPrincipal.varianteProductoNegocio
+                    .obtenerVariantePorCodigoBarra(codigo);
+
+            ProductoDTO producto = frmPrincipal.productoNegocio.buscarPorId(variante.getProductoId());
+
+            // Actualizar interfaz
+            txtCodigo.setText(codigo);
+            txtPrecio.setText(formatoMoneda(variante.getPrecioVenta()));
+
+            // Configurar color
+            try {
+                btnColor.setBackground(Color.decode(variante.getColor()));
+            } catch (Exception e) {
+                btnColor.setBackground(Color.WHITE);
+            }
+
+            // Habilitar campos para permitir agregar manualmente
+            habilitarCampos(true);
+            spnCantidad.requestFocus();
+
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al cargar variante: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void limpiarSeleccionCombo() {
+        cbNombreProducto.setSelectedIndex(-1);
+        cbNombreProducto.getEditor().setItem("");
+        cbNombreProducto.updateUI();
+    }
+
     class NumerosDecimalesFilter extends DocumentFilter {
 
         @Override
@@ -1602,9 +1873,11 @@ public class PanelVenta extends javax.swing.JPanel {
     private utils.BotonMenu btnAgregar;
     private utils.BotonToggle btnAplicarDescuento;
     private utils.BotonMenu btnBorrarTabla;
+    private javax.swing.JRadioButton btnBusquedaNombre;
     private javax.swing.JButton btnColor;
     private utils.BotonMenu btnEliminar;
     private utils.BotonMenu btnImprimir;
+    private javax.swing.JComboBox<String> cbNombreProducto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel13;
@@ -1637,7 +1910,6 @@ public class PanelVenta extends javax.swing.JPanel {
     private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextField txtDescuento;
     private javax.swing.JTextField txtMontoPago;
-    private javax.swing.JTextField txtNombreProducto;
     private javax.swing.JTextField txtPrecio;
     // End of variables declaration//GEN-END:variables
 }
