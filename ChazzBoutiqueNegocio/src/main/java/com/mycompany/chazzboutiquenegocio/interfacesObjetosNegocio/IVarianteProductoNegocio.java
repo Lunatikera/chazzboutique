@@ -6,12 +6,16 @@ package com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio;
 
 import com.mycompany.chazzboutiquenegocio.dtos.VarianteProductoDTO;
 import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
+import java.util.List;
 
 /**
  *
  * @author carli
  */
 public interface IVarianteProductoNegocio {
-     public VarianteProductoDTO obtenerVariantePorCodigoBarra(String codigoBarra) throws NegocioException;
+
+    public VarianteProductoDTO obtenerVariantePorCodigoBarra(String codigoBarra) throws NegocioException;
+
+    public List<VarianteProductoDTO> obtenerVariantesPorProducto(Long productoId) throws NegocioException;
 
 }
