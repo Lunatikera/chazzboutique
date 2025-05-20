@@ -75,7 +75,7 @@ public class VentaNegocio implements IVentaNegocio {
 
                 // Actualizar stock
                 variante.setStock(variante.getStock() - detalleDTO.getCantidad());
-                varianteProductoDAO.actualizar(variante);
+                varianteProductoDAO.actualizarVarianteProducto(variante);
             }
 
             return ventaDTO;

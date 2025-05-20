@@ -55,7 +55,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
@@ -68,6 +71,11 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+import javax.swing.Timer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.text.AbstractDocument;
@@ -279,8 +287,16 @@ public class PanelVenta extends javax.swing.JPanel {
         });
 
         // Configurar listener para el combo box
+        // En el constructor, modificar el ActionListener del combo box:
+        // En el constructor:
         cbNombreProducto.addActionListener(e -> {
-            if (busquedaPorNombre && cbNombreProducto.getSelectedItem() != null) {
+            if (!busquedaPorNombre || e.getActionCommand() == null || !e.getActionCommand().equals("comboBoxChanged")) {
+                return;
+            }
+
+            // Solo procesar si el usuario seleccionó un ítem explícitamente
+            Object selected = cbNombreProducto.getSelectedItem();
+            if (selected != null && !selected.toString().isEmpty()) {
                 buscarVariantesPorNombre();
             }
         });
@@ -324,20 +340,116 @@ public class PanelVenta extends javax.swing.JPanel {
         try {
             List<ProductoDTO> productos = frmPrincipal.productoNegocio.obtenerTodosProductos();
             cbNombreProducto.removeAllItems();
+            cbNombreProducto.setEditable(true);
 
+            // Guardar la lista completa
+            List<String> nombresProductos = new ArrayList<>();
             for (ProductoDTO producto : productos) {
-                cbNombreProducto.addItem(producto.getNombreProducto());
+                nombresProductos.add(producto.getNombreProducto());
             }
+            cbNombreProducto.putClientProperty("fullList", nombresProductos);
 
-            if (!productos.isEmpty()) {
-                cbNombreProducto.setSelectedIndex(-1);
-            }
+            // Configurar el editor y el filtrado
+            JTextField editor = (JTextField) cbNombreProducto.getEditor().getEditorComponent();
+            editor.getDocument().addDocumentListener(new DocumentListener() {
+                private Timer timer;
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    scheduleFilter();
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    scheduleFilter();
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    scheduleFilter();
+                }
+
+                private void scheduleFilter() {
+                    if (timer != null) {
+                        timer.stop();
+                    }
+                    timer = new Timer(300, evt -> {
+                        filterComboBox();
+                        timer.stop();
+                    });
+                    timer.setRepeats(false);
+                    timer.start();
+                }
+            });
+
+            // Cargar todos los items inicialmente
+            nombresProductos.forEach(cbNombreProducto::addItem);
+            cbNombreProducto.setSelectedIndex(-1);
+
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this,
                     "Error al cargar productos: " + ex.getMessage(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private void filterComboBox() {
+        JTextField editor = (JTextField) cbNombreProducto.getEditor().getEditorComponent();
+        String filterText = editor.getText().toLowerCase();
+
+        @SuppressWarnings("unchecked")
+        List<String> fullList = (List<String>) cbNombreProducto.getClientProperty("fullList");
+        if (fullList == null) {
+            return;
+        }
+
+        // Usar SwingWorker para el filtrado en segundo plano
+        new SwingWorker<List<String>, Void>() {
+            @Override
+            protected List<String> doInBackground() {
+                return fullList.stream()
+                        .filter(item -> item.toLowerCase().contains(filterText))
+                        .collect(Collectors.toList());
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    List<String> filteredList = get();
+
+                    // Evitar cambios innecesarios
+                    if (filteredList.equals(getCurrentModelItems())) {
+                        return;
+                    }
+
+                    // Actualizar el modelo en el EDT
+                    SwingUtilities.invokeLater(() -> {
+                        Object selected = cbNombreProducto.getSelectedItem();
+                        cbNombreProducto.setModel(new DefaultComboBoxModel<>(filteredList.toArray(new String[0])));
+                        cbNombreProducto.setSelectedItem(selected);
+                        editor.setText(filterText);
+
+                        if (!filterText.isEmpty() && cbNombreProducto.isShowing()) {
+                            cbNombreProducto.showPopup();
+                        } else {
+                            cbNombreProducto.hidePopup();
+                        }
+                    });
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }.execute();
+    }
+
+    private List<String> getCurrentModelItems() {
+        List<String> items = new ArrayList<>();
+        ComboBoxModel<String> model = cbNombreProducto.getModel();
+        for (int i = 0; i < model.getSize(); i++) {
+            items.add(model.getElementAt(i));
+        }
+        return items;
     }
 
     private void registrarVenta() {
@@ -1842,9 +1954,12 @@ public class PanelVenta extends javax.swing.JPanel {
     }
 
     private void limpiarSeleccionCombo() {
-        cbNombreProducto.setSelectedIndex(-1);
-        cbNombreProducto.getEditor().setItem("");
-        cbNombreProducto.updateUI();
+        SwingUtilities.invokeLater(() -> {
+            cbNombreProducto.setSelectedIndex(-1);
+            JTextField editor = (JTextField) cbNombreProducto.getEditor().getEditorComponent();
+            editor.setText("");
+            cbNombreProducto.hidePopup();
+        });
     }
 
     class NumerosDecimalesFilter extends DocumentFilter {

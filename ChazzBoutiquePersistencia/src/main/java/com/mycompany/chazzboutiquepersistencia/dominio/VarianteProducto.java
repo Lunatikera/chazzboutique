@@ -52,6 +52,9 @@ public class VarianteProducto implements Serializable {
     @Column(name = "precioVenta", nullable = false)
     private BigDecimal precioVenta;
 
+    @Column(name = "eliminado",nullable = false)
+    private boolean eliminado = false;
+
     @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
@@ -129,6 +132,14 @@ public class VarianteProducto implements Serializable {
 
     public void setPrecioVenta(BigDecimal precioVenta) {
         this.precioVenta = precioVenta;
+    }
+
+    public boolean isEliminado() {
+        return eliminado;
+    }
+
+    public void setEliminado(boolean eliminado) {
+        this.eliminado = eliminado;
     }
 
     @Override

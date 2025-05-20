@@ -26,7 +26,7 @@ public class Caja implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "_id", nullable = false, unique = true)
+    @Column(name = "caja_id", nullable = false, unique = true)
     private Long id;
 
     @Column(name = "horaApertura", nullable = false)
