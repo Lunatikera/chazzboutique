@@ -9,6 +9,7 @@
     <class>com.mycompany.chazzboutiquepersistencia.dominio.Proveedor</class>
     <class>com.mycompany.chazzboutiquepersistencia.dominio.VarianteProducto</class>
     <class>com.mycompany.chazzboutiquepersistencia.dominio.Caja</class>
+    <class>com.mycompany.chazzboutiquepersistencia.dominio.Categoria</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/ChazzBoutique?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

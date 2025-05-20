@@ -7,7 +7,6 @@ package com.mycompany.chazzboutiquepersistencia.interfacesDAO;
 import com.mycompany.chazzboutiquepersistencia.dominio.VarianteProducto;
 import com.mycompany.chazzboutiquepersistencia.excepciones.PersistenciaException;
 import java.util.List;
-import javax.persistence.PersistenceException;
 
 /**
  *
@@ -17,10 +16,15 @@ public interface IVarianteProductoDAO {
 
     public VarianteProducto obtenerPorCodigoBarra(String codigoBarra) throws PersistenciaException;
 
-    public VarianteProducto actualizar(VarianteProducto variante) throws PersistenciaException;
+    public VarianteProducto actualizarVarianteProducto(VarianteProducto variante) throws PersistenciaException;
 
     public VarianteProducto buscarPorId(Long id) throws PersistenciaException;
 
     public List<VarianteProducto> obtenerVariantesPorProducto(Long productoId) throws PersistenciaException;
+
+    public VarianteProducto crearVariante(VarianteProducto variante) throws PersistenciaException;
+
+    public void eliminarVarianteProducto(Long id) throws PersistenciaException;
+
 
 }

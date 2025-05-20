@@ -1,111 +1,122 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.chazzboutiquepersistencia.daos;
 
 import com.mycompany.chazzboutiquepersistencia.conexion.IConexionBD;
 import com.mycompany.chazzboutiquepersistencia.dominio.VarianteProducto;
 import com.mycompany.chazzboutiquepersistencia.excepciones.PersistenciaException;
 import com.mycompany.chazzboutiquepersistencia.interfacesDAO.IVarianteProductoDAO;
-import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
+import java.util.List;
 
-/**
- *
- * @author carli
- */
 public class VarianteProductoDAO implements IVarianteProductoDAO {
 
-    IConexionBD conexionBD;
+    private final IConexionBD conexionBD;
 
     public VarianteProductoDAO(IConexionBD conexionBD) {
         this.conexionBD = conexionBD;
     }
 
     @Override
-    public List<VarianteProducto> obtenerVariantesPorProducto(Long productoId) throws PersistenciaException {
-        EntityManager entityManager = conexionBD.getEntityManager();
+    public VarianteProducto crearVariante(VarianteProducto variante) throws PersistenciaException {
+        EntityManager em = conexionBD.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         try {
-            // Consulta JPQL para obtener todas las variantes de un producto
-            TypedQuery<VarianteProducto> query = entityManager.createQuery(
-                    "SELECT v FROM VarianteProducto v WHERE v.producto.id = :productoId",
-                    VarianteProducto.class
-            );
-            query.setParameter("productoId", productoId);
-            return query.getResultList();
+            tx.begin();
+            em.persist(variante);
+            tx.commit();
+            return variante;
         } catch (Exception e) {
-            throw new PersistenciaException("Error al obtener variantes para el producto ID: " + productoId, e);
+            if (tx.isActive()) tx.rollback();
+            throw new PersistenciaException("Error al crear la variante de producto", e);
         } finally {
-            if (entityManager != null && entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
-    }
-
-    @Override
-    public VarianteProducto obtenerPorCodigoBarra(String codigoBarra) throws PersistenciaException {
-        EntityManager entityManager = conexionBD.getEntityManager();
-        try {
-            TypedQuery<VarianteProducto> query = entityManager.createQuery(
-                    "SELECT v FROM VarianteProducto v WHERE v.codigoBarra = :codigoBarra", VarianteProducto.class);
-            query.setParameter("codigoBarra", codigoBarra);
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            return null; // No se encontró la variante
-        } catch (Exception e) {
-            throw new PersistenciaException("Error al obtener la variante de producto por código de barra: " + codigoBarra, e);
-        }
-    }
-
-    @Override
-    public VarianteProducto actualizar(VarianteProducto variante) throws PersistenciaException {
-        EntityManager entityManager = conexionBD.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-
-            // Actualiza la variante en la base de datos
-            VarianteProducto varianteActualizada = entityManager.merge(variante);
-
-            transaction.commit();
-            return varianteActualizada;
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            throw new PersistenciaException("Error al actualizar la variante de producto con ID: " + variante.getId(), e);
-        } finally {
-            if (entityManager != null && entityManager.isOpen()) {
-                entityManager.close();
-            }
+            em.close();
         }
     }
 
     @Override
     public VarianteProducto buscarPorId(Long id) throws PersistenciaException {
-        EntityManager entityManager = conexionBD.getEntityManager();
+        EntityManager em = conexionBD.getEntityManager();
         try {
-            // Busca la variante por su ID
-            VarianteProducto variante = entityManager.find(VarianteProducto.class, id);
-
-            if (variante == null) {
-                throw new PersistenciaException("No se encontró la variante de producto con ID: " + id);
-            }
-
-            return variante;
+            VarianteProducto v = em.find(VarianteProducto.class, id);
+            return v;
         } catch (Exception e) {
-            throw new PersistenciaException("Error al buscar variante de producto por ID: " + id, e);
+            throw new PersistenciaException("Error al buscar variante por ID", e);
         } finally {
-            if (entityManager != null && entityManager.isOpen()) {
-                entityManager.close();
+            em.close();
+        }
+    }
+
+    @Override
+    public VarianteProducto obtenerPorCodigoBarra(String codigoBarra) throws PersistenciaException {
+        EntityManager em = conexionBD.getEntityManager();
+        try {
+            TypedQuery<VarianteProducto> query = em.createQuery(
+                "SELECT v FROM VarianteProducto v WHERE v.codigoBarra = :cb AND v.eliminado = false",
+                VarianteProducto.class
+            );
+            query.setParameter("cb", codigoBarra);
+            return query.getSingleResult();
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al obtener variante por código de barras", e);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<VarianteProducto> obtenerVariantesPorProducto(Long productoId) throws PersistenciaException {
+        EntityManager em = conexionBD.getEntityManager();
+        try {
+            TypedQuery<VarianteProducto> query = em.createQuery(
+                "SELECT v FROM VarianteProducto v " +
+                "WHERE v.producto.id = :pid AND v.eliminado = false",
+                VarianteProducto.class
+            );
+            query.setParameter("pid", productoId);
+            return query.getResultList();
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al obtener variantes por producto", e);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public VarianteProducto actualizarVarianteProducto(VarianteProducto variante) throws PersistenciaException {
+        EntityManager em = conexionBD.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            VarianteProducto updated = em.merge(variante);
+            tx.commit();
+            return updated;
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw new PersistenciaException("Error al actualizar la variante de producto", e);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public void eliminarVarianteProducto(Long id) throws PersistenciaException {
+        EntityManager em = conexionBD.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            VarianteProducto v = em.find(VarianteProducto.class, id);
+            if (v != null) {
+                v.setEliminado(true);
+                em.merge(v);
             }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw new PersistenciaException("Error al hacer soft delete de la variante", e);
+        } finally {
+            em.close();
         }
     }
 }

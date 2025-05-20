@@ -44,10 +44,33 @@ public class Producto implements Serializable {
     @JoinColumn(name = "proveedor_id", nullable = false)
     private Proveedor proveedor;
 
+    @ManyToOne
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
+
     @OneToMany(mappedBy = "producto", cascade = CascadeType.PERSIST)
     private List<VarianteProducto> variantes;
 
     public Producto() {
+    }
+
+    public Producto(Long id, String nombreProducto, String descripcionProducto, LocalDate fechaCreacion, Proveedor proveedor, Categoria categoria) {
+        this.id = id;
+        this.nombreProducto = nombreProducto;
+        this.descripcionProducto = descripcionProducto;
+        this.fechaCreacion = fechaCreacion;
+        this.proveedor = proveedor;
+        this.categoria = categoria;
+    }
+
+    public Producto(Long id, String nombreProducto, String descripcionProducto, LocalDate fechaCreacion, Proveedor proveedor, Categoria categoria, List<VarianteProducto> variantes) {
+        this.id = id;
+        this.nombreProducto = nombreProducto;
+        this.descripcionProducto = descripcionProducto;
+        this.fechaCreacion = fechaCreacion;
+        this.proveedor = proveedor;
+        this.categoria = categoria;
+        this.variantes = variantes;
     }
 
     public Long getId() {
