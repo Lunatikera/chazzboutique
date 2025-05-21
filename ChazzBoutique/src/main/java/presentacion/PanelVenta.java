@@ -112,6 +112,7 @@ public class PanelVenta extends javax.swing.JPanel {
         cargarNombresProductos();
         configurarBusquedaToggle();
         btnAplicarDescuento.setEnabled(false);
+        
         // En el constructor, después de inicializar el spinner:
         spnCantidad.setModel(new SpinnerNumberModel(1, 1, 100, 1)); // Valores de 1 a 100, incremento de 1
         // En el constructor, después de inicializar el spinner:
@@ -123,6 +124,7 @@ public class PanelVenta extends javax.swing.JPanel {
             } else {
                 btnAgregar.setEnabled(false);
             }
+            
         });
 
 // Configurar el editor del spinner para capturar Enter
@@ -1921,6 +1923,7 @@ public class PanelVenta extends javax.swing.JPanel {
         dialog.pack();
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
+        
     }
 
     private void cargarVarianteSeleccionada(String codigo) {

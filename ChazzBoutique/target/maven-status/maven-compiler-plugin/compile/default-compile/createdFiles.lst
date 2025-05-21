@@ -1,8 +1,9 @@
 utils\ScrollBar.class
-presentacion\FrmMain$1.class
 presentacion\PanelVenta$1.class
 utils\ImagenPerfil.class
+presentacion\FrmAñadirProducto.class
 utils\SpinnerCellEditor$1.class
+presentacion\FrmInicial.class
 presentacion\FrmRegistro$1.class
 presentacion\PanelVenta$4.class
 utils\ModernScrollBarUI.class

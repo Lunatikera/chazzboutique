@@ -31,10 +31,8 @@ public class ChazzBoutiquePersistencia {
         IConexionBD conexionBD = new ConexionBD();
         IProductoDAO productoDAO = new ProductoDAO(conexionBD);
         
-        Proveedor proveedor = new Proveedor();
-        Categoria categoria = new Categoria();
-        Producto producto = new Producto(100L, "Shorts Cortos", "muy cortos", LocalDate.now(), proveedor, categoria);
+       
 
-        productoDAO.crearProducto(producto);
+       
     }
 }
