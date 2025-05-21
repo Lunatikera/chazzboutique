@@ -10,6 +10,8 @@ utils\ModernScrollBarUI.class
 presentacion\PanelVenta$NumerosDecimalesFilter.class
 presentacion\FrmLogin$2.class
 utils\SpinnerRenderer.class
+presentacion\FrmCategoria$1.class
+presentacion\ButtonEditor.class
 presentacion\PanelVenta$12.class
 presentacion\PanelVenta$15.class
 presentacion\PanelVenta$2.class
@@ -26,6 +28,7 @@ utils\SpinnerCellEditor.class
 presentacion\PanelVenta$11.class
 utils\ColorNameDetector.class
 presentacion\PanelVenta$9.class
+presentacion\FrmCategoria.class
 presentacion\PanelVenta$14.class
 presentacion\FrmRegistro.class
 utils\BotonToggle$1.class
@@ -34,6 +37,7 @@ utils\BotonMenu.class
 presentacion\PanelVenta$10.class
 utils\ModeloTablaVentas.class
 presentacion\PanelVenta$7.class
+presentacion\ButtonRenderer.class
 presentacion\PanelVenta$3.class
 presentacion\PanelVenta$13.class
 utils\BotonToggle.class

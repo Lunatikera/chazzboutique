@@ -1,13 +1,9 @@
 package presentacion;
 
 import com.mycompany.chazzboutiquenegocio.dtos.UsuarioDTO;
-import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProductoNegocio;
-import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IUsuarioNegocio;
-import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVarianteProductoNegocio;
-import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVentaNegocio;
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.*;
+
 import java.awt.Dimension;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import utils.ScrollBar;
@@ -18,20 +14,25 @@ public class FrmMain extends javax.swing.JFrame {
     public IVentaNegocio ventaNegocio;
     public IVarianteProductoNegocio varianteProductoNegocio;
     public IProductoNegocio productoNegocio;
+    public ICategoriaNegocio categoriaNegocio;
     private UsuarioDTO usuarioRegistrado;
 
-    public FrmMain(IUsuarioNegocio usuarioNegocio, IVentaNegocio ventaNegocio, IVarianteProductoNegocio varianteProductoNegocio, IProductoNegocio productoNegocio, UsuarioDTO usuarioRegistrado) {
+    public FrmMain(IUsuarioNegocio usuarioNegocio, IVentaNegocio ventaNegocio,
+                   IVarianteProductoNegocio varianteProductoNegocio, IProductoNegocio productoNegocio,
+                   ICategoriaNegocio categoriaNegocio, UsuarioDTO usuarioRegistrado) {
         initComponents();
         this.setTitle("ChazzBoutique");
         this.setLocationRelativeTo(null);
+
         this.usuarioNegocio = usuarioNegocio;
         this.ventaNegocio = ventaNegocio;
         this.varianteProductoNegocio = varianteProductoNegocio;
         this.productoNegocio = productoNegocio;
+        this.categoriaNegocio = categoriaNegocio;
         this.usuarioRegistrado = usuarioRegistrado;
 
-        // Cargar pantalla de inicio
-        this.pintarPanelPrincipal(new FrmInicial(this));
+        // Cargar pantalla de inicio con acceso a lógica de categorías
+        this.pintarPanelPrincipal(new FrmInicial(this, this.categoriaNegocio));
 
         this.jScrollPane1.setVerticalScrollBar(new ScrollBar());
     }
@@ -57,6 +58,7 @@ public class FrmMain extends javax.swing.JFrame {
         return usuarioRegistrado;
     }
 
+    // COMPONENTES GRÁFICOS
     @SuppressWarnings("unchecked")
     private void initComponents() {
         jPanel3 = new javax.swing.JPanel();
@@ -75,7 +77,6 @@ public class FrmMain extends javax.swing.JFrame {
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/chazzLogoBlack.png")));
 
         jPanel4.setBackground(new java.awt.Color(176, 50, 53));
-
         jPanel7.setBackground(new java.awt.Color(0, 0, 0));
         jPanel7.setPreferredSize(new java.awt.Dimension(277, 55));
 

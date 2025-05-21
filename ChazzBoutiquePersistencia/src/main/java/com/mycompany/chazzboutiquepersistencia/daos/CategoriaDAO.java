@@ -98,17 +98,17 @@ public class CategoriaDAO implements ICategoriaDAO {
             tx.begin();
             Categoria c = em.find(Categoria.class, id);
             if (c != null) {
-                c.setEliminado(true);
-                em.merge(c);
+                em.remove(c); 
             }
             tx.commit();
         } catch (Exception e) {
             if (tx.isActive()) {
                 tx.rollback();
             }
-            throw new PersistenciaException("Error al eliminar la categoría (soft delete)", e);
+            throw new PersistenciaException("Error al eliminar la categoría", e);
         } finally {
             em.close();
         }
     }
+
 }

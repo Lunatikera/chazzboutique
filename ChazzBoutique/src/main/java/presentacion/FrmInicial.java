@@ -1,5 +1,7 @@
 package presentacion;
 
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.ICategoriaNegocio;
+
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -9,9 +11,11 @@ import javax.swing.JPanel;
 public class FrmInicial extends JPanel {
 
     private FrmMain frmMain;
+    private ICategoriaNegocio categoriaNegocio;
 
-    public FrmInicial(FrmMain frmMain) {
+    public FrmInicial(FrmMain frmMain, ICategoriaNegocio categoriaNegocio) {
         this.frmMain = frmMain;
+        this.categoriaNegocio = categoriaNegocio;
         initComponents();
     }
 
@@ -42,15 +46,13 @@ public class FrmInicial extends JPanel {
         });
         add(btnRegistrarProducto);
 
-        // Botón Registrar Categoría (placeholder)
+        // Botón Registrar Categoría
         JButton btnRegistrarCategoria = new JButton("Registrar Categoría");
         btnRegistrarCategoria.setBounds(300, 220, 200, 40);
         btnRegistrarCategoria.setFocusPainted(false);
         btnRegistrarCategoria.addActionListener(e -> {
-            // Aquí podrías llamar a una clase como FrmRegistrarCategoria
-            System.out.println("Registrar Categoría aún no implementado.");
+            frmMain.pintarPanelPrincipal(new FrmCategoria(frmMain, categoriaNegocio));
         });
         add(btnRegistrarCategoria);
     }
 }
-
