@@ -36,7 +36,7 @@ public class FrmProducto extends JPanel {
     private DefaultTableModel tableModel;
 
     public FrmProducto(FrmMain frmMain, IProductoNegocio productoNegocio,
-                       ICategoriaNegocio categoriaNegocio, IProveedorNegocio proveedorNegocio) {
+            ICategoriaNegocio categoriaNegocio, IProveedorNegocio proveedorNegocio) {
         this.frmMain = frmMain;
         this.productoNegocio = productoNegocio;
         this.categoriaNegocio = categoriaNegocio;
@@ -107,8 +107,14 @@ public class FrmProducto extends JPanel {
         btnCancelar.setBounds(380, 280, 100, 30);
         add(btnCancelar);
 
+        JButton btnRegresar = new JButton("Regresar");
+        btnRegresar.setBounds(490, 280, 100, 30);
+        add(btnRegresar);
+
+        btnRegresar.addActionListener(e -> regresarAlInicio());
+
         tableModel = new DefaultTableModel(
-            new Object[]{"ID", "Nombre", "Descripción", "Fecha", "Categoría", "Proveedor"}, 0
+                new Object[]{"ID", "Nombre", "Descripción", "Fecha", "Categoría", "Proveedor"}, 0
         );
         tblProductos = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(tblProductos);
@@ -132,6 +138,13 @@ public class FrmProducto extends JPanel {
                 }
             }
         });
+    }
+
+    private void regresarAlInicio() {
+        frmMain.pintarPanelPrincipal(
+                new FrmInicial(frmMain, categoriaNegocio, productoNegocio, proveedorNegocio)
+        );
+
     }
 
     private void cargarCategorias() {
@@ -191,7 +204,7 @@ public class FrmProducto extends JPanel {
             }
 
             ProductoDTO nuevoProducto = new ProductoDTO(
-                null, nombre, descripcion, fecha, categoria.getId(), proveedor.getId()
+                    null, nombre, descripcion, fecha, categoria.getId(), proveedor.getId()
             );
 
             productoNegocio.crearProducto(nuevoProducto);
@@ -224,7 +237,7 @@ public class FrmProducto extends JPanel {
             }
 
             ProductoDTO productoEditado = new ProductoDTO(
-                id, nombre, descripcion, fecha, categoria.getId(), proveedor.getId()
+                    id, nombre, descripcion, fecha, categoria.getId(), proveedor.getId()
             );
 
             productoNegocio.actualizarProducto(productoEditado);
@@ -244,7 +257,9 @@ public class FrmProducto extends JPanel {
         }
 
         int confirmacion = JOptionPane.showConfirmDialog(this, "¿Estás seguro de eliminar este producto?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (confirmacion != JOptionPane.YES_OPTION) return;
+        if (confirmacion != JOptionPane.YES_OPTION) {
+            return;
+        }
 
         try {
             Long id = (Long) tableModel.getValueAt(filaSeleccionada, 0);
@@ -266,4 +281,3 @@ public class FrmProducto extends JPanel {
         tblProductos.clearSelection();
     }
 }
-
