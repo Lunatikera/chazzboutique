@@ -15,8 +15,8 @@ public class ProveedorDAO implements IProveedorDAO {
     public ProveedorDAO(IConexionBD conexionBD) {
         this.conexionBD = conexionBD;
     }
-@Override
-public Proveedor buscarPorId(Long id) throws PersistenciaException {
+  
+    public Proveedor buscarPorId(Long id) throws PersistenciaException {
     EntityManager em = conexionBD.getEntityManager();
     try {
         return em.find(Proveedor.class, id);

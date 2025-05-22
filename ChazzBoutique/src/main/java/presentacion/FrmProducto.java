@@ -9,6 +9,8 @@ import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProductoNego
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProveedorNegocio;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
@@ -69,7 +71,7 @@ public class FrmProducto extends JPanel {
         add(txtDescripcion);
 
         JLabel lblFechaCreacion = new JLabel("Fecha de Creación:");
-        lblFechaCreacion.setBounds(50, 160, 120, 30);
+        lblFechaCreacion.setBounds(50, 160, 130, 30);
         add(lblFechaCreacion);
         txtFechaCreacion = new JTextField(LocalDate.now().toString());
         txtFechaCreacion.setBounds(180, 160, 270, 30);
@@ -105,18 +107,37 @@ public class FrmProducto extends JPanel {
         btnCancelar.setBounds(380, 280, 100, 30);
         add(btnCancelar);
 
-        tableModel = new DefaultTableModel(new Object[]{"ID", "Nombre", "Descripción", "Fecha", "Categoría", "Proveedor"}, 0);
+        tableModel = new DefaultTableModel(
+            new Object[]{"ID", "Nombre", "Descripción", "Fecha", "Categoría", "Proveedor"}, 0
+        );
         tblProductos = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(tblProductos);
-        scrollPane.setBounds(50, 320, 700, 200);
+        scrollPane.setBounds(50, 330, 900, 300);
         add(scrollPane);
 
-        // Agregar listeners a los botones (implementación omitida por brevedad)
+        // Eventos
+        btnAgregar.addActionListener(e -> agregarProducto());
+        btnEditar.addActionListener(e -> editarProducto());
+        btnEliminar.addActionListener(e -> eliminarProducto());
+        btnCancelar.addActionListener(e -> limpiarCampos());
+
+        // Rellenar campos al seleccionar una fila
+        tblProductos.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent event) {
+                int row = tblProductos.getSelectedRow();
+                if (row != -1) {
+                    txtNombre.setText(tableModel.getValueAt(row, 1).toString());
+                    txtDescripcion.setText(tableModel.getValueAt(row, 2).toString());
+                    txtFechaCreacion.setText(tableModel.getValueAt(row, 3).toString());
+                }
+            }
+        });
     }
 
     private void cargarCategorias() {
         try {
             List<CategoriaDTO> categorias = categoriaNegocio.obtenerCategorias();
+            cmbCategoria.removeAllItems();
             for (CategoriaDTO categoria : categorias) {
                 cmbCategoria.addItem(categoria);
             }
@@ -128,6 +149,7 @@ public class FrmProducto extends JPanel {
     private void cargarProveedores() {
         try {
             List<ProveedorDTO> proveedores = proveedorNegocio.obtenerProveedores();
+            cmbProveedor.removeAllItems();
             for (ProveedorDTO proveedor : proveedores) {
                 cmbProveedor.addItem(proveedor);
             }
@@ -142,17 +164,106 @@ public class FrmProducto extends JPanel {
             tableModel.setRowCount(0);
             for (ProductoDTO producto : productos) {
                 tableModel.addRow(new Object[]{
-                        producto.getId(),
-                        producto.getNombreProducto(),
-                        producto.getDescripcionProducto(),
-                        producto.getFechaCreacion(),
-                        producto.getCategoriaId(),
-                        producto.getProveedorId()
+                    producto.getId(),
+                    producto.getNombreProducto(),
+                    producto.getDescripcionProducto(),
+                    producto.getFechaCreacion(),
+                    producto.getCategoriaId(),
+                    producto.getProveedorId()
                 });
             }
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "Error al cargar productos: " + e.getMessage());
         }
+    }
+
+    private void agregarProducto() {
+        try {
+            String nombre = txtNombre.getText().trim();
+            String descripcion = txtDescripcion.getText().trim();
+            LocalDate fecha = LocalDate.parse(txtFechaCreacion.getText().trim());
+            CategoriaDTO categoria = (CategoriaDTO) cmbCategoria.getSelectedItem();
+            ProveedorDTO proveedor = (ProveedorDTO) cmbProveedor.getSelectedItem();
+
+            if (nombre.isEmpty() || categoria == null || proveedor == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, llena todos los campos obligatorios.");
+                return;
+            }
+
+            ProductoDTO nuevoProducto = new ProductoDTO(
+                null, nombre, descripcion, fecha, categoria.getId(), proveedor.getId()
+            );
+
+            productoNegocio.crearProducto(nuevoProducto);
+            JOptionPane.showMessageDialog(this, "Producto agregado correctamente.");
+            limpiarCampos();
+            cargarProductos();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al agregar producto: " + e.getMessage());
+        }
+    }
+
+    private void editarProducto() {
+        int filaSeleccionada = tblProductos.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un producto para editar.");
+            return;
+        }
+
+        try {
+            Long id = (Long) tableModel.getValueAt(filaSeleccionada, 0);
+            String nombre = txtNombre.getText().trim();
+            String descripcion = txtDescripcion.getText().trim();
+            LocalDate fecha = LocalDate.parse(txtFechaCreacion.getText().trim());
+            CategoriaDTO categoria = (CategoriaDTO) cmbCategoria.getSelectedItem();
+            ProveedorDTO proveedor = (ProveedorDTO) cmbProveedor.getSelectedItem();
+
+            if (nombre.isEmpty() || categoria == null || proveedor == null) {
+                JOptionPane.showMessageDialog(this, "Completa todos los campos antes de editar.");
+                return;
+            }
+
+            ProductoDTO productoEditado = new ProductoDTO(
+                id, nombre, descripcion, fecha, categoria.getId(), proveedor.getId()
+            );
+
+            productoNegocio.actualizarProducto(productoEditado);
+            JOptionPane.showMessageDialog(this, "Producto actualizado correctamente.");
+            limpiarCampos();
+            cargarProductos();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al editar producto: " + e.getMessage());
+        }
+    }
+
+    private void eliminarProducto() {
+        int filaSeleccionada = tblProductos.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un producto para eliminar.");
+            return;
+        }
+
+        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Estás seguro de eliminar este producto?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (confirmacion != JOptionPane.YES_OPTION) return;
+
+        try {
+            Long id = (Long) tableModel.getValueAt(filaSeleccionada, 0);
+            productoNegocio.eliminarProducto(id);
+            JOptionPane.showMessageDialog(this, "Producto eliminado correctamente.");
+            limpiarCampos();
+            cargarProductos();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al eliminar producto: " + e.getMessage());
+        }
+    }
+
+    private void limpiarCampos() {
+        txtNombre.setText("");
+        txtDescripcion.setText("");
+        txtFechaCreacion.setText(LocalDate.now().toString());
+        cmbCategoria.setSelectedIndex(0);
+        cmbProveedor.setSelectedIndex(0);
+        tblProductos.clearSelection();
     }
 }
 

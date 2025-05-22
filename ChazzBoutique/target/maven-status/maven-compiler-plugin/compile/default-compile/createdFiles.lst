@@ -32,6 +32,7 @@ presentacion\PanelVenta$14.class
 presentacion\FrmRegistro.class
 presentacion\FrmProducto.class
 utils\BotonToggle$1.class
+presentacion\FrmProducto$1.class
 presentacion\FrmMain.class
 utils\BotonMenu.class
 presentacion\PanelVenta$10.class

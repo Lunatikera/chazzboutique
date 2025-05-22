@@ -14,9 +14,15 @@ import java.util.List;
  */
 public interface IProductoNegocio {
 
-    public ProductoDTO buscarPorId(Long id) throws NegocioException;
+    ProductoDTO buscarPorId(Long id) throws NegocioException;
 
-    public List<ProductoDTO> buscarPorNombre(String nombre) throws NegocioException;
-    public List<ProductoDTO> obtenerTodosProductos() throws NegocioException ;
+    List<ProductoDTO> buscarPorNombre(String nombre) throws NegocioException;
 
+    List<ProductoDTO> obtenerTodosProductos() throws NegocioException;
+
+    void crearProducto(ProductoDTO productoDTO) throws NegocioException;
+
+    void actualizarProducto(ProductoDTO productoDTO) throws NegocioException;
+
+    void eliminarProducto(Long id) throws NegocioException;
 }

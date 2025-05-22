@@ -121,4 +121,12 @@ public class Producto implements Serializable {
         this.variantes = variantes;
     }
 
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
 }

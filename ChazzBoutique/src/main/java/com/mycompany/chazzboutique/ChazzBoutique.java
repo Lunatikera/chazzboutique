@@ -32,7 +32,7 @@ public class ChazzBoutique {
         IUsuarioNegocio usuarioNegocio = new UsuarioNegocio(usuarioDAO);
         IVentaNegocio ventaNegocio = new VentaNegocio(ventaDAO, detalleVentaDAO, varianteProductoDAO, usuarioDAO);
         IVarianteProductoNegocio varianteProductoNegocio = new VarianteProductoNegocio(varianteProductoDAO);
-        IProductoNegocio productoNegocio = new ProductoNegocio(productoDAO);
+       IProductoNegocio productoNegocio = new ProductoNegocio(productoDAO, categoriaDAO,proveedorDAO);
         ICategoriaNegocio categoriaNegocio = new CategoriaNegocio(categoriaDAO);
         IProveedorNegocio proveedorNegocio = new ProveedorNegocio(proveedorDAO); 
 
