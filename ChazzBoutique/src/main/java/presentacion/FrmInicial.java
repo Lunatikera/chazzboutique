@@ -1,6 +1,8 @@
 package presentacion;
 
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.ICategoriaNegocio;
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProductoNegocio;
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProveedorNegocio;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -12,10 +14,17 @@ public class FrmInicial extends JPanel {
 
     private FrmMain frmMain;
     private ICategoriaNegocio categoriaNegocio;
+    private IProductoNegocio productoNegocio;
+    private IProveedorNegocio proveedorNegocio;
 
-    public FrmInicial(FrmMain frmMain, ICategoriaNegocio categoriaNegocio) {
+    public FrmInicial(FrmMain frmMain,
+                      ICategoriaNegocio categoriaNegocio,
+                      IProductoNegocio productoNegocio,
+                      IProveedorNegocio proveedorNegocio) {
         this.frmMain = frmMain;
         this.categoriaNegocio = categoriaNegocio;
+        this.productoNegocio = productoNegocio;
+        this.proveedorNegocio = proveedorNegocio;
         initComponents();
     }
 
@@ -42,7 +51,7 @@ public class FrmInicial extends JPanel {
         btnRegistrarProducto.setBounds(300, 160, 200, 40);
         btnRegistrarProducto.setFocusPainted(false);
         btnRegistrarProducto.addActionListener(e -> {
-            frmMain.pintarPanelPrincipal(new FrmAñadirProducto());
+            frmMain.pintarPanelPrincipal(new FrmProducto(frmMain, productoNegocio, categoriaNegocio, proveedorNegocio));
         });
         add(btnRegistrarProducto);
 
@@ -51,7 +60,7 @@ public class FrmInicial extends JPanel {
         btnRegistrarCategoria.setBounds(300, 220, 200, 40);
         btnRegistrarCategoria.setFocusPainted(false);
         btnRegistrarCategoria.addActionListener(e -> {
-            frmMain.pintarPanelPrincipal(new FrmCategoria(frmMain, categoriaNegocio));
+            frmMain.pintarPanelPrincipal(new FrmCategoria(frmMain, categoriaNegocio, productoNegocio, proveedorNegocio));
         });
         add(btnRegistrarCategoria);
     }

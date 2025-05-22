@@ -1,23 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.chazzboutiquenegocio.dtos;
 
 import java.time.LocalDate;
 
-/**
- *
- * @author carli
- */
 public class ProductoDTO {
-   private Long id;
+
+    private Long id;
     private String nombreProducto;
     private String descripcionProducto;
     private LocalDate fechaCreacion;
-  
 
-    // Constructores
+    private Long categoriaId;     
+    private Long proveedorId;    
     public ProductoDTO() {
     }
 
@@ -27,6 +20,17 @@ public class ProductoDTO {
         this.descripcionProducto = descripcionProducto;
         this.fechaCreacion = fechaCreacion;
     }
+
+    public ProductoDTO(Long id, String nombreProducto, String descripcionProducto, LocalDate fechaCreacion, Long categoriaId, Long proveedorId) {
+        this.id = id;
+        this.nombreProducto = nombreProducto;
+        this.descripcionProducto = descripcionProducto;
+        this.fechaCreacion = fechaCreacion;
+        this.categoriaId = categoriaId;
+        this.proveedorId = proveedorId;
+    }
+
+    // Getters y Setters
 
     public Long getId() {
         return id;
@@ -60,5 +64,19 @@ public class ProductoDTO {
         this.fechaCreacion = fechaCreacion;
     }
 
-    
+    public Long getCategoriaId() {
+        return categoriaId;
+    }
+
+    public void setCategoriaId(Long categoriaId) {
+        this.categoriaId = categoriaId;
+    }
+
+    public Long getProveedorId() {
+        return proveedorId;
+    }
+
+    public void setProveedorId(Long proveedorId) {
+        this.proveedorId = proveedorId;
+    }
 }

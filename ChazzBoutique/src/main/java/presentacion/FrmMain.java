@@ -15,11 +15,13 @@ public class FrmMain extends javax.swing.JFrame {
     public IVarianteProductoNegocio varianteProductoNegocio;
     public IProductoNegocio productoNegocio;
     public ICategoriaNegocio categoriaNegocio;
+    public IProveedorNegocio proveedorNegocio;
     private UsuarioDTO usuarioRegistrado;
 
     public FrmMain(IUsuarioNegocio usuarioNegocio, IVentaNegocio ventaNegocio,
-                   IVarianteProductoNegocio varianteProductoNegocio, IProductoNegocio productoNegocio,
-                   ICategoriaNegocio categoriaNegocio, UsuarioDTO usuarioRegistrado) {
+                   IVarianteProductoNegocio varianteProductoNegocio,
+                   IProductoNegocio productoNegocio, ICategoriaNegocio categoriaNegocio,
+                   IProveedorNegocio proveedorNegocio, UsuarioDTO usuarioRegistrado) {
         initComponents();
         this.setTitle("ChazzBoutique");
         this.setLocationRelativeTo(null);
@@ -29,19 +31,15 @@ public class FrmMain extends javax.swing.JFrame {
         this.varianteProductoNegocio = varianteProductoNegocio;
         this.productoNegocio = productoNegocio;
         this.categoriaNegocio = categoriaNegocio;
+        this.proveedorNegocio = proveedorNegocio;
         this.usuarioRegistrado = usuarioRegistrado;
 
-        // Cargar pantalla de inicio con acceso a lógica de categorías
-        this.pintarPanelPrincipal(new FrmInicial(this, this.categoriaNegocio));
-
-        this.jScrollPane1.setVerticalScrollBar(new ScrollBar());
+        this.pintarPanelPrincipal(new FrmInicial(this, categoriaNegocio, productoNegocio, proveedorNegocio));
     }
 
     public void pintarPanelPrincipal(JPanel panel) {
         jScrollPane1.setViewportView(panel);
         panel.setPreferredSize(new Dimension(0, panel.getPreferredSize().height));
-        jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         jScrollPane1.revalidate();
         jScrollPane1.repaint();
     }

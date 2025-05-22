@@ -25,19 +25,30 @@ public class ChazzBoutique {
         IVarianteProductoDAO varianteProductoDAO = new VarianteProductoDAO(conexionBD);
         IProductoDAO productoDAO = new ProductoDAO(conexionBD);
         IDetalleVentaDAO detalleVentaDAO = new DetalleVentaDAO(conexionBD);
-        ICategoriaDAO categoriaDAO = new CategoriaDAO(conexionBD); // NUEVO
+        ICategoriaDAO categoriaDAO = new CategoriaDAO(conexionBD);
+        IProveedorDAO proveedorDAO = new ProveedorDAO(conexionBD); // ✅ NUEVO
 
         // Negocios
         IUsuarioNegocio usuarioNegocio = new UsuarioNegocio(usuarioDAO);
         IVentaNegocio ventaNegocio = new VentaNegocio(ventaDAO, detalleVentaDAO, varianteProductoDAO, usuarioDAO);
         IVarianteProductoNegocio varianteProductoNegocio = new VarianteProductoNegocio(varianteProductoDAO);
         IProductoNegocio productoNegocio = new ProductoNegocio(productoDAO);
-        ICategoriaNegocio categoriaNegocio = new CategoriaNegocio(categoriaDAO); // NUEVO
+        ICategoriaNegocio categoriaNegocio = new CategoriaNegocio(categoriaDAO);
+        IProveedorNegocio proveedorNegocio = new ProveedorNegocio(proveedorDAO); 
 
         try {
             UsuarioDTO usuarioRegistrado = usuarioNegocio.iniciarSesion(new InicioSesionDTO("Yalam", "12345"));
-            FrmMain frmMain = new FrmMain(usuarioNegocio, ventaNegocio, varianteProductoNegocio,
-                    productoNegocio, categoriaNegocio, usuarioRegistrado); 
+
+            FrmMain frmMain = new FrmMain(
+                    usuarioNegocio,
+                    ventaNegocio,
+                    varianteProductoNegocio,
+                    productoNegocio,
+                    categoriaNegocio,
+                    proveedorNegocio, 
+                    usuarioRegistrado
+            );
+
             frmMain.setVisible(true);
         } catch (NegocioException ex) {
             Logger.getLogger(ChazzBoutique.class.getName()).log(Level.SEVERE, null, ex);

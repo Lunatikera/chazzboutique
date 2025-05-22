@@ -1,7 +1,6 @@
 utils\ScrollBar.class
 presentacion\PanelVenta$1.class
 utils\ImagenPerfil.class
-presentacion\FrmAñadirProducto.class
 utils\SpinnerCellEditor$1.class
 presentacion\FrmInicial.class
 presentacion\FrmRegistro$1.class
@@ -31,6 +30,7 @@ presentacion\PanelVenta$9.class
 presentacion\FrmCategoria.class
 presentacion\PanelVenta$14.class
 presentacion\FrmRegistro.class
+presentacion\FrmProducto.class
 utils\BotonToggle$1.class
 presentacion\FrmMain.class
 utils\BotonMenu.class

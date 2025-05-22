@@ -3,6 +3,8 @@ package presentacion;
 import com.mycompany.chazzboutiquenegocio.dtos.CategoriaDTO;
 import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.ICategoriaNegocio;
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProductoNegocio;
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProveedorNegocio;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,6 +15,8 @@ public class FrmCategoria extends JPanel {
 
     private FrmMain frmMain;
     private ICategoriaNegocio categoriaNegocio;
+    private IProductoNegocio productoNegocio;
+    private IProveedorNegocio proveedorNegocio;
 
     private JTextField txtNombre;
     private JTextField txtDescripcion;
@@ -24,9 +28,12 @@ public class FrmCategoria extends JPanel {
 
     private CategoriaDTO categoriaSeleccionada;
 
-    public FrmCategoria(FrmMain frmMain, ICategoriaNegocio categoriaNegocio) {
+    public FrmCategoria(FrmMain frmMain, ICategoriaNegocio categoriaNegocio,
+                        IProductoNegocio productoNegocio, IProveedorNegocio proveedorNegocio) {
         this.frmMain = frmMain;
         this.categoriaNegocio = categoriaNegocio;
+        this.productoNegocio = productoNegocio;
+        this.proveedorNegocio = proveedorNegocio;
         initComponents();
         cargarCategorias();
     }
@@ -69,15 +76,13 @@ public class FrmCategoria extends JPanel {
 
         btnCancelar = new JButton("Regresar");
         btnCancelar.setBounds(310, 210, 140, 35);
-        add(btnCancelar);
-
         btnCancelar.addActionListener(e -> {
-            frmMain.pintarPanelPrincipal(new FrmInicial(frmMain, categoriaNegocio));
+            frmMain.pintarPanelPrincipal(new FrmInicial(frmMain, categoriaNegocio, productoNegocio, proveedorNegocio));
         });
+        add(btnCancelar);
 
         btnConfirmar.addActionListener(e -> guardarCategoria());
 
-        // Tabla
         tableModel = new DefaultTableModel(new Object[]{"ID", "Nombre", "Descripción", "Imagen", "Editar", "Eliminar"}, 0) {
             public boolean isCellEditable(int row, int column) {
                 return column == 4 || column == 5;
@@ -173,7 +178,7 @@ public class FrmCategoria extends JPanel {
                 categoriaNegocio.eliminarCategoria(id);
                 cargarCategorias();
             } catch (NegocioException e) {
-                JOptionPane.showMessageDialog(this, "Error al eliminar categoría.");
+                JOptionPane.showMessageDialog(this, "No se puede eliminar la categoría: elimine primero los productos relacionados.");
             }
         }
     }
