@@ -1,19 +1,210 @@
 package presentacion;
 
+import com.mycompany.chazzboutiquenegocio.dtos.CategoriaDTO;
+import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
 import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import utils.ButtonEditor;
+import utils.ButtonRenderer;
 
 /**
  *
- * @author 
+ * @author
  */
 public class PnlAnadirCategoria extends javax.swing.JPanel {
 
-    /**
-     * Creates new form PnlAnadirProducto
-     */
-    public PnlAnadirCategoria() {
+    private FrmPrincipal frmPrincipal;
+    private DefaultTableModel tableModel;
+    private CategoriaDTO categoriaSeleccionada;
+    private String imagen;
+
+    public PnlAnadirCategoria(FrmPrincipal frmPrincipal) {
         initComponents();
+        this.frmPrincipal = frmPrincipal;
         this.setSize(new Dimension(1701, 1080));
+
+        lblImagen.setPreferredSize(new Dimension(480, 600));
+
+        tableModel = new DefaultTableModel(new Object[]{"ID", "Nombre", "Descripción", "Imagen", "Editar", "Eliminar"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column == 4 || column == 5;
+            }
+        };
+        tblCategorias.setModel(tableModel);
+
+        tblCategorias.getColumn("Editar").setCellRenderer(new ButtonRenderer("Editar"));
+        tblCategorias.getColumn("Eliminar").setCellRenderer(new ButtonRenderer("Eliminar"));
+        tblCategorias.getColumn("Editar").setCellEditor(new ButtonEditor(new JCheckBox(), "Editar", this::editarCategoria));
+        tblCategorias.getColumn("Eliminar").setCellEditor(new ButtonEditor(new JCheckBox(), "Eliminar", this::eliminarCategoria));
+        cargarCategorias();
+    }
+
+    private void guardarCategoria() {
+        String nombre = txtNombreCategoria.getText().trim();
+        String descripcion = txtDescripcion.getText().trim();
+        String imagen = this.imagen != null ? this.imagen : " ";
+
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nombre es obligatorio.");
+            return;
+        }
+
+        try {
+            if (categoriaSeleccionada == null) {
+                CategoriaDTO dto = new CategoriaDTO(null, nombre, descripcion, imagen);
+                frmPrincipal.categoriaNegocio.crearCategoria(dto);
+                JOptionPane.showMessageDialog(this, "Categoría registrada.");
+            } else {
+                categoriaSeleccionada.setNombreCategoria(nombre);
+                categoriaSeleccionada.setDescripcionCategoria(descripcion);
+                categoriaSeleccionada.setImagenCategoria(imagen);
+                frmPrincipal.categoriaNegocio.actualizarCategoria(categoriaSeleccionada);
+                JOptionPane.showMessageDialog(this, "Categoría actualizada.");
+                categoriaSeleccionada = null;
+            }
+
+            limpiarFormulario();
+            cargarCategorias();
+
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+    }
+
+    private void seleccionarImagen() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Seleccionar Imagen");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Imágenes", "jpg", "jpeg", "png", "gif"));
+
+        int resultado = fileChooser.showOpenDialog(this);
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            File imagenSeleccionada = fileChooser.getSelectedFile();
+
+            try {
+
+                String nombreArchivo = imagenSeleccionada.getName();
+                File carpetaDestino = new File("src/main/resources/categorias/");
+                if (!carpetaDestino.exists()) {
+                    carpetaDestino.mkdirs();
+                }
+
+                File destino = new File(carpetaDestino, nombreArchivo);
+                Files.copy(imagenSeleccionada.toPath(), destino.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                imagen = "/categorias/" + nombreArchivo;
+                ImageIcon icon = new ImageIcon(destino.getAbsolutePath());
+                Image img = icon.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_SMOOTH);
+                lblImagen.setIcon(new ImageIcon(img));
+                lblImagen.setText("");
+
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Error al copiar la imagen: " + e.getMessage());
+            }
+        }
+    }
+
+    private void cargarCategorias() {
+        tableModel.setRowCount(0);
+        try {
+            List<CategoriaDTO> categorias = frmPrincipal.categoriaNegocio.obtenerCategorias();
+            for (CategoriaDTO cat : categorias) {
+                tableModel.addRow(new Object[]{
+                    cat.getId(),
+                    cat.getNombreCategoria(),
+                    cat.getDescripcionCategoria(),
+                    cat.getImagenCategoria(),
+                    "Editar",
+                    "Eliminar"
+                });
+            }
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar categorías.");
+        }
+    }
+
+    private void editarCategoria(int row) {
+        Long id = (Long) tableModel.getValueAt(row, 0);
+        try {
+            for (CategoriaDTO cat : frmPrincipal.categoriaNegocio.obtenerCategorias()) {
+                if (cat.getId().equals(id)) {
+                    this.categoriaSeleccionada = cat;
+                    txtNombreCategoria.setText(cat.getNombreCategoria());
+                    txtDescripcion.setText(cat.getDescripcionCategoria());
+
+                    String ruta = cat.getImagenCategoria();
+                    if (ruta != null && !ruta.isEmpty()) {
+                        this.imagen = ruta;
+
+                        if (lblImagen.getWidth() > 0 && lblImagen.getHeight() > 0) {
+                            cargarImagenEnLabel(ruta);
+                        } else {
+                            lblImagen.addComponentListener(new ComponentAdapter() {
+                                @Override
+                                public void componentResized(ComponentEvent e) {
+                                    cargarImagenEnLabel(ruta);
+                                    lblImagen.removeComponentListener(this);
+                                }
+                            });
+                        }
+                    } else {
+                        lblImagen.setIcon(null);
+                        lblImagen.setText("");
+                        this.imagen = null;
+                    }
+                    break;
+                }
+            }
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar categoría.");
+        }
+    }
+
+    private void cargarImagenEnLabel(String rutaRelativa) {
+        File file = new File("src/main/resources" + rutaRelativa);
+        if (file.exists()) {
+            ImageIcon icon = new ImageIcon(file.getAbsolutePath());
+            Image img = icon.getImage().getScaledInstance(480, 600, Image.SCALE_SMOOTH);
+            lblImagen.setIcon(new ImageIcon(img));
+            lblImagen.setText("");
+        } else {
+            lblImagen.setIcon(null);
+            lblImagen.setText("Imagen no encontrada");
+        }
+    }
+
+    private void eliminarCategoria(int row) {
+        Long id = (Long) tableModel.getValueAt(row, 0);
+        int confirm = JOptionPane.showConfirmDialog(this, "¿Eliminar esta categoría?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                frmPrincipal.categoriaNegocio.eliminarCategoria(id);
+                cargarCategorias();
+            } catch (NegocioException e) {
+                JOptionPane.showMessageDialog(this, "No se puede eliminar la categoría: elimine primero los productos relacionados.");
+            }
+        }
+    }
+
+    private void limpiarFormulario() {
+        txtNombreCategoria.setText("");
+        txtDescripcion.setText("");
+        lblImagen.setText("");
     }
 
     /**
@@ -28,7 +219,7 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblCategorias = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtDescripcion = new javax.swing.JTextArea();
@@ -51,9 +242,9 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(606, Short.MAX_VALUE)
+                .addContainerGap(599, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(584, 584, 584))
+                .addGap(591, 591, 591))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -69,18 +260,26 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblCategorias.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "Nombre", "Descripción", "Imagen", "Editar", "Eliminar"
             }
-        ));
-        jScrollPane2.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tblCategorias);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel4.setText("Descripción:");
@@ -100,6 +299,11 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
         btnConfirmar.setForeground(new java.awt.Color(255, 255, 255));
         btnConfirmar.setText("Confirmar");
         btnConfirmar.setBorder(null);
+        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -150,6 +354,11 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
         btnAgregarImagen.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregarImagen.setText("Agregar Imagen");
         btnAgregarImagen.setBorder(null);
+        btnAgregarImagen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarImagenActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -184,6 +393,14 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
         add(jPanel2, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
+        guardarCategoria();
+    }//GEN-LAST:event_btnConfirmarActionPerformed
+
+    private void btnAgregarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarImagenActionPerformed
+        seleccionarImagen();
+    }//GEN-LAST:event_btnAgregarImagenActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarImagen;
@@ -196,8 +413,8 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblImagen;
+    private javax.swing.JTable tblCategorias;
     private javax.swing.JTextArea txtDescripcion;
     private javax.swing.JTextField txtNombreCategoria;
     // End of variables declaration//GEN-END:variables

@@ -4,13 +4,12 @@ import java.awt.Dimension;
 
 /**
  *
- * @author 
+ * @author
  */
 public class PnlAnadirProducto extends javax.swing.JPanel {
 
-    /**
-     * Creates new form PnlAnadirProducto
-     */
+    private FrmPrincipal frmPrincipal;
+
     public PnlAnadirProducto() {
         initComponents();
         this.setSize(new Dimension(1701, 1080));
@@ -38,7 +37,7 @@ public class PnlAnadirProducto extends javax.swing.JPanel {
         cbxCategoria = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblProductos = new javax.swing.JTable();
 
         setPreferredSize(new java.awt.Dimension(1701, 1080));
         setLayout(new java.awt.BorderLayout());
@@ -100,7 +99,7 @@ public class PnlAnadirProducto extends javax.swing.JPanel {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -111,7 +110,7 @@ public class PnlAnadirProducto extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(tblProductos);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -201,7 +200,7 @@ public class PnlAnadirProducto extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblProductos;
     private javax.swing.JTextArea txtDescripcion;
     private javax.swing.JTextField txtNombreProducto;
     // End of variables declaration//GEN-END:variables
