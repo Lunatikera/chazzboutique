@@ -26,19 +26,21 @@ public class ChazzBoutique {
         IProductoDAO productoDAO = new ProductoDAO(conexionBD);
         IDetalleVentaDAO detalleVentaDAO = new DetalleVentaDAO(conexionBD);
         ICategoriaDAO categoriaDAO = new CategoriaDAO(conexionBD);
-        IProveedorDAO proveedorDAO = new ProveedorDAO(conexionBD); // ✅ NUEVO
+        IProveedorDAO proveedorDAO = new ProveedorDAO(conexionBD); 
 
         // Negocios
         IUsuarioNegocio usuarioNegocio = new UsuarioNegocio(usuarioDAO);
         IVentaNegocio ventaNegocio = new VentaNegocio(ventaDAO, detalleVentaDAO, varianteProductoDAO, usuarioDAO);
-        IVarianteProductoNegocio varianteProductoNegocio = new VarianteProductoNegocio(varianteProductoDAO);
-       IProductoNegocio productoNegocio = new ProductoNegocio(productoDAO, categoriaDAO,proveedorDAO);
+        IVarianteProductoNegocio varianteProductoNegocio = new VarianteProductoNegocio(varianteProductoDAO, productoDAO);
+        IProductoNegocio productoNegocio = new ProductoNegocio(productoDAO, categoriaDAO, proveedorDAO);
         ICategoriaNegocio categoriaNegocio = new CategoriaNegocio(categoriaDAO);
         IProveedorNegocio proveedorNegocio = new ProveedorNegocio(proveedorDAO); 
 
         try {
+           
             UsuarioDTO usuarioRegistrado = usuarioNegocio.iniciarSesion(new InicioSesionDTO("Yalam", "12345"));
 
+            // Creación de ventana principal
             FrmMain frmMain = new FrmMain(
                     usuarioNegocio,
                     ventaNegocio,
@@ -51,7 +53,8 @@ public class ChazzBoutique {
 
             frmMain.setVisible(true);
         } catch (NegocioException ex) {
-            Logger.getLogger(ChazzBoutique.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ChazzBoutique.class.getName()).log(Level.SEVERE, "Error al iniciar sesión", ex);
+            System.out.println("Error al iniciar sesión: " + ex.getMessage());
         }
     }
 }

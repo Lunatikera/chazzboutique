@@ -7,6 +7,7 @@ import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.ICategoriaNegocio;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProductoNegocio;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProveedorNegocio;
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVarianteProductoNegocio;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -34,7 +35,7 @@ public class FrmProducto extends JPanel {
     private JButton btnCancelar;
     private JTable tblProductos;
     private DefaultTableModel tableModel;
-
+private IVarianteProductoNegocio varianteProductoNegocio;
     public FrmProducto(FrmMain frmMain, IProductoNegocio productoNegocio,
             ICategoriaNegocio categoriaNegocio, IProveedorNegocio proveedorNegocio) {
         this.frmMain = frmMain;
@@ -142,7 +143,7 @@ public class FrmProducto extends JPanel {
 
     private void regresarAlInicio() {
         frmMain.pintarPanelPrincipal(
-                new FrmInicial(frmMain, categoriaNegocio, productoNegocio, proveedorNegocio)
+                new FrmInicial(frmMain, categoriaNegocio, productoNegocio, proveedorNegocio,varianteProductoNegocio)
         );
 
     }

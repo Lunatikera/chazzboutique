@@ -19,9 +19,9 @@ public class FrmMain extends javax.swing.JFrame {
     private UsuarioDTO usuarioRegistrado;
 
     public FrmMain(IUsuarioNegocio usuarioNegocio, IVentaNegocio ventaNegocio,
-                   IVarianteProductoNegocio varianteProductoNegocio,
-                   IProductoNegocio productoNegocio, ICategoriaNegocio categoriaNegocio,
-                   IProveedorNegocio proveedorNegocio, UsuarioDTO usuarioRegistrado) {
+            IVarianteProductoNegocio varianteProductoNegocio,
+            IProductoNegocio productoNegocio, ICategoriaNegocio categoriaNegocio,
+            IProveedorNegocio proveedorNegocio, UsuarioDTO usuarioRegistrado) {
         initComponents();
         this.setTitle("ChazzBoutique");
         this.setLocationRelativeTo(null);
@@ -34,7 +34,7 @@ public class FrmMain extends javax.swing.JFrame {
         this.proveedorNegocio = proveedorNegocio;
         this.usuarioRegistrado = usuarioRegistrado;
 
-        this.pintarPanelPrincipal(new FrmInicial(this, categoriaNegocio, productoNegocio, proveedorNegocio));
+        this.pintarPanelPrincipal(new FrmInicial(this, categoriaNegocio, productoNegocio, proveedorNegocio, varianteProductoNegocio));
     }
 
     public void pintarPanelPrincipal(JPanel panel) {
@@ -88,22 +88,22 @@ public class FrmMain extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE))
-                .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addContainerGap())
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jLabel1)
-                    .addGap(31, 31, 31)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 809, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(72, Short.MAX_VALUE))
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel1)
+                                .addGap(31, 31, 31)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 809, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(72, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.LINE_START);

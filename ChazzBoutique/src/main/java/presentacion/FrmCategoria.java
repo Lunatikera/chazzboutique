@@ -5,6 +5,7 @@ import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.ICategoriaNegocio;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProductoNegocio;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProveedorNegocio;
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVarianteProductoNegocio;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -17,7 +18,7 @@ public class FrmCategoria extends JPanel {
     private ICategoriaNegocio categoriaNegocio;
     private IProductoNegocio productoNegocio;
     private IProveedorNegocio proveedorNegocio;
-
+    private IVarianteProductoNegocio varianteProductoNegocio;
     private JTextField txtNombre;
     private JTextField txtDescripcion;
     private JTextField txtImagen;
@@ -29,7 +30,7 @@ public class FrmCategoria extends JPanel {
     private CategoriaDTO categoriaSeleccionada;
 
     public FrmCategoria(FrmMain frmMain, ICategoriaNegocio categoriaNegocio,
-                        IProductoNegocio productoNegocio, IProveedorNegocio proveedorNegocio) {
+            IProductoNegocio productoNegocio, IProveedorNegocio proveedorNegocio) {
         this.frmMain = frmMain;
         this.categoriaNegocio = categoriaNegocio;
         this.productoNegocio = productoNegocio;
@@ -77,7 +78,7 @@ public class FrmCategoria extends JPanel {
         btnCancelar = new JButton("Regresar");
         btnCancelar.setBounds(310, 210, 140, 35);
         btnCancelar.addActionListener(e -> {
-            frmMain.pintarPanelPrincipal(new FrmInicial(frmMain, categoriaNegocio, productoNegocio, proveedorNegocio));
+            frmMain.pintarPanelPrincipal(new FrmInicial(frmMain, categoriaNegocio, productoNegocio, proveedorNegocio, varianteProductoNegocio));
         });
         add(btnCancelar);
 
@@ -140,12 +141,12 @@ public class FrmCategoria extends JPanel {
             List<CategoriaDTO> categorias = categoriaNegocio.obtenerCategorias();
             for (CategoriaDTO cat : categorias) {
                 tableModel.addRow(new Object[]{
-                        cat.getId(),
-                        cat.getNombreCategoria(),
-                        cat.getDescripcionCategoria(),
-                        cat.getImagenCategoria(),
-                        "Editar",
-                        "Eliminar"
+                    cat.getId(),
+                    cat.getNombreCategoria(),
+                    cat.getDescripcionCategoria(),
+                    cat.getImagenCategoria(),
+                    "Editar",
+                    "Eliminar"
                 });
             }
         } catch (NegocioException e) {
