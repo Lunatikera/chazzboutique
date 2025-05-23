@@ -18,4 +18,9 @@ public interface IVarianteProductoNegocio {
     void actualizarVariante(VarianteProductoDTO dto) throws NegocioException;
 
     void eliminarVariante(Long id) throws NegocioException;
+
+    public List<VarianteProductoDTO> buscarVariantesPorNombreProducto(String terminoBusqueda, int pagina, int tamanoPagina) throws NegocioException;
+
+    public long contarVariantesPorNombreProducto(String terminoBusqueda) throws NegocioException;
+
 }

@@ -13,6 +13,7 @@ import presentacion.FrmMain;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import presentacion.FrmPrincipal;
 
 public class ChazzBoutique {
 
@@ -41,7 +42,7 @@ public class ChazzBoutique {
             UsuarioDTO usuarioRegistrado = usuarioNegocio.iniciarSesion(new InicioSesionDTO("Yalam", "12345"));
 
             // Creación de ventana principal
-            FrmMain frmMain = new FrmMain(
+            FrmPrincipal frmMain = new FrmPrincipal(
                     usuarioNegocio,
                     ventaNegocio,
                     varianteProductoNegocio,

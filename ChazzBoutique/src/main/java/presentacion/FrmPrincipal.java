@@ -44,7 +44,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         this.proveedorNegocio = proveedorNegocio;
         this.usuarioRegistrado = usuarioRegistrado;
 
-        this.pintarPanelPrincipal(new PanelVenta(this));
+        this.pintarPanelPrincipal(new PanelHome(this));
     }
 
     public void pintarPanelPrincipal(JPanel panel) {
@@ -271,6 +271,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jPanel1.getAccessibleContext().setAccessibleName("2");
 
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(1701, 1078));
         jPanel2.add(jScrollPane1);
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
