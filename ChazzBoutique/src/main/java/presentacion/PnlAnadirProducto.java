@@ -4,13 +4,12 @@ import java.awt.Dimension;
 
 /**
  *
- * @author 
+ * @author
  */
 public class PnlAnadirProducto extends javax.swing.JPanel {
 
-    /**
-     * Creates new form PnlAnadirProducto
-     */
+    private FrmPrincipal frmPrincipal;
+
     public PnlAnadirProducto() {
         initComponents();
         this.setSize(new Dimension(1701, 1080));
