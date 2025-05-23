@@ -186,7 +186,6 @@ public class PanelEscogerAnadir extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonElegirAnadirProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonElegirAnadirProductoActionPerformed
-        frmPrincipal.pintarPanelPrincipal(new PnlAnadirProducto());
     }//GEN-LAST:event_jButtonElegirAnadirProductoActionPerformed
 
     private void jButtonVarianteProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVarianteProductoActionPerformed

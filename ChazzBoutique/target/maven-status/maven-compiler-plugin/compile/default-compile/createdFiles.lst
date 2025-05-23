@@ -1,5 +1,6 @@
 presentacion\PanelVenta$1.class
 presentacion\PnlAnadirCategoria$5.class
+presentacion\PnlAnadirProducto$1.class
 presentacion\PanelHome$4.class
 utils\ImagenPerfil.class
 utils\SpinnerCellEditor$1.class
@@ -26,8 +27,11 @@ presentacion\PanelCategoriaProducto$1.class
 presentacion\PanelCategoriaProducto$4.class
 presentacion\PanelHome$7.class
 presentacion\PnlAnadirCategoria$2.class
+presentacion\PanelEscogerAnadir$2.class
 utils\BotonMenu$1.class
+presentacion\FrmPrincipal$5.class
 presentacion\PanelVenta$6.class
+presentacion\PnlVarianteProducto$5.class
 utils\ProductoComboItem.class
 presentacion\PanelHome$12.class
 presentacion\PanelCategoriaProducto$11.class
@@ -62,6 +66,7 @@ utils\ButtonRenderer.class
 presentacion\PnlVarianteProducto$3.class
 presentacion\PanelCategoriaProducto$8.class
 presentacion\PanelCategoriaProducto$12.class
+presentacion\PnlVarianteProducto$6.class
 presentacion\PanelVenta$2.class
 com\mycompany\chazzboutique\ChazzBoutique.class
 presentacion\FrmLogin$1.class
@@ -82,6 +87,7 @@ presentacion\PnlVarianteProducto$1.class
 presentacion\FrmRegistro.class
 presentacion\PanelHome$3.class
 presentacion\FrmProducto.class
+presentacion\PnlAnadirProducto$3.class
 presentacion\FrmPrincipal$1.class
 presentacion\PanelHome.class
 utils\BotonToggle$1.class
@@ -89,6 +95,7 @@ presentacion\PanelCategoriaProducto$14.class
 presentacion\PanelVenta$10.class
 presentacion\PnlAnadirVarianteProducto.class
 utils\ModeloTablaVentas.class
+presentacion\PanelEscogerAnadir$1.class
 presentacion\PnlAnadirCategoria$4.class
 presentacion\PanelEscogerAnadir.class
 presentacion\PanelVenta$3.class
@@ -98,3 +105,4 @@ presentacion\FrmVarianteProducto.class
 presentacion\PnlAnadirProducto.class
 presentacion\PnlReporte.class
 presentacion\PanelHome$2.class
+presentacion\PnlAnadirProducto$2.class

@@ -88,7 +88,7 @@ public class PnlAnadirProducto extends javax.swing.JPanel {
 
     private void cargarCategorias() {
         try {
-            List<CategoriaDTO> categorias = frmPrincipal.categoriaNegocio.obtenerCategorias();
+            List<CategoriaDTO> categorias = frmPrincipal.getCategoriaNegocio().obtenerCategorias();
             cbxCategoria.removeAllItems();
             for (CategoriaDTO categoria : categorias) {
                 cbxCategoria.addItem(categoria);
@@ -100,7 +100,7 @@ public class PnlAnadirProducto extends javax.swing.JPanel {
 
     private void cargarProveedores() {
         try {
-            List<ProveedorDTO> proveedores = frmPrincipal.proveedorNegocio.obtenerProveedores();
+            List<ProveedorDTO> proveedores = frmPrincipal.getProveedorNegocio().obtenerProveedores();
             cbxProveedor.removeAllItems();
             for (ProveedorDTO proveedor : proveedores) {
                 cbxProveedor.addItem(proveedor);
@@ -112,9 +112,9 @@ public class PnlAnadirProducto extends javax.swing.JPanel {
 
     private void cargarProductos() {
         try {
-            List<ProductoDTO> productos = frmPrincipal.productoNegocio.obtenerTodosProductos();
-            List<CategoriaDTO> categorias = frmPrincipal.categoriaNegocio.obtenerCategorias();
-            List<ProveedorDTO> proveedores = frmPrincipal.proveedorNegocio.obtenerProveedores();
+            List<ProductoDTO> productos = frmPrincipal.getProductoNegocio().obtenerTodosProductos();
+            List<CategoriaDTO> categorias = frmPrincipal.getCategoriaNegocio().obtenerCategorias();
+            List<ProveedorDTO> proveedores = frmPrincipal.getProveedorNegocio().obtenerProveedores();
 
             tableModel.setRowCount(0);
 
@@ -170,14 +170,14 @@ public class PnlAnadirProducto extends javax.swing.JPanel {
         try {
             if (productoSeleccionado == null) {
                 ProductoDTO nuevoProducto = new ProductoDTO(null, nombre, descripcion, categoria.getId(), proveedor.getId());
-                frmPrincipal.productoNegocio.crearProducto(nuevoProducto);
+                frmPrincipal.getProductoNegocio().crearProducto(nuevoProducto);
             } else {
                 productoSeleccionado.setNombreProducto(nombre);
                 productoSeleccionado.setDescripcionProducto(descripcion);
                 productoSeleccionado.setCategoriaId(categoria.getId());
                 productoSeleccionado.setProveedorId(proveedor.getId());
 
-                frmPrincipal.productoNegocio.actualizarProducto(productoSeleccionado);
+                frmPrincipal.getProductoNegocio().actualizarProducto(productoSeleccionado);
             }
 
             JOptionPane.showMessageDialog(this, "Producto guardado correctamente.");
@@ -192,7 +192,7 @@ public class PnlAnadirProducto extends javax.swing.JPanel {
     private void editarProducto(int row) {
         Long id = (Long) tableModel.getValueAt(row, 0);
         try {
-            for (ProductoDTO prod : frmPrincipal.productoNegocio.obtenerTodosProductos()) {
+            for (ProductoDTO prod : frmPrincipal.getProductoNegocio().obtenerTodosProductos()) {
                 if (prod.getId().equals(id)) {
                     this.productoSeleccionado = prod;
                     txtNombreProducto.setText(prod.getNombreProducto());
@@ -224,7 +224,7 @@ public class PnlAnadirProducto extends javax.swing.JPanel {
         int confirm = JOptionPane.showConfirmDialog(this, "¿Eliminar este producto?", "Confirmar", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                frmPrincipal.productoNegocio.eliminarProducto(id);
+                frmPrincipal.getProductoNegocio().eliminarProducto(id);
                 JOptionPane.showMessageDialog(this, "Producto eliminado correctamente.");
                 limpiarCampos();
                 cargarProductos();

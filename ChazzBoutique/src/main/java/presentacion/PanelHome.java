@@ -39,7 +39,7 @@ private IVarianteProductoNegocio varianteNegocio;
     public PanelHome(FrmPrincipal frmPrincipal) {
         initComponents();
         this.frmPrincipal = frmPrincipal;
-        this.varianteNegocio= frmPrincipal.varianteProductoNegocio;
+        this.varianteNegocio= frmPrincipal.getVarianteProductoNegocio();
         cargarCategorias();
         cargarVariantes(paginaActual, tamanoPagina, filtroActual);
 

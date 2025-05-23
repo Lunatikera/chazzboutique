@@ -21,7 +21,8 @@ import javax.swing.JScrollPane;
  * @author carli
  */
 public class FrmPrincipal extends javax.swing.JFrame {
-  public IUsuarioNegocio usuarioNegocio;
+
+    public IUsuarioNegocio usuarioNegocio;
     private IVentaNegocio ventaNegocio;
     private IVarianteProductoNegocio varianteProductoNegocio;
     private IProductoNegocio productoNegocio;
@@ -29,8 +30,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private IProveedorNegocio proveedorNegocio;
     private IReporteNegocio reporteNegocio;
     private UsuarioDTO usuarioRegistrado;
-    
-     public FrmPrincipal(IUsuarioNegocio usuarioNegocio, IVentaNegocio ventaNegocio,
+
+    public FrmPrincipal(IUsuarioNegocio usuarioNegocio, IVentaNegocio ventaNegocio,
             IVarianteProductoNegocio varianteProductoNegocio,
             IProductoNegocio productoNegocio, ICategoriaNegocio categoriaNegocio,
             IProveedorNegocio proveedorNegocio, IReporteNegocio reporteNegocio, UsuarioDTO usuarioRegistrado) {
@@ -44,9 +45,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
         this.productoNegocio = productoNegocio;
         this.categoriaNegocio = categoriaNegocio;
         this.proveedorNegocio = proveedorNegocio;
-        this.reporteNegocio= reporteNegocio;
+        this.reporteNegocio = reporteNegocio;
         this.usuarioRegistrado = usuarioRegistrado;
-
 
         this.pintarPanelPrincipal(new PanelHome(this));
     }
@@ -93,7 +93,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     public IReporteNegocio getReporteNegocio() {
         return reporteNegocio;
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -223,6 +223,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
         botonMenu4.setForeground(new java.awt.Color(255, 255, 255));
         botonMenu4.setText("Productos");
         botonMenu4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        botonMenu4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonMenu4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -322,6 +327,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private void botonMenu5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMenu5ActionPerformed
         this.pintarPanelPrincipal(new PnlReporte(this));
     }//GEN-LAST:event_botonMenu5ActionPerformed
+
+    private void botonMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMenu4ActionPerformed
+        this.pintarPanelPrincipal(new PnlAnadirProducto(this));
+
+    }//GEN-LAST:event_botonMenu4ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

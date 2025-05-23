@@ -267,6 +267,9 @@
                       <Font name="Segoe UI" size="24" style="0"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonMenu4ActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

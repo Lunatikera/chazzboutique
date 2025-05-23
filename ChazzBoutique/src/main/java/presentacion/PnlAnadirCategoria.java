@@ -1,7 +1,9 @@
 package presentacion;
 
+import com.itextpdf.text.Font;
 import com.mycompany.chazzboutiquenegocio.dtos.CategoriaDTO;
 import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ComponentAdapter;
@@ -19,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import utils.ButtonEditor;
 import utils.ButtonRenderer;
 
@@ -48,6 +51,11 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
         };
         tblCategorias.setModel(tableModel);
 
+        JTableHeader header = tblCategorias.getTableHeader();
+        header.setFont(new java.awt.Font("Segoe UI", Font.BOLD, 20));
+        header.setForeground(Color.WHITE);
+        header.setBackground(Color.BLACK);
+        header.setPreferredSize(new Dimension(header.getWidth(), 35));
         tblCategorias.getColumn("Editar").setCellRenderer(new ButtonRenderer("Editar"));
         tblCategorias.getColumn("Eliminar").setCellRenderer(new ButtonRenderer("Eliminar"));
         tblCategorias.getColumn("Editar").setCellEditor(new ButtonEditor(new JCheckBox(), "Editar", this::editarCategoria));
@@ -260,6 +268,8 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
+        tblCategorias.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        tblCategorias.setForeground(new java.awt.Color(176, 50, 53));
         tblCategorias.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -325,7 +335,7 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtNombreCategoria)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)))
                             .addComponent(btnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 586, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(122, 122, 122))))
         );
