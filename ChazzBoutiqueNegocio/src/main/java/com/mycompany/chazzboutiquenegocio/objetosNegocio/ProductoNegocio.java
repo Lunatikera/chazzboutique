@@ -10,6 +10,7 @@ import com.mycompany.chazzboutiquepersistencia.excepciones.PersistenciaException
 import com.mycompany.chazzboutiquepersistencia.interfacesDAO.IProductoDAO;
 import com.mycompany.chazzboutiquepersistencia.interfacesDAO.ICategoriaDAO;
 import com.mycompany.chazzboutiquepersistencia.interfacesDAO.IProveedorDAO;
+import java.time.LocalDate;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -101,7 +102,7 @@ public class ProductoNegocio implements IProductoNegocio {
                     null,
                     productoDTO.getNombreProducto(),
                     productoDTO.getDescripcionProducto(),
-                    productoDTO.getFechaCreacion(),
+                    LocalDate.now(),
                     proveedor,
                     categoria
             );
