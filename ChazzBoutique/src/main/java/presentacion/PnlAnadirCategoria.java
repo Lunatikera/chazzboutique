@@ -28,7 +28,7 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblCategorias = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtDescripcion = new javax.swing.JTextArea();
@@ -69,7 +69,7 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblCategorias.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -80,7 +80,7 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(tblCategorias);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel4.setText("Descripción:");
@@ -196,8 +196,8 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblImagen;
+    private javax.swing.JTable tblCategorias;
     private javax.swing.JTextArea txtDescripcion;
     private javax.swing.JTextField txtNombreCategoria;
     // End of variables declaration//GEN-END:variables
