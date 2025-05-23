@@ -42,17 +42,18 @@ public class ChazzBoutique {
             UsuarioDTO usuarioRegistrado = usuarioNegocio.iniciarSesion(new InicioSesionDTO("Yalam", "12345"));
 
             // Creación de ventana principal
-            FrmPrincipal frmMain = new FrmPrincipal(
-                    usuarioNegocio,
-                    ventaNegocio,
-                    varianteProductoNegocio,
-                    productoNegocio,
-                    categoriaNegocio,
+            FrmPrincipal frmPrincipal = new FrmPrincipal(
+                    usuarioNegocio, 
+                    ventaNegocio, 
+                    varianteProductoNegocio, 
+                    productoNegocio, 
+                    categoriaNegocio, 
+
                     proveedorNegocio, 
                     usuarioRegistrado
             );
 
-            frmMain.setVisible(true);
+            frmPrincipal.setVisible(true);
         } catch (NegocioException ex) {
             Logger.getLogger(ChazzBoutique.class.getName()).log(Level.SEVERE, "Error al iniciar sesión", ex);
             System.out.println("Error al iniciar sesión: " + ex.getMessage());
