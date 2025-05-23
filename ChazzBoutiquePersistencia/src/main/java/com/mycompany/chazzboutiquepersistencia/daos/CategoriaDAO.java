@@ -8,6 +8,7 @@ import com.mycompany.chazzboutiquepersistencia.conexion.IConexionBD;
 import com.mycompany.chazzboutiquepersistencia.dominio.Categoria;
 import com.mycompany.chazzboutiquepersistencia.excepciones.PersistenciaException;
 import com.mycompany.chazzboutiquepersistencia.interfacesDAO.ICategoriaDAO;
+
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -19,7 +20,7 @@ import javax.persistence.TypedQuery;
  */
 public class CategoriaDAO implements ICategoriaDAO {
 
-    IConexionBD conexionBD;
+    private final IConexionBD conexionBD;
 
     public CategoriaDAO(IConexionBD conexionBD) {
         this.conexionBD = conexionBD;
@@ -47,7 +48,11 @@ public class CategoriaDAO implements ICategoriaDAO {
     public Categoria buscarPorId(Long id) throws PersistenciaException {
         EntityManager em = conexionBD.getEntityManager();
         try {
-            return em.find(Categoria.class, id);
+            Categoria categoria = em.find(Categoria.class, id);
+            if (categoria == null) {
+                throw new PersistenciaException("La categoría con ID " + id + " no existe.");
+            }
+            return categoria;
         } catch (Exception e) {
             throw new PersistenciaException("Error al buscar categoría por ID", e);
         } finally {
@@ -96,19 +101,20 @@ public class CategoriaDAO implements ICategoriaDAO {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            Categoria c = em.find(Categoria.class, id);
-            if (c != null) {
-                c.setEliminado(true);
-                em.merge(c);
+            Categoria categoria = em.find(Categoria.class, id);
+            if (categoria == null) {
+                throw new PersistenciaException("La categoría con ID " + id + " no existe.");
             }
+            em.remove(categoria);
             tx.commit();
         } catch (Exception e) {
             if (tx.isActive()) {
                 tx.rollback();
             }
-            throw new PersistenciaException("Error al eliminar la categoría (soft delete)", e);
+            throw new PersistenciaException("Error al eliminar la categoría", e);
         } finally {
             em.close();
         }
     }
+
 }

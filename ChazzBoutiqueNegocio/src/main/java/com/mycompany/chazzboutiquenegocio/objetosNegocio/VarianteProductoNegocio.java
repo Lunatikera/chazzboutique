@@ -1,63 +1,115 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.chazzboutiquenegocio.objetosNegocio;
 
 import com.mycompany.chazzboutiquenegocio.dtos.VarianteProductoDTO;
 import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVarianteProductoNegocio;
+import com.mycompany.chazzboutiquepersistencia.dominio.Producto;
 import com.mycompany.chazzboutiquepersistencia.dominio.VarianteProducto;
 import com.mycompany.chazzboutiquepersistencia.excepciones.PersistenciaException;
+import com.mycompany.chazzboutiquepersistencia.interfacesDAO.IProductoDAO;
 import com.mycompany.chazzboutiquepersistencia.interfacesDAO.IVarianteProductoDAO;
+
 import java.util.ArrayList;
 import java.util.List;
 
+public class VarianteProductoNegocio implements IVarianteProductoNegocio {
 
-/**
- *
- * @author carli
- */
-public class VarianteProductoNegocio implements IVarianteProductoNegocio{
-    IVarianteProductoDAO varianteProductoDAO;
+    private final IVarianteProductoDAO varianteProductoDAO;
+    private final IProductoDAO productoDAO;
 
-    public VarianteProductoNegocio(IVarianteProductoDAO varianteProductoDAO) {
+    public VarianteProductoNegocio(IVarianteProductoDAO varianteProductoDAO, IProductoDAO productoDAO) {
         this.varianteProductoDAO = varianteProductoDAO;
+        this.productoDAO = productoDAO;
     }
-    
+
     @Override
     public VarianteProductoDTO obtenerVariantePorCodigoBarra(String codigoBarra) throws NegocioException {
         try {
             VarianteProducto variante = varianteProductoDAO.obtenerPorCodigoBarra(codigoBarra);
-            if (variante != null) {
-                // Convertir VarianteProducto a VarianteProductoDTO
-                return new VarianteProductoDTO(
-                    variante.getCodigoBarra(),
-                    variante.getStock(),
-                    variante.getPrecioCompra(),
-                    variante.getTalla(),variante.getColor(),
-                    variante.getPrecioVenta(),
-                    variante.getProducto().getId()
-                );
-            } else {
-                return null; // O lanzar una excepción si prefieres
-            }
+            return (variante != null) ? convertirA_DTO(variante) : null;
         } catch (PersistenciaException e) {
-            throw new NegocioException("Error al obtener la variante de producto por código de barra: " + codigoBarra, e);
+            throw new NegocioException("Error al obtener la variante por código de barra: " + codigoBarra, e);
         }
     }
 
     @Override
-   public List<VarianteProductoDTO> obtenerVariantesPorProducto(Long productoId) throws NegocioException {
-    try {
-        // 1. Obtener las variantes desde el DAO
-        List<VarianteProducto> variantes = varianteProductoDAO.obtenerVariantesPorProducto(productoId);
-        
-        // 2. Convertir la lista de entidades a DTOs
-        List<VarianteProductoDTO> variantesDTO = new ArrayList<>();
-        
-        for (VarianteProducto variante : variantes) {
-            variantesDTO.add(new VarianteProductoDTO(
+    public List<VarianteProductoDTO> obtenerVariantesPorProducto(Long productoId) throws NegocioException {
+        try {
+            List<VarianteProducto> variantes = varianteProductoDAO.obtenerVariantesPorProducto(productoId);
+            List<VarianteProductoDTO> resultado = new ArrayList<>();
+            for (VarianteProducto variante : variantes) {
+                resultado.add(convertirA_DTO(variante));
+            }
+            return resultado;
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al obtener variantes para el producto ID: " + productoId, e);
+        }
+    }
+
+    @Override
+    public void crearVariante(VarianteProductoDTO dto) throws NegocioException {
+        try {
+            Producto producto = productoDAO.buscarPorId(dto.getProductoId());
+            if (producto == null) {
+                throw new NegocioException("Producto no encontrado con ID: " + dto.getProductoId());
+            }
+
+            VarianteProducto variante = new VarianteProducto();
+            llenarEntidadDesdeDTO(variante, dto);
+            variante.setProducto(producto);
+            variante.setEliminado(false);
+
+            varianteProductoDAO.crearVariante(variante);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al crear variante", e);
+        }
+    }
+
+    @Override
+    public void actualizarVariante(VarianteProductoDTO dto) throws NegocioException {
+        try {
+            VarianteProducto variante = varianteProductoDAO.buscarPorId(dto.getId());
+            if (variante == null) {
+                throw new NegocioException("Variante no encontrada");
+            }
+
+            llenarEntidadDesdeDTO(variante, dto);
+            varianteProductoDAO.actualizarVarianteProducto(variante);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al actualizar variante", e);
+        }
+    }
+
+    @Override
+    public void eliminarVariante(Long id) throws NegocioException {
+        try {
+            VarianteProducto variante = varianteProductoDAO.buscarPorId(id);
+            if (variante == null) {
+                throw new NegocioException("Variante no encontrada");
+            }
+
+            variante.setEliminado(true);
+            varianteProductoDAO.actualizarVarianteProducto(variante);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al eliminar variante", e);
+        }
+    }
+
+    @Override
+    public VarianteProductoDTO buscarPorId(Long id) throws NegocioException {
+        try {
+            VarianteProducto variante = varianteProductoDAO.buscarPorId(id);
+            if (variante == null || variante.isEliminado()) {
+                throw new NegocioException("Variante no encontrada");
+            }
+            return convertirA_DTO(variante);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al buscar variante por ID", e);
+        }
+    }
+
+       private VarianteProductoDTO convertirA_DTO(VarianteProducto variante) {
+        VarianteProductoDTO dto = new VarianteProductoDTO(
                 variante.getCodigoBarra(),
                 variante.getStock(),
                 variante.getPrecioCompra(),
@@ -65,13 +117,17 @@ public class VarianteProductoNegocio implements IVarianteProductoNegocio{
                 variante.getColor(),
                 variante.getPrecioVenta(),
                 variante.getProducto().getId()
-            ));
-        }
-        
-        return variantesDTO;
-        
-    } catch (PersistenciaException e) {
-        throw new NegocioException("Error al obtener variantes para el producto ID: " + productoId, e);
+        );
+        dto.setId(variante.getId());
+        return dto;
     }
-}
+
+    private void llenarEntidadDesdeDTO(VarianteProducto entidad, VarianteProductoDTO dto) {
+        entidad.setCodigoBarra(dto.getCodigoBarra());
+        entidad.setStock(dto.getStock());
+        entidad.setPrecioCompra(dto.getPrecioCompra());
+        entidad.setPrecioVenta(dto.getPrecioVenta());
+        entidad.setTalla(dto.getTalla());
+        entidad.setColor(dto.getColor());
+    }
 }

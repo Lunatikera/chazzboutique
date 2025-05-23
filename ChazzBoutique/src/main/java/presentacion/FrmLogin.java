@@ -29,7 +29,6 @@ public class FrmLogin extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        botonMenu1 = new utils.BotonMenu();
         jtxtContrasena = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -43,10 +42,6 @@ public class FrmLogin extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        botonMenu1.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/loginSelected.png"))); // NOI18N
-        botonMenu1.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/login.png"))); // NOI18N
-        jPanel3.add(botonMenu1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 670, -1, -1));
 
         jtxtContrasena.setText("jTextField1");
         jPanel3.add(jtxtContrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 480, 453, 59));
@@ -147,7 +142,6 @@ public class FrmLogin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private utils.BotonMenu botonMenu1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

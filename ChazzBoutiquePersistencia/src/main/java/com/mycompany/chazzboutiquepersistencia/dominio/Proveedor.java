@@ -1,24 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.chazzboutiquepersistencia.dominio;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
- *
- * @author carli
+ * Entidad que representa un proveedor de productos.
  */
 @Entity
 @Table(name = "tblProveedor")
@@ -28,9 +16,6 @@ public class Proveedor implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "proveedor_id", nullable = false, unique = true)
     private Long id;
-
-    @OneToMany(mappedBy = "proveedor", cascade = CascadeType.PERSIST)
-    private List<Producto> productos;
 
     @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
@@ -47,9 +32,24 @@ public class Proveedor implements Serializable {
     @Column(name = "fechaCreacion", nullable = false)
     private LocalDate fechaCreacion;
 
+    @OneToMany(mappedBy = "proveedor", cascade = CascadeType.PERSIST)
+    private List<Producto> productos;
+
+    // Constructor vacío
     public Proveedor() {
     }
 
+    // Constructor completo
+    public Proveedor(Long id, String nombre, String telefono, String correo, String direccion, LocalDate fechaCreacion) {
+        this.id = id;
+        this.nombre = nombre;
+        this.telefono = telefono;
+        this.correo = correo;
+        this.direccion = direccion;
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -98,4 +98,17 @@ public class Proveedor implements Serializable {
         this.fechaCreacion = fechaCreacion;
     }
 
+    public List<Producto> getProductos() {
+        return productos;
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
+    }
+
+    // Para mostrar en JComboBox u otros componentes visuales
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }
