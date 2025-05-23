@@ -61,12 +61,7 @@ public class PanelHome extends javax.swing.JPanel {
         }
     }
 
-    private void btnLeftCategoriaActionPerformed(java.awt.event.ActionEvent evt) {
-        if (indiceCarrusel > 0) {
-            indiceCarrusel--;
-            mostrarCategorias();
-        }
-    }
+ 
 
     private void btnRightCarruselActionPerformed(java.awt.event.ActionEvent evt) {
         if (indiceCarrusel + VISTA_MAXIMA < categorias.size()) {
@@ -1010,7 +1005,10 @@ public class PanelHome extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLeftCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLeftCategoriaActionPerformed
-        // TODO add your handling code here:
+        if (indiceCarrusel > 0) {
+            indiceCarrusel--;
+            mostrarCategorias();
+        }
     }//GEN-LAST:event_btnLeftCategoriaActionPerformed
 
     private void btnRightPaginaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRightPaginaActionPerformed

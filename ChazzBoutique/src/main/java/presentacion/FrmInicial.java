@@ -41,7 +41,6 @@ public class FrmInicial extends JPanel {
         btnVenta.setBounds(300, 100, 200, 40);
         btnVenta.setFocusPainted(false);
         btnVenta.addActionListener(e -> {
-            frmMain.pintarPanelPrincipal(new PanelVenta(frmMain));
         });
         add(btnVenta);
 
