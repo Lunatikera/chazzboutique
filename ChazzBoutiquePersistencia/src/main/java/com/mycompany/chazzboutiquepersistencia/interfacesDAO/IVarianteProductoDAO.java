@@ -30,4 +30,8 @@ public interface IVarianteProductoDAO {
 
     public long contarVariantesPorNombreProducto(String terminoBusqueda) throws PersistenciaException;
 
+    List<VarianteProducto> buscarVariantesPorCategoriaYNombreProducto(int idCategoria, String nombre, int pagina, int tamañoPagina) throws PersistenciaException;
+
+    public long contarVariantesPorCategoriaYNombreProducto(int idCategoria, String nombre) throws PersistenciaException;
+
 }
