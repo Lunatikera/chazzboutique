@@ -1316,73 +1316,73 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
 
     private void btnVer1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer1ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(0); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
+      PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer1ActionPerformed
 
     private void btnVer2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer2ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(1); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
+       PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer2ActionPerformed
 
     private void btnVer3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer3ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(2); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
+       PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer3ActionPerformed
 
     private void btnVer4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer4ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(3); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
+       PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer4ActionPerformed
 
     private void btnVer5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer5ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(4); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
+       PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer5ActionPerformed
 
     private void btnVer6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer6ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(5); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
+      PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer6ActionPerformed
 
     private void btnVer7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer7ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(6); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
+      PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer7ActionPerformed
 
     private void btnVer8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer8ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(7); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer8ActionPerformed
 
     private void btnVer9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer9ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(8); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
+      PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer9ActionPerformed
 
     private void btnVer10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer10ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(9); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer10ActionPerformed
 
     private void btnVer11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer11ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(10); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
+       PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer11ActionPerformed
 
     private void btnVer12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer12ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(11); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer12ActionPerformed
 
