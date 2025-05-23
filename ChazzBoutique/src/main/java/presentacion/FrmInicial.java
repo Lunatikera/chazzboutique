@@ -9,6 +9,7 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import utils.BotonFlatRound;
 
 public class FrmInicial extends JPanel {
 
@@ -38,7 +39,7 @@ public class FrmInicial extends JPanel {
         add(lblTitulo);
 
         // Botón Punto de Venta
-        JButton btnVenta = new JButton("Punto de Venta");
+        BotonFlatRound btnVenta = new BotonFlatRound("Punto de Venta");
         btnVenta.setBounds(300, 100, 200, 40);
         btnVenta.setFocusPainted(false);
         btnVenta.addActionListener(e -> {
@@ -47,7 +48,7 @@ public class FrmInicial extends JPanel {
         add(btnVenta);
 
         // Botón Registrar Producto
-        JButton btnRegistrarProducto = new JButton("Registrar Producto");
+        BotonFlatRound btnRegistrarProducto = new BotonFlatRound("Registrar Producto");
         btnRegistrarProducto.setBounds(300, 160, 200, 40);
         btnRegistrarProducto.setFocusPainted(false);
         btnRegistrarProducto.addActionListener(e -> {
@@ -56,7 +57,7 @@ public class FrmInicial extends JPanel {
         add(btnRegistrarProducto);
 
         // Botón Registrar Categoría
-        JButton btnRegistrarCategoria = new JButton("Registrar Categoría");
+        BotonFlatRound btnRegistrarCategoria = new BotonFlatRound("Registrar Categoría");
         btnRegistrarCategoria.setBounds(300, 220, 200, 40);
         btnRegistrarCategoria.setFocusPainted(false);
         btnRegistrarCategoria.addActionListener(e -> {
