@@ -8,6 +8,7 @@ import com.mycompany.chazzboutiquenegocio.dtos.UsuarioDTO;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.ICategoriaNegocio;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProductoNegocio;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProveedorNegocio;
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IReporteNegocio;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IUsuarioNegocio;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVarianteProductoNegocio;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVentaNegocio;
@@ -21,17 +22,18 @@ import javax.swing.JScrollPane;
  */
 public class FrmPrincipal extends javax.swing.JFrame {
   public IUsuarioNegocio usuarioNegocio;
-    public IVentaNegocio ventaNegocio;
-    public IVarianteProductoNegocio varianteProductoNegocio;
-    public IProductoNegocio productoNegocio;
-    public ICategoriaNegocio categoriaNegocio;
-    public IProveedorNegocio proveedorNegocio;
+    private IVentaNegocio ventaNegocio;
+    private IVarianteProductoNegocio varianteProductoNegocio;
+    private IProductoNegocio productoNegocio;
+    private ICategoriaNegocio categoriaNegocio;
+    private IProveedorNegocio proveedorNegocio;
+    private IReporteNegocio reporteNegocio;
     private UsuarioDTO usuarioRegistrado;
     
      public FrmPrincipal(IUsuarioNegocio usuarioNegocio, IVentaNegocio ventaNegocio,
             IVarianteProductoNegocio varianteProductoNegocio,
             IProductoNegocio productoNegocio, ICategoriaNegocio categoriaNegocio,
-            IProveedorNegocio proveedorNegocio, UsuarioDTO usuarioRegistrado) {
+            IProveedorNegocio proveedorNegocio, IReporteNegocio reporteNegocio, UsuarioDTO usuarioRegistrado) {
         initComponents();
         this.setTitle("ChazzBoutique");
         this.setLocationRelativeTo(null);
@@ -42,10 +44,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
         this.productoNegocio = productoNegocio;
         this.categoriaNegocio = categoriaNegocio;
         this.proveedorNegocio = proveedorNegocio;
+        this.reporteNegocio= reporteNegocio;
         this.usuarioRegistrado = usuarioRegistrado;
 
 
-        this.pintarPanelPrincipal(new PanelVenta(this));
+        this.pintarPanelPrincipal(new PnlReporte(this));
     }
 
     public void pintarPanelPrincipal(JPanel panel) {
@@ -81,6 +84,14 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     public IProveedorNegocio getProveedorNegocio() {
         return proveedorNegocio;
+    }
+
+    public ICategoriaNegocio getCategoriaNegocio() {
+        return categoriaNegocio;
+    }
+
+    public IReporteNegocio getReporteNegocio() {
+        return reporteNegocio;
     }
     
     @SuppressWarnings("unchecked")

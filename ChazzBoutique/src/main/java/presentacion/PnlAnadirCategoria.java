@@ -68,13 +68,13 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
         try {
             if (categoriaSeleccionada == null) {
                 CategoriaDTO dto = new CategoriaDTO(null, nombre, descripcion, imagen);
-                frmPrincipal.categoriaNegocio.crearCategoria(dto);
+                frmPrincipal.getCategoriaNegocio().crearCategoria(dto);
                 JOptionPane.showMessageDialog(this, "Categoría registrada.");
             } else {
                 categoriaSeleccionada.setNombreCategoria(nombre);
                 categoriaSeleccionada.setDescripcionCategoria(descripcion);
                 categoriaSeleccionada.setImagenCategoria(imagen);
-                frmPrincipal.categoriaNegocio.actualizarCategoria(categoriaSeleccionada);
+                frmPrincipal.getCategoriaNegocio().actualizarCategoria(categoriaSeleccionada);
                 JOptionPane.showMessageDialog(this, "Categoría actualizada.");
                 categoriaSeleccionada = null;
             }
@@ -122,7 +122,7 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
     private void cargarCategorias() {
         tableModel.setRowCount(0);
         try {
-            List<CategoriaDTO> categorias = frmPrincipal.categoriaNegocio.obtenerCategorias();
+            List<CategoriaDTO> categorias = frmPrincipal.getCategoriaNegocio().obtenerCategorias();
             for (CategoriaDTO cat : categorias) {
                 tableModel.addRow(new Object[]{
                     cat.getId(),
@@ -141,7 +141,7 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
     private void editarCategoria(int row) {
         Long id = (Long) tableModel.getValueAt(row, 0);
         try {
-            for (CategoriaDTO cat : frmPrincipal.categoriaNegocio.obtenerCategorias()) {
+            for (CategoriaDTO cat : frmPrincipal.getCategoriaNegocio().obtenerCategorias()) {
                 if (cat.getId().equals(id)) {
                     this.categoriaSeleccionada = cat;
                     txtNombreCategoria.setText(cat.getNombreCategoria());
@@ -193,7 +193,7 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
         int confirm = JOptionPane.showConfirmDialog(this, "¿Eliminar esta categoría?", "Confirmar", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                frmPrincipal.categoriaNegocio.eliminarCategoria(id);
+                frmPrincipal.getCategoriaNegocio().eliminarCategoria(id);
                 cargarCategorias();
             } catch (NegocioException e) {
                 JOptionPane.showMessageDialog(this, "No se puede eliminar la categoría: elimine primero los productos relacionados.");

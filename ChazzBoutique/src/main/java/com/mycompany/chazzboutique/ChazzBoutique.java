@@ -28,6 +28,7 @@ public class ChazzBoutique {
         IDetalleVentaDAO detalleVentaDAO = new DetalleVentaDAO(conexionBD);
         ICategoriaDAO categoriaDAO = new CategoriaDAO(conexionBD);
         IProveedorDAO proveedorDAO = new ProveedorDAO(conexionBD); 
+        IReporteDAO reporteDAO= new ReporteDAO(conexionBD);
 
         // Negocios
         IUsuarioNegocio usuarioNegocio = new UsuarioNegocio(usuarioDAO);
@@ -36,7 +37,8 @@ public class ChazzBoutique {
         IProductoNegocio productoNegocio = new ProductoNegocio(productoDAO, categoriaDAO, proveedorDAO);
         ICategoriaNegocio categoriaNegocio = new CategoriaNegocio(categoriaDAO);
         IProveedorNegocio proveedorNegocio = new ProveedorNegocio(proveedorDAO); 
-
+        IReporteNegocio reporteNegocio= new ReporteNegocio(reporteDAO);
+        
         try {
            
             UsuarioDTO usuarioRegistrado = usuarioNegocio.iniciarSesion(new InicioSesionDTO("Yalam", "12345"));
@@ -48,8 +50,8 @@ public class ChazzBoutique {
                     varianteProductoNegocio, 
                     productoNegocio, 
                     categoriaNegocio, 
-
-                    proveedorNegocio, 
+                    proveedorNegocio,
+                    reporteNegocio,
                     usuarioRegistrado
             );
 

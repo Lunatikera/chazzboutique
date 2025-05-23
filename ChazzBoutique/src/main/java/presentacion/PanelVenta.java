@@ -319,7 +319,7 @@ public class PanelVenta extends javax.swing.JPanel {
         String nombreSeleccionado = (String) cbNombreProducto.getSelectedItem();
 
         try {
-            List<ProductoDTO> productos = frmPrincipal.productoNegocio.buscarPorNombre(nombreSeleccionado);
+            List<ProductoDTO> productos = frmPrincipal.getProductoNegocio().buscarPorNombre(nombreSeleccionado);
 
             if (productos.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
@@ -340,7 +340,7 @@ public class PanelVenta extends javax.swing.JPanel {
 
     private void cargarNombresProductos() {
         try {
-            List<ProductoDTO> productos = frmPrincipal.productoNegocio.obtenerTodosProductos();
+            List<ProductoDTO> productos = frmPrincipal.getProductoNegocio().obtenerTodosProductos();
             cbNombreProducto.removeAllItems();
             cbNombreProducto.setEditable(true);
 
@@ -497,7 +497,7 @@ public class PanelVenta extends javax.swing.JPanel {
                     continue;
                 }
 
-                VarianteProductoDTO variante = frmPrincipal.varianteProductoNegocio.obtenerVariantePorCodigoBarra(codigoBarras);
+                VarianteProductoDTO variante = frmPrincipal.getVarianteProductoNegocio().obtenerVariantePorCodigoBarra(codigoBarras);
                 if (variante == null) {
                     throw new NegocioException("Producto con código " + codigoBarras + " ya no disponible");
                 }
@@ -514,7 +514,7 @@ public class PanelVenta extends javax.swing.JPanel {
             ventaDTO.setDetalles(detalles);
             System.out.println(ventaDTO.toString());
             // 5. Registrar la venta
-            VentaDTO ventaregistrada = frmPrincipal.ventaNegocio.registrarVenta(ventaDTO);
+            VentaDTO ventaregistrada = frmPrincipal.getVentaNegocio().registrarVenta(ventaDTO);
 
             // 6. Mostrar mensaje de éxito
             JOptionPane.showMessageDialog(this,
@@ -705,7 +705,7 @@ public class PanelVenta extends javax.swing.JPanel {
                 return;
             }
 
-            VarianteProductoDTO variante = frmPrincipal.varianteProductoNegocio.obtenerVariantePorCodigoBarra(codigo);
+            VarianteProductoDTO variante = frmPrincipal.getVarianteProductoNegocio().obtenerVariantePorCodigoBarra(codigo);
             validarYAgregarVariante(variante, codigo, cantidad);
 
             if (busquedaPorNombre) {
@@ -724,7 +724,7 @@ public class PanelVenta extends javax.swing.JPanel {
             throw new NegocioException("El producto no existe");
         }
 
-        ProductoDTO producto = frmPrincipal.productoNegocio.buscarPorId(variante.getProductoId());
+        ProductoDTO producto = frmPrincipal.getProductoNegocio().buscarPorId(variante.getProductoId());
         if (cantidad <= 0) {
             throw new NegocioException("Cantidad inválida");
         }
@@ -959,7 +959,7 @@ public class PanelVenta extends javax.swing.JPanel {
             // Verificar si el producto ya está en la venta
 
             // Buscar la variante del producto
-            VarianteProductoDTO variante = frmPrincipal.varianteProductoNegocio.obtenerVariantePorCodigoBarra(codigo);
+            VarianteProductoDTO variante = frmPrincipal.getVarianteProductoNegocio().obtenerVariantePorCodigoBarra(codigo);
 
             if (variante == null) {
                 JOptionPane.showMessageDialog(this,
@@ -972,7 +972,7 @@ public class PanelVenta extends javax.swing.JPanel {
             }
 
             // Buscar información completa del producto
-            ProductoDTO producto = frmPrincipal.productoNegocio.buscarPorId(variante.getProductoId());
+            ProductoDTO producto = frmPrincipal.getProductoNegocio().buscarPorId(variante.getProductoId());
 
             if (producto == null) {
                 JOptionPane.showMessageDialog(this,
@@ -1750,7 +1750,7 @@ public class PanelVenta extends javax.swing.JPanel {
 
             for (DetalleVentaDTO detalle : ventaDTO.getDetalles()) {
                 try {
-                    VarianteProductoDTO producto = frmPrincipal.varianteProductoNegocio
+                    VarianteProductoDTO producto = frmPrincipal.getVarianteProductoNegocio()
                             .obtenerVariantePorCodigoBarra(detalle.getCodigoVariante());
 
                     String nombre = producto.getCodigoBarra();
@@ -1832,7 +1832,7 @@ public class PanelVenta extends javax.swing.JPanel {
         }
 
         try {
-            List<ProductoDTO> productos = frmPrincipal.productoNegocio.buscarPorNombre(nombre);
+            List<ProductoDTO> productos = frmPrincipal.getProductoNegocio().buscarPorNombre(nombre);
             if (productos.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
                         "No se encontraron productos con ese nombre",
@@ -1869,7 +1869,7 @@ public class PanelVenta extends javax.swing.JPanel {
 
         for (ProductoDTO producto : productos) {
             try {
-                List<VarianteProductoDTO> variantes = frmPrincipal.varianteProductoNegocio
+                List<VarianteProductoDTO> variantes = frmPrincipal.getVarianteProductoNegocio()
                         .obtenerVariantesPorProducto(producto.getId());
 
                 for (VarianteProductoDTO variante : variantes) {
@@ -1928,10 +1928,10 @@ public class PanelVenta extends javax.swing.JPanel {
 
     private void cargarVarianteSeleccionada(String codigo) {
         try {
-            VarianteProductoDTO variante = frmPrincipal.varianteProductoNegocio
+            VarianteProductoDTO variante = frmPrincipal.getVarianteProductoNegocio()
                     .obtenerVariantePorCodigoBarra(codigo);
 
-            ProductoDTO producto = frmPrincipal.productoNegocio.buscarPorId(variante.getProductoId());
+            ProductoDTO producto = frmPrincipal.getProductoNegocio().buscarPorId(variante.getProductoId());
 
             // Actualizar interfaz
             txtCodigo.setText(codigo);

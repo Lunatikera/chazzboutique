@@ -87,13 +87,13 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
                     panelArticulo4, panelArticulo5, panelArticulo6
             );
 
-            List<VarianteProductoDTO> variantes = frmPrincipal.varianteProductoNegocio
+            List<VarianteProductoDTO> variantes = frmPrincipal.getVarianteProductoNegocio()
                     .buscarVariantesPorNombreProducto(filtro, pagina, tamañoPagina);
             listaActualDeVariantes = variantes;
-            long total = frmPrincipal.varianteProductoNegocio.contarVariantesPorNombreProducto(filtroActual);
+            long total = frmPrincipal.getVarianteProductoNegocio().contarVariantesPorNombreProducto(filtroActual);
             lblArticulos.setText("Todos (" + total + " artículos)");
 
-            List<VarianteProductoDTO> siguientePagina = frmPrincipal.varianteProductoNegocio
+            List<VarianteProductoDTO> siguientePagina = frmPrincipal.getVarianteProductoNegocio()
                     .buscarVariantesPorNombreProducto(filtro, pagina + 1, tamañoPagina);
 
             hayMasPaginas = !siguientePagina.isEmpty();
