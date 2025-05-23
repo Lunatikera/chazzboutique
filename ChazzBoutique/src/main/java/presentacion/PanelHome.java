@@ -117,6 +117,12 @@ public class PanelHome extends javax.swing.JPanel {
             } else {
                 botones.get(i).setIcon(null); // O imagen por defecto
             }
+
+            CategoriaDTO categoriaSeleccionada = cat;
+            botones.get(i).addActionListener(evt -> {
+                PanelCategoriaProducto panelCategoria = new PanelCategoriaProducto(frmPrincipal, categoriaSeleccionada);
+                frmPrincipal.pintarPanelPrincipal(panelCategoria);
+            });
         }
     }
 

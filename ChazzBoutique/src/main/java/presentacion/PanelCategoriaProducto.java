@@ -26,6 +26,7 @@ import static utils.Capitalizador.capitalizarNombre;
 public class PanelCategoriaProducto extends javax.swing.JPanel {
 
     private FrmPrincipal frmPrincipal;
+    private CategoriaDTO categoriaSeleccionada;
 
     private int paginaActual = 1;
     private final int tamanoPagina = 12;
@@ -33,9 +34,11 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
     private boolean hayMasPaginas = true;
     private List<VarianteProductoDTO> listaActualDeVariantes;
 
-    public PanelCategoriaProducto(FrmPrincipal frmPrincipal) {
+    public PanelCategoriaProducto(FrmPrincipal frmPrincipal, CategoriaDTO categoria) {
         initComponents();
         this.frmPrincipal = frmPrincipal;
+        this.categoriaSeleccionada = categoria;
+        this.lblTitulo.setText(categoria.getNombreCategoria());
         cargarVariantes(paginaActual, tamanoPagina, filtroActual);
         txtBuscador.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
@@ -84,13 +87,14 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
 
             List<JPanel> panelesArticulo = List.of(
                     panelArticulo1, panelArticulo2, panelArticulo3,
-                    panelArticulo4, panelArticulo5, panelArticulo6
+                    panelArticulo4, panelArticulo5, panelArticulo6,panelArticulo7,panelArticulo8,panelArticulo9,panelArticulo10,panelArticulo11,panelArticulo12
             );
 
             List<VarianteProductoDTO> variantes = frmPrincipal.varianteProductoNegocio
-                    .buscarVariantesPorNombreProducto(filtro, pagina, tamañoPagina);
+                    .buscarVariantesPorCategoriaYNombreProducto(this.categoriaSeleccionada.getId().intValue(), filtro, pagina, tamañoPagina);
             listaActualDeVariantes = variantes;
-            long total = frmPrincipal.varianteProductoNegocio.contarVariantesPorNombreProducto(filtroActual);
+            long total = frmPrincipal.varianteProductoNegocio
+                    .contarVariantesPorCategoriaYNombreProducto(categoriaSeleccionada.getId().intValue(), filtro);
             lblArticulos.setText("Todos (" + total + " artículos)");
 
             List<VarianteProductoDTO> siguientePagina = frmPrincipal.varianteProductoNegocio

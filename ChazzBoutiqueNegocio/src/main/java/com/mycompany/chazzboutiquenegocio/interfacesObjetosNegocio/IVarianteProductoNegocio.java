@@ -23,4 +23,7 @@ public interface IVarianteProductoNegocio {
 
     public long contarVariantesPorNombreProducto(String terminoBusqueda) throws NegocioException;
 
+    public List<VarianteProductoDTO> buscarVariantesPorCategoriaYNombreProducto(int idCategoria, String nombre, int pagina, int tamañoPagina) throws NegocioException ;
+
+    public long contarVariantesPorCategoriaYNombreProducto(int idCategoria, String nombre) throws NegocioException;
 }
