@@ -88,8 +88,7 @@ public class VarianteProductoNegocio implements IVarianteProductoNegocio {
                 throw new NegocioException("Variante no encontrada");
             }
 
-            variante.setEliminado(true);
-            varianteProductoDAO.actualizarVarianteProducto(variante);
+            varianteProductoDAO.eliminarVarianteProducto(id);
         } catch (PersistenciaException e) {
             throw new NegocioException("Error al eliminar variante", e);
         }

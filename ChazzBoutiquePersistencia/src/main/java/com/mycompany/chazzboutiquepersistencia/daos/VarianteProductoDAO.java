@@ -110,72 +110,70 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            VarianteProducto v = em.find(VarianteProducto.class, id);
-            if (v != null) {
-                v.setEliminado(true);
-                em.merge(v);
-            }
+            em.createQuery("DELETE FROM VarianteProducto v WHERE v.id = :id")
+                    .setParameter("id", id)
+                    .executeUpdate();
             tx.commit();
         } catch (Exception e) {
             if (tx.isActive()) {
                 tx.rollback();
             }
-            throw new PersistenciaException("Error al hacer soft delete de la variante", e);
+            throw new PersistenciaException("Error al eliminar variante", e);
         } finally {
             em.close();
         }
     }
 
     @Override
-public List<VarianteProducto> buscarVariantesPorNombreProducto(String terminoBusqueda, int pagina, int tamañoPagina) throws PersistenciaException {
-    EntityManager em = conexionBD.getEntityManager();
-    try {
-        // Limpiar el filtro: minúsculas y espacios normales
-        String filtro = terminoBusqueda.toLowerCase().trim().replaceAll("\\s+", " ");
+    public List<VarianteProducto> buscarVariantesPorNombreProducto(String terminoBusqueda, int pagina, int tamañoPagina) throws PersistenciaException {
+        EntityManager em = conexionBD.getEntityManager();
+        try {
+            // Limpiar el filtro: minúsculas y espacios normales
+            String filtro = terminoBusqueda.toLowerCase().trim().replaceAll("\\s+", " ");
 
-        TypedQuery<VarianteProducto> query = em.createQuery(
-            "SELECT v FROM VarianteProducto v " +
-            "WHERE v.eliminado = false AND (" +
-            "LOWER(v.producto.nombreProducto) LIKE :busqueda OR " +
-            "LOWER(v.color) LIKE :busqueda OR " +
-            "LOWER(v.talla) LIKE :busqueda" +
-            ")",
-            VarianteProducto.class
-        );
+            TypedQuery<VarianteProducto> query = em.createQuery(
+                    "SELECT v FROM VarianteProducto v "
+                    + "WHERE v.eliminado = false AND ("
+                    + "LOWER(v.producto.nombreProducto) LIKE :busqueda OR "
+                    + "LOWER(v.color) LIKE :busqueda OR "
+                    + "LOWER(v.talla) LIKE :busqueda"
+                    + ")",
+                    VarianteProducto.class
+            );
 
-        query.setParameter("busqueda", "%" + filtro + "%");
-        query.setFirstResult((pagina - 1) * tamañoPagina);
-        query.setMaxResults(tamañoPagina);
+            query.setParameter("busqueda", "%" + filtro + "%");
+            query.setFirstResult((pagina - 1) * tamañoPagina);
+            query.setMaxResults(tamañoPagina);
 
-        return query.getResultList();
-    } catch (Exception e) {
-        throw new PersistenciaException("Error al buscar variantes con paginación", e);
-    } finally {
-        em.close();
+            return query.getResultList();
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al buscar variantes con paginación", e);
+        } finally {
+            em.close();
+        }
     }
-}
 
-public long contarVariantesPorNombreProducto(String terminoBusqueda) throws PersistenciaException {
-    EntityManager em = conexionBD.getEntityManager();
-    try {
-        String filtro = terminoBusqueda.toLowerCase().trim().replaceAll("\\s+", " ");
+    public long contarVariantesPorNombreProducto(String terminoBusqueda) throws PersistenciaException {
+        EntityManager em = conexionBD.getEntityManager();
+        try {
+            String filtro = terminoBusqueda.toLowerCase().trim().replaceAll("\\s+", " ");
 
-        TypedQuery<Long> query = em.createQuery(
-            "SELECT COUNT(v) FROM VarianteProducto v " +
-            "WHERE v.eliminado = false AND (" +
-            "LOWER(v.producto.nombreProducto) LIKE :busqueda OR " +
-            "LOWER(v.color) LIKE :busqueda OR " +
-            "LOWER(v.talla) LIKE :busqueda)",
-            Long.class
-        );
-        query.setParameter("busqueda", "%" + filtro + "%");
+            TypedQuery<Long> query = em.createQuery(
+                    "SELECT COUNT(v) FROM VarianteProducto v "
+                    + "WHERE v.eliminado = false AND ("
+                    + "LOWER(v.producto.nombreProducto) LIKE :busqueda OR "
+                    + "LOWER(v.color) LIKE :busqueda OR "
+                    + "LOWER(v.talla) LIKE :busqueda)",
+                    Long.class
+            );
+            query.setParameter("busqueda", "%" + filtro + "%");
 
-        return query.getSingleResult();
-    } catch (Exception e) {
-        throw new PersistenciaException("Error al contar variantes", e);
-    } finally {
-        em.close();
+            return query.getSingleResult();
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al contar variantes", e);
+        } finally {
+            em.close();
+        }
     }
-}
 
 }

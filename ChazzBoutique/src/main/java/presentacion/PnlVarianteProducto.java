@@ -1,16 +1,21 @@
 package presentacion;
 
 import com.mycompany.chazzboutiquenegocio.dtos.VarianteProductoDTO;
+import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVarianteProductoNegocio;
+import com.mycompany.chazzboutiquenegocio.objetosNegocio.VarianteProductoNegocio;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
+import javax.swing.JOptionPane;
 import static utils.Capitalizador.capitalizarNombre;
 
 /**
@@ -19,12 +24,19 @@ import static utils.Capitalizador.capitalizarNombre;
  */
 public class PnlVarianteProducto extends javax.swing.JPanel {
 
+    private FrmPrincipal frmPrincipal;
+    private IVarianteProductoNegocio varianteNegocio;
+    private VarianteProductoDTO variante;
+
     /**
      * Creates new form PnlAnadirProducto
      */
-    public PnlVarianteProducto(VarianteProductoDTO variante) {
+    public PnlVarianteProducto(VarianteProductoDTO variante, IVarianteProductoNegocio varianteNegocio,FrmPrincipal frmPrincipal) {
         initComponents();
         this.setSize(new Dimension(1701, 1080));
+        this.variante = variante;
+        this.varianteNegocio = varianteNegocio;
+        this.frmPrincipal = frmPrincipal;
         cargarDatos(variante);
     }
 
@@ -123,6 +135,7 @@ public class PnlVarianteProducto extends javax.swing.JPanel {
         btnConfirmar1 = new javax.swing.JButton();
         btnAgregarImagen = new javax.swing.JButton();
         txtTalla = new javax.swing.JTextField();
+        btnEliminar = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1701, 1080));
         setLayout(new java.awt.BorderLayout());
@@ -139,7 +152,7 @@ public class PnlVarianteProducto extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(463, 463, 463)
                 .addComponent(jLabel1)
-                .addContainerGap(725, Short.MAX_VALUE))
+                .addContainerGap(896, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -217,6 +230,11 @@ public class PnlVarianteProducto extends javax.swing.JPanel {
         btnConfirmar1.setForeground(new java.awt.Color(255, 255, 255));
         btnConfirmar1.setText("Confirmar");
         btnConfirmar1.setBorder(null);
+        btnConfirmar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmar1ActionPerformed(evt);
+            }
+        });
 
         btnAgregarImagen.setBackground(new java.awt.Color(0, 0, 0));
         btnAgregarImagen.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
@@ -231,6 +249,17 @@ public class PnlVarianteProducto extends javax.swing.JPanel {
 
         txtTalla.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
 
+        btnEliminar.setBackground(new java.awt.Color(0, 0, 0));
+        btnEliminar.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        btnEliminar.setForeground(new java.awt.Color(255, 255, 255));
+        btnEliminar.setText("Eliminar");
+        btnEliminar.setBorder(null);
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -239,8 +268,25 @@ public class PnlVarianteProducto extends javax.swing.JPanel {
                 .addGap(235, 235, 235)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(btnAgregarImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 421, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(123, 123, 123)
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnConfirmar1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(31, 31, 31)
+                                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(16, 16, 16))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(lblImagen)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 432, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(jPanel2Layout.createSequentialGroup()
@@ -263,22 +309,8 @@ public class PnlVarianteProducto extends javax.swing.JPanel {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(txtCodigoBarras1, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(btnGenerarCodigoBarras, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(btnAgregarImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 421, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(123, 123, 123)
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(55, 55, 55)
-                                .addComponent(btnConfirmar1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
-                .addGap(110, 110, 110))
+                                .addComponent(btnGenerarCodigoBarras, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -318,7 +350,8 @@ public class PnlVarianteProducto extends javax.swing.JPanel {
                         .addGap(41, 41, 41)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnConfirmar1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnConfirmar1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(btnAgregarImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -333,7 +366,7 @@ public class PnlVarianteProducto extends javax.swing.JPanel {
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         boolean modoEdicion = btnEditar.getText().equals("Editar");
 
-        txtCodigoBarras1.setEditable(modoEdicion);
+        txtCodigoBarras1.setEditable(false);
         txtPrecioCompra.setEditable(modoEdicion);
         txtPrecioVenta.setEditable(modoEdicion);
         txtTalla.setEditable(modoEdicion);
@@ -397,12 +430,79 @@ public class PnlVarianteProducto extends javax.swing.JPanel {
         }
      }//GEN-LAST:event_btnAgregarImagenActionPerformed
 
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "¿Estás seguro de que deseas eliminar esta variante?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                if (variante != null && variante.getId() != null) {
+                    varianteNegocio.eliminarVariante(variante.getId());
+                    JOptionPane.showMessageDialog(this, "Variante eliminada correctamente.");
+
+                    // Volver al panel de inicio o recargar lista de variantes
+                    frmPrincipal.pintarPanelPrincipal(new PanelHome(frmPrincipal));
+                } else {
+                    JOptionPane.showMessageDialog(this, "La variante no es válida o no tiene ID asignado.",
+                            "Advertencia", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (NegocioException ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Error al eliminar la variante:\n" + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnConfirmar1ActionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            String talla = txtTalla.getText().trim();
+            BigDecimal precioCompra = new BigDecimal(txtPrecioCompra.getText().replace("$", "").trim());
+            BigDecimal precioVenta = new BigDecimal(txtPrecioVenta.getText().replace("$", "").trim());
+
+            Color color = btnColor.getBackground();
+            String hexColor = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+
+            VarianteProductoDTO dtoActualizado = new VarianteProductoDTO(
+                    txtCodigoBarras1.getText().trim(), // Código de barras no editable
+                    25, // Stock fijo
+                    precioCompra,
+                    talla,
+                    hexColor,
+                    precioVenta,
+                    variante.getProductoId()
+            );
+            dtoActualizado.setId(variante.getId());
+            dtoActualizado.setNombreProducto(variante.getNombreProducto());
+            dtoActualizado.setUrlImagen(variante.getUrlImagen());
+
+            varianteNegocio.actualizarVariante(dtoActualizado);
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Variante actualizada correctamente.");
+            btnEditar.setText("Editar");
+            btnConfirmar1.setEnabled(false);
+
+            // Deshabilitar campos de nuevo
+            txtPrecioCompra.setEditable(false);
+            txtPrecioVenta.setEditable(false);
+            txtTalla.setEditable(false);
+            btnColor.setEnabled(false);
+            btnAgregarImagen.setEnabled(false);
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al actualizar: " + ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarImagen;
     private javax.swing.JButton btnColor;
     private javax.swing.JButton btnConfirmar1;
     private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGenerarCodigoBarras;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
