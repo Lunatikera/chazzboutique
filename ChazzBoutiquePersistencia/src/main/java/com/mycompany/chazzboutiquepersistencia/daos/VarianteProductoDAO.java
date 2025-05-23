@@ -113,14 +113,14 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
             VarianteProducto v = em.find(VarianteProducto.class, id);
             if (v != null) {
                 v.setEliminado(true);
-                em.merge(v);
+                em.remove(v);
             }
             tx.commit();
         } catch (Exception e) {
             if (tx.isActive()) {
                 tx.rollback();
             }
-            throw new PersistenciaException("Error al hacer soft delete de la variante", e);
+            throw new PersistenciaException("Error al eliminar variante", e);
         } finally {
             em.close();
         }

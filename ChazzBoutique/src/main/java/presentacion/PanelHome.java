@@ -7,6 +7,7 @@ package presentacion;
 import com.mycompany.chazzboutiquenegocio.dtos.CategoriaDTO;
 import com.mycompany.chazzboutiquenegocio.dtos.VarianteProductoDTO;
 import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVarianteProductoNegocio;
 import java.awt.Color;
 import java.awt.Image;
 import java.net.URL;
@@ -24,7 +25,7 @@ import static utils.Capitalizador.capitalizarNombre;
  * @author carli
  */
 public class PanelHome extends javax.swing.JPanel {
-
+private IVarianteProductoNegocio varianteNegocio;
     private FrmPrincipal frmPrincipal;
     private List<CategoriaDTO> categorias;
     private int indiceCarrusel = 0;
@@ -38,6 +39,7 @@ public class PanelHome extends javax.swing.JPanel {
     public PanelHome(FrmPrincipal frmPrincipal) {
         initComponents();
         this.frmPrincipal = frmPrincipal;
+        this.varianteNegocio= frmPrincipal.varianteProductoNegocio;
         cargarCategorias();
         cargarVariantes(paginaActual, tamanoPagina, filtroActual);
 
@@ -1095,7 +1097,7 @@ public class PanelHome extends javax.swing.JPanel {
 
     private void btnVer1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer1ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(0); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer1ActionPerformed
 
@@ -1106,29 +1108,29 @@ public class PanelHome extends javax.swing.JPanel {
 
     private void btnVer2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer2ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(1); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
         frmPrincipal.pintarPanelPrincipal(pnl);        // TODO add your handling code here:
     }//GEN-LAST:event_btnVer2ActionPerformed
 
     private void btnVer3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer3ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(2); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
         frmPrincipal.pintarPanelPrincipal(pnl);        // TODO add your handling code here:
     }//GEN-LAST:event_btnVer3ActionPerformed
 
     private void btnVer4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer4ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(3); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+       PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
         frmPrincipal.pintarPanelPrincipal(pnl);    }//GEN-LAST:event_btnVer4ActionPerformed
 
     private void btnVer5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer5ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(4); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
         frmPrincipal.pintarPanelPrincipal(pnl);    }//GEN-LAST:event_btnVer5ActionPerformed
 
     private void btnVer6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer6ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(5); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio);
         frmPrincipal.pintarPanelPrincipal(pnl);    }//GEN-LAST:event_btnVer6ActionPerformed
 
 
