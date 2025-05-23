@@ -10,6 +10,7 @@ import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVarianteProductoNegocio;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
@@ -119,6 +120,16 @@ private IVarianteProductoNegocio varianteNegocio;
             } else {
                 botones.get(i).setIcon(null); // O imagen por defecto
             }
+
+            for (ActionListener al : botones.get(i).getActionListeners()) {
+                botones.get(i).removeActionListener(al);
+            }
+
+            CategoriaDTO copiaCategoria = cat;
+            botones.get(i).addActionListener(evt -> {
+                PanelCategoriaProducto panelCategoria = new PanelCategoriaProducto(frmPrincipal, copiaCategoria);
+                frmPrincipal.pintarPanelPrincipal(panelCategoria);
+            });
         }
     }
 

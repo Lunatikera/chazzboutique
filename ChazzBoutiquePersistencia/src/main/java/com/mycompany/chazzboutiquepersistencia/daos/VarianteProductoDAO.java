@@ -110,15 +110,17 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            em.createQuery("DELETE FROM VarianteProducto v WHERE v.id = :id")
-                    .setParameter("id", id)
-                    .executeUpdate();
+            VarianteProducto v = em.find(VarianteProducto.class, id);
+            if (v != null) {
+                v.setEliminado(true);
+                em.merge(v);
+            }
             tx.commit();
         } catch (Exception e) {
             if (tx.isActive()) {
                 tx.rollback();
             }
-            throw new PersistenciaException("Error al eliminar variante", e);
+            throw new PersistenciaException("Error al hacer soft delete de la variante", e);
         } finally {
             em.close();
         }
@@ -173,6 +175,45 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
             throw new PersistenciaException("Error al contar variantes", e);
         } finally {
             em.close();
+        }
+    }
+
+    @Override
+    public List<VarianteProducto> buscarVariantesPorCategoriaYNombreProducto(int idCategoria, String nombre, int pagina, int tamañoPagina) throws PersistenciaException {
+        EntityManager em = conexionBD.getEntityManager();
+
+        try {
+            return em.createQuery("""
+            SELECT v FROM VarianteProducto v
+            WHERE v.producto.categoria.id = :idCategoria
+            AND v.eliminado = false
+            AND LOWER(v.producto.nombreProducto) LIKE :nombre
+        """, VarianteProducto.class)
+                    .setParameter("idCategoria", (long) idCategoria)
+                    .setParameter("nombre", "%" + nombre.toLowerCase() + "%")
+                    .setFirstResult((pagina - 1) * tamañoPagina)
+                    .setMaxResults(tamañoPagina)
+                    .getResultList();
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al buscar variantes por categoría y nombre", e);
+        }
+    }
+
+    @Override
+    public long contarVariantesPorCategoriaYNombreProducto(int idCategoria, String nombre) throws PersistenciaException {
+        EntityManager em = conexionBD.getEntityManager();
+        try {
+            return em.createQuery("""
+            SELECT COUNT(v) FROM VarianteProducto v
+            WHERE v.producto.categoria.id = :idCategoria
+            AND v.eliminado = false
+            AND LOWER(v.producto.nombreProducto) LIKE :nombre
+        """, Long.class)
+                    .setParameter("idCategoria", (long) idCategoria)
+                    .setParameter("nombre", "%" + nombre.toLowerCase() + "%")
+                    .getSingleResult();
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al contar variantes por categoría y nombre", e);
         }
     }
 

@@ -169,4 +169,52 @@ public class VarianteProductoNegocio implements IVarianteProductoNegocio {
         }
     }
 
+    private VarianteProductoDTO convertirADTO(VarianteProducto variante) {
+        VarianteProductoDTO dto = new VarianteProductoDTO();
+        dto.setId(variante.getId());
+        dto.setCodigoBarra(variante.getCodigoBarra());
+        dto.setStock(variante.getStock());
+        dto.setPrecioCompra(variante.getPrecioCompra());
+        dto.setPrecioVenta(variante.getPrecioVenta());
+        dto.setTalla(variante.getTalla());
+        dto.setColor(variante.getColor());
+        dto.setUrlImagen(variante.getUrlImagen());
+        dto.setProductoId(variante.getProducto().getId());
+        dto.setNombreProducto(variante.getProducto().getNombre()); // asegúrate que `getNombre()` existe
+        return dto;
+    }
+
+    @Override
+    public List<VarianteProductoDTO> buscarVariantesPorCategoriaYNombreProducto(int idCategoria, String nombre, int pagina, int tamañoPagina) throws NegocioException {
+        if (idCategoria <= 0) {
+            throw new NegocioException("El ID de la categoría debe ser mayor que cero");
+        }
+        if (pagina < 1 || tamañoPagina < 1) {
+            throw new NegocioException("Parámetros de paginación inválidos");
+        }
+
+        try {
+            String filtro = (nombre == null || nombre.trim().isEmpty()) ? "" : nombre.trim().toLowerCase();
+            List<VarianteProducto> variantes = varianteProductoDAO.buscarVariantesPorCategoriaYNombreProducto(idCategoria, filtro, pagina, tamañoPagina);
+            return variantes.stream()
+                    .map(this::convertirADTO)
+                    .toList();
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al buscar variantes", e);
+        }
+    }
+
+    @Override
+    public long contarVariantesPorCategoriaYNombreProducto(int idCategoria, String nombre) throws NegocioException {
+        if (idCategoria <= 0) {
+            throw new NegocioException("El ID de la categoría debe ser mayor que cero");
+        }
+        try {
+            String filtro = (nombre == null || nombre.trim().isEmpty()) ? "" : nombre.trim().toLowerCase();
+            return varianteProductoDAO.contarVariantesPorCategoriaYNombreProducto(idCategoria, filtro);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al contar variantes", e);
+        }
+    }
+
 }
