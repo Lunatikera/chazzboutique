@@ -30,6 +30,23 @@ public class ProductoDTO {
         this.proveedorId = proveedorId;
     }
 
+    public ProductoDTO(String nombreProducto, String descripcionProducto, Long categoriaId, Long proveedorId) {
+        this.nombreProducto = nombreProducto;
+        this.descripcionProducto = descripcionProducto;
+        this.categoriaId = categoriaId;
+        this.proveedorId = proveedorId;
+    }
+
+    public ProductoDTO(Long id, String nombreProducto, String descripcionProducto, Long categoriaId, Long proveedorId) {
+        this.id = id;
+        this.nombreProducto = nombreProducto;
+        this.descripcionProducto = descripcionProducto;
+        this.categoriaId = categoriaId;
+        this.proveedorId = proveedorId;
+    }
+    
+    
+
     // Getters y Setters
 
     public Long getId() {
