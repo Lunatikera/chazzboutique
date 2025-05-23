@@ -28,7 +28,9 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
             tx.commit();
             return variante;
         } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
+            if (tx.isActive()) {
+                tx.rollback();
+            }
             throw new PersistenciaException("Error al crear la variante de producto", e);
         } finally {
             em.close();
@@ -53,8 +55,8 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
         EntityManager em = conexionBD.getEntityManager();
         try {
             TypedQuery<VarianteProducto> query = em.createQuery(
-                "SELECT v FROM VarianteProducto v WHERE v.codigoBarra = :cb AND v.eliminado = false",
-                VarianteProducto.class
+                    "SELECT v FROM VarianteProducto v WHERE v.codigoBarra = :cb AND v.eliminado = false",
+                    VarianteProducto.class
             );
             query.setParameter("cb", codigoBarra);
             return query.getSingleResult();
@@ -70,9 +72,9 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
         EntityManager em = conexionBD.getEntityManager();
         try {
             TypedQuery<VarianteProducto> query = em.createQuery(
-                "SELECT v FROM VarianteProducto v " +
-                "WHERE v.producto.id = :pid AND v.eliminado = false",
-                VarianteProducto.class
+                    "SELECT v FROM VarianteProducto v "
+                    + "WHERE v.producto.id = :pid AND v.eliminado = false",
+                    VarianteProducto.class
             );
             query.setParameter("pid", productoId);
             return query.getResultList();
@@ -93,7 +95,9 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
             tx.commit();
             return updated;
         } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
+            if (tx.isActive()) {
+                tx.rollback();
+            }
             throw new PersistenciaException("Error al actualizar la variante de producto", e);
         } finally {
             em.close();
@@ -113,10 +117,65 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
             }
             tx.commit();
         } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
+            if (tx.isActive()) {
+                tx.rollback();
+            }
             throw new PersistenciaException("Error al hacer soft delete de la variante", e);
         } finally {
             em.close();
         }
     }
+
+    @Override
+public List<VarianteProducto> buscarVariantesPorNombreProducto(String terminoBusqueda, int pagina, int tamañoPagina) throws PersistenciaException {
+    EntityManager em = conexionBD.getEntityManager();
+    try {
+        // Limpiar el filtro: minúsculas y espacios normales
+        String filtro = terminoBusqueda.toLowerCase().trim().replaceAll("\\s+", " ");
+
+        TypedQuery<VarianteProducto> query = em.createQuery(
+            "SELECT v FROM VarianteProducto v " +
+            "WHERE v.eliminado = false AND (" +
+            "LOWER(v.producto.nombreProducto) LIKE :busqueda OR " +
+            "LOWER(v.color) LIKE :busqueda OR " +
+            "LOWER(v.talla) LIKE :busqueda" +
+            ")",
+            VarianteProducto.class
+        );
+
+        query.setParameter("busqueda", "%" + filtro + "%");
+        query.setFirstResult((pagina - 1) * tamañoPagina);
+        query.setMaxResults(tamañoPagina);
+
+        return query.getResultList();
+    } catch (Exception e) {
+        throw new PersistenciaException("Error al buscar variantes con paginación", e);
+    } finally {
+        em.close();
+    }
+}
+
+public long contarVariantesPorNombreProducto(String terminoBusqueda) throws PersistenciaException {
+    EntityManager em = conexionBD.getEntityManager();
+    try {
+        String filtro = terminoBusqueda.toLowerCase().trim().replaceAll("\\s+", " ");
+
+        TypedQuery<Long> query = em.createQuery(
+            "SELECT COUNT(v) FROM VarianteProducto v " +
+            "WHERE v.eliminado = false AND (" +
+            "LOWER(v.producto.nombreProducto) LIKE :busqueda OR " +
+            "LOWER(v.color) LIKE :busqueda OR " +
+            "LOWER(v.talla) LIKE :busqueda)",
+            Long.class
+        );
+        query.setParameter("busqueda", "%" + filtro + "%");
+
+        return query.getSingleResult();
+    } catch (Exception e) {
+        throw new PersistenciaException("Error al contar variantes", e);
+    } finally {
+        em.close();
+    }
+}
+
 }

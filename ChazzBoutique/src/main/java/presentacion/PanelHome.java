@@ -5,14 +5,18 @@
 package presentacion;
 
 import com.mycompany.chazzboutiquenegocio.dtos.CategoriaDTO;
+import com.mycompany.chazzboutiquenegocio.dtos.VarianteProductoDTO;
 import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
+import java.awt.Color;
 import java.awt.Image;
+import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  *
@@ -23,12 +27,62 @@ public class PanelHome extends javax.swing.JPanel {
     private FrmPrincipal frmPrincipal;
     private List<CategoriaDTO> categorias;
     private int indiceCarrusel = 0;
-    private final int VISTA_MAXIMA = 7;
+    private final int VISTA_MAXIMA = 5;
+    private int paginaActual = 1;
+    private final int tamanoPagina = 6;
+    private String filtroActual = "";
+    private boolean hayMasPaginas = true;
 
     public PanelHome(FrmPrincipal frmPrincipal) {
         initComponents();
         this.frmPrincipal = frmPrincipal;
         cargarCategorias();
+        cargarVariantes(paginaActual, tamanoPagina, filtroActual);
+
+        txtBuscador.setForeground(Color.GRAY);
+        txtBuscador.setText("Buscar");
+
+// Manejador de focus
+        txtBuscador.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (txtBuscador.getText().equals("Buscar")) {
+                    txtBuscador.setText("");
+                    txtBuscador.setForeground(Color.WHITE);
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (txtBuscador.getText().isBlank()) {
+                    txtBuscador.setText("Buscar");
+                    txtBuscador.setForeground(Color.GRAY);
+                }
+            }
+        });
+        txtBuscador.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                buscar();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                buscar();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                buscar();
+            }
+
+            private void buscar() {
+                String texto = txtBuscador.getText().trim();
+                if (!texto.equalsIgnoreCase("Buscar")) {
+                    filtroActual = texto;
+                    paginaActual = 1;
+                    cargarVariantes(paginaActual, tamanoPagina, filtroActual);
+                }
+            }
+        });
+
     }
 
     private void cargarCategorias() {
@@ -42,31 +96,84 @@ public class PanelHome extends javax.swing.JPanel {
     }
 
     private void mostrarCategorias() {
-        List<JLabel> etiquetas = List.of(lblCategoria1, lblCategoria2, lblCategoria3, lblCategoria4, lblCategoria5, lblCategoria6, lblCategoria7);
-        List<JButton> botones = List.of(btnImagenCategoria1, btnImagenCategoria2, btnImagenCategoria3, btnImagenCategoria4, btnImagenCategoria5, btnImagenCategoria6, btnImagenCategoria7);
+        List<JLabel> etiquetas = List.of(lblCategoria1, lblCategoria2, lblCategoria3, lblCategoria4, lblCategoria5);
+        List<JButton> botones = List.of(btnImagenCategoria1, btnImagenCategoria2, btnImagenCategoria3, btnImagenCategoria4, btnImagenCategoria5);
+
+        int total = categorias.size();
 
         for (int i = 0; i < VISTA_MAXIMA; i++) {
-            int index = indiceCarrusel + i;
-            if (index < categorias.size()) {
-                CategoriaDTO cat = categorias.get(index);
-                etiquetas.get(i).setText(cat.getNombreCategoria());
+            int index = (indiceCarrusel + i) % total;
+            CategoriaDTO cat = categorias.get(index);
 
-                ImageIcon icon = new ImageIcon(cat.getImagenCategoria());
-                Image img = icon.getImage().getScaledInstance(160, 90, Image.SCALE_SMOOTH);
+            etiquetas.get(i).setText(cat.getNombreCategoria());
+
+            URL url = getClass().getResource(cat.getImagenCategoria());
+            if (url != null) {
+                ImageIcon icon = new ImageIcon(url);
+                Image img = icon.getImage().getScaledInstance(166, 247, Image.SCALE_SMOOTH);
                 botones.get(i).setIcon(new ImageIcon(img));
             } else {
-                etiquetas.get(i).setText("");
-                botones.get(i).setIcon(null);
+                botones.get(i).setIcon(null); // O imagen por defecto
             }
         }
     }
 
- 
+    private void cargarVariantes(int pagina, int tamañoPagina, String filtro) {
+        try {
 
-    private void btnRightCarruselActionPerformed(java.awt.event.ActionEvent evt) {
-        if (indiceCarrusel + VISTA_MAXIMA < categorias.size()) {
-            indiceCarrusel++;
-            mostrarCategorias();
+            List<JPanel> panelesArticulo = List.of(
+                    panelArticulo1, panelArticulo2, panelArticulo3,
+                    panelArticulo4, panelArticulo5, panelArticulo6
+            );
+
+            List<VarianteProductoDTO> variantes = frmPrincipal.varianteProductoNegocio
+                    .buscarVariantesPorNombreProducto(filtro, pagina, tamañoPagina);
+
+            long total = frmPrincipal.varianteProductoNegocio.contarVariantesPorNombreProducto(filtroActual);
+            lblArticulos.setText("Todos (" + total + " artículos)");
+
+            List<VarianteProductoDTO> siguientePagina = frmPrincipal.varianteProductoNegocio
+                    .buscarVariantesPorNombreProducto(filtro, pagina + 1, tamañoPagina);
+
+            hayMasPaginas = !siguientePagina.isEmpty();
+            // actualizar la interfaz (como ya lo haces)
+            List<JLabel> etiquetasNombre = List.of(lblNombreArticulo1, lblNombreArticulo2, lblNombreArticulo3, lblNombreArticulo4, lblNombreArticulo5, lblNombreArticulo6);
+            List<JLabel> etiquetasTalla = List.of(lblTallaResult1, lblTallaResult2, lblTallaResult3, lblTallaResult4, lblTallaResult5, lblTallaResult6);
+            List<JButton> botonesColor = List.of(btnColor1, btnColor2, btnColor3, btnColor4, btnColor5, btnColor6);
+            List<JLabel> etiquetasImagen = List.of(lblImagenArticulo1, lblImagenArticulo2, lblImagenArticulo3, lblImagenArticulo4, lblImagenArticulo5, lblImagenArticulo6);
+
+            for (int i = 0; i < tamañoPagina; i++) {
+                if (i < variantes.size()) {
+                    VarianteProductoDTO dto = variantes.get(i);
+                    etiquetasNombre.get(i).setText(dto.getNombreProducto());
+                    etiquetasTalla.get(i).setText(dto.getTalla());
+                    botonesColor.get(i).setBackground(Color.decode(dto.getColor()));
+                    URL url = getClass().getResource(dto.getUrlImagen());
+                    if (url != null) {
+                        ImageIcon icon = new ImageIcon(url);
+                        etiquetasImagen.get(i).setIcon(new ImageIcon(icon.getImage().getScaledInstance(83, 123, Image.SCALE_SMOOTH)));
+                    } else {
+                        etiquetasImagen.get(i).setIcon(null);
+                    }
+                    panelesArticulo.get(i).setVisible(true); // Mostrar panel
+                } else {
+                    etiquetasNombre.get(i).setText("");
+                    etiquetasTalla.get(i).setText("");
+                    botonesColor.get(i).setBackground(Color.WHITE);
+                    etiquetasImagen.get(i).setIcon(null);
+                    panelesArticulo.get(i).setVisible(false); // Ocultar panel
+                }
+            }
+            jPanel10.revalidate();
+            jPanel10.repaint();
+
+            // actualizar visibilidad de botones
+            btnRightPagina.setEnabled(hayMasPaginas);
+            btnLeftPagina1.setEnabled(paginaActual > 1);
+
+        } catch (NegocioException ex) {
+            lblArticulos.setText("Todos (0 artículos)");
+
         }
     }
 
@@ -98,12 +205,6 @@ public class PanelHome extends javax.swing.JPanel {
         panelCategoria5 = new javax.swing.JPanel();
         btnImagenCategoria5 = new javax.swing.JButton();
         lblCategoria5 = new javax.swing.JLabel();
-        panelCategoria6 = new javax.swing.JPanel();
-        btnImagenCategoria6 = new javax.swing.JButton();
-        lblCategoria6 = new javax.swing.JLabel();
-        panelCategoria7 = new javax.swing.JPanel();
-        btnImagenCategoria7 = new javax.swing.JButton();
-        lblCategoria7 = new javax.swing.JLabel();
         btnRightCarrusel = new utils.BotonMenu();
         jPanel10 = new javax.swing.JPanel();
         panelArticulo1 = new javax.swing.JPanel();
@@ -171,8 +272,9 @@ public class PanelHome extends javax.swing.JPanel {
         panelCarrusel.setBackground(new java.awt.Color(255, 255, 255));
         panelCarrusel.setMinimumSize(new java.awt.Dimension(1920, 259));
 
-        btnLeftCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/left.png"))); // NOI18N
         btnLeftCategoria.setPreferredSize(new java.awt.Dimension(29, 259));
+        btnLeftCategoria.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/left.png"))); // NOI18N
+        btnLeftCategoria.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/left.png"))); // NOI18N
         btnLeftCategoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLeftCategoriaActionPerformed(evt);
@@ -182,7 +284,10 @@ public class PanelHome extends javax.swing.JPanel {
 
         panelCategoria1.setBackground(new java.awt.Color(255, 255, 255));
 
+        btnImagenCategoria1.setBackground(new java.awt.Color(248, 253, 253));
         btnImagenCategoria1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ImagenPruebaCatalogo.png"))); // NOI18N
+        btnImagenCategoria1.setBorderPainted(false);
+        btnImagenCategoria1.setContentAreaFilled(false);
 
         lblCategoria1.setFont(new java.awt.Font("Lucida Bright", 0, 26)); // NOI18N
         lblCategoria1.setText("Camisas");
@@ -191,15 +296,14 @@ public class PanelHome extends javax.swing.JPanel {
         panelCategoria1.setLayout(panelCategoria1Layout);
         panelCategoria1Layout.setHorizontalGroup(
             panelCategoria1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelCategoria1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria1Layout.createSequentialGroup()
                 .addContainerGap(34, Short.MAX_VALUE)
                 .addGroup(panelCategoria1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria1Layout.createSequentialGroup()
-                        .addComponent(btnImagenCategoria1)
-                        .addGap(30, 30, 30))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria1Layout.createSequentialGroup()
-                        .addComponent(lblCategoria1)
-                        .addGap(60, 60, 60))))
+                    .addGroup(panelCategoria1Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(lblCategoria1))
+                    .addComponent(btnImagenCategoria1))
+                .addGap(30, 30, 30))
         );
         panelCategoria1Layout.setVerticalGroup(
             panelCategoria1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,7 +319,10 @@ public class PanelHome extends javax.swing.JPanel {
 
         panelCategoria2.setBackground(new java.awt.Color(255, 255, 255));
 
+        btnImagenCategoria2.setBackground(new java.awt.Color(248, 253, 253));
         btnImagenCategoria2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ImagenPruebaCatalogo.png"))); // NOI18N
+        btnImagenCategoria2.setBorderPainted(false);
+        btnImagenCategoria2.setContentAreaFilled(false);
 
         lblCategoria2.setFont(new java.awt.Font("Lucida Bright", 0, 26)); // NOI18N
         lblCategoria2.setText("Camisas");
@@ -224,15 +331,12 @@ public class PanelHome extends javax.swing.JPanel {
         panelCategoria2.setLayout(panelCategoria2Layout);
         panelCategoria2Layout.setHorizontalGroup(
             panelCategoria2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelCategoria2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria2Layout.createSequentialGroup()
                 .addContainerGap(34, Short.MAX_VALUE)
                 .addGroup(panelCategoria2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria2Layout.createSequentialGroup()
-                        .addComponent(btnImagenCategoria2)
-                        .addGap(30, 30, 30))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria2Layout.createSequentialGroup()
-                        .addComponent(lblCategoria2)
-                        .addGap(60, 60, 60))))
+                    .addComponent(lblCategoria2)
+                    .addComponent(btnImagenCategoria2))
+                .addGap(30, 30, 30))
         );
         panelCategoria2Layout.setVerticalGroup(
             panelCategoria2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -248,7 +352,10 @@ public class PanelHome extends javax.swing.JPanel {
 
         panelCategoria3.setBackground(new java.awt.Color(255, 255, 255));
 
+        btnImagenCategoria3.setBackground(new java.awt.Color(248, 253, 253));
         btnImagenCategoria3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ImagenPruebaCatalogo.png"))); // NOI18N
+        btnImagenCategoria3.setBorderPainted(false);
+        btnImagenCategoria3.setContentAreaFilled(false);
 
         lblCategoria3.setFont(new java.awt.Font("Lucida Bright", 0, 26)); // NOI18N
         lblCategoria3.setText("Camisas");
@@ -257,15 +364,14 @@ public class PanelHome extends javax.swing.JPanel {
         panelCategoria3.setLayout(panelCategoria3Layout);
         panelCategoria3Layout.setHorizontalGroup(
             panelCategoria3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelCategoria3Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria3Layout.createSequentialGroup()
                 .addContainerGap(34, Short.MAX_VALUE)
                 .addGroup(panelCategoria3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria3Layout.createSequentialGroup()
-                        .addComponent(btnImagenCategoria3)
-                        .addGap(30, 30, 30))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria3Layout.createSequentialGroup()
-                        .addComponent(lblCategoria3)
-                        .addGap(60, 60, 60))))
+                    .addGroup(panelCategoria3Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(lblCategoria3))
+                    .addComponent(btnImagenCategoria3))
+                .addGap(30, 30, 30))
         );
         panelCategoria3Layout.setVerticalGroup(
             panelCategoria3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -281,7 +387,10 @@ public class PanelHome extends javax.swing.JPanel {
 
         panelCategoria4.setBackground(new java.awt.Color(255, 255, 255));
 
+        btnImagenCategoria4.setBackground(new java.awt.Color(248, 253, 253));
         btnImagenCategoria4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ImagenPruebaCatalogo.png"))); // NOI18N
+        btnImagenCategoria4.setBorderPainted(false);
+        btnImagenCategoria4.setContentAreaFilled(false);
 
         lblCategoria4.setFont(new java.awt.Font("Lucida Bright", 0, 26)); // NOI18N
         lblCategoria4.setText("Camisas");
@@ -290,15 +399,14 @@ public class PanelHome extends javax.swing.JPanel {
         panelCategoria4.setLayout(panelCategoria4Layout);
         panelCategoria4Layout.setHorizontalGroup(
             panelCategoria4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelCategoria4Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria4Layout.createSequentialGroup()
                 .addContainerGap(34, Short.MAX_VALUE)
                 .addGroup(panelCategoria4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria4Layout.createSequentialGroup()
-                        .addComponent(btnImagenCategoria4)
-                        .addGap(30, 30, 30))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria4Layout.createSequentialGroup()
-                        .addComponent(lblCategoria4)
-                        .addGap(60, 60, 60))))
+                    .addGroup(panelCategoria4Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(lblCategoria4))
+                    .addComponent(btnImagenCategoria4))
+                .addGap(30, 30, 30))
         );
         panelCategoria4Layout.setVerticalGroup(
             panelCategoria4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -314,7 +422,10 @@ public class PanelHome extends javax.swing.JPanel {
 
         panelCategoria5.setBackground(new java.awt.Color(255, 255, 255));
 
+        btnImagenCategoria5.setBackground(new java.awt.Color(248, 253, 253));
         btnImagenCategoria5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ImagenPruebaCatalogo.png"))); // NOI18N
+        btnImagenCategoria5.setBorderPainted(false);
+        btnImagenCategoria5.setContentAreaFilled(false);
 
         lblCategoria5.setFont(new java.awt.Font("Lucida Bright", 0, 26)); // NOI18N
         lblCategoria5.setText("Camisas");
@@ -323,15 +434,14 @@ public class PanelHome extends javax.swing.JPanel {
         panelCategoria5.setLayout(panelCategoria5Layout);
         panelCategoria5Layout.setHorizontalGroup(
             panelCategoria5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelCategoria5Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria5Layout.createSequentialGroup()
                 .addContainerGap(34, Short.MAX_VALUE)
                 .addGroup(panelCategoria5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria5Layout.createSequentialGroup()
-                        .addComponent(btnImagenCategoria5)
-                        .addGap(30, 30, 30))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria5Layout.createSequentialGroup()
-                        .addComponent(lblCategoria5)
-                        .addGap(60, 60, 60))))
+                    .addGroup(panelCategoria5Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(lblCategoria5))
+                    .addComponent(btnImagenCategoria5))
+                .addGap(30, 30, 30))
         );
         panelCategoria5Layout.setVerticalGroup(
             panelCategoria5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -345,73 +455,13 @@ public class PanelHome extends javax.swing.JPanel {
 
         panelCarrusel.add(panelCategoria5);
 
-        panelCategoria6.setBackground(new java.awt.Color(255, 255, 255));
-
-        btnImagenCategoria6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ImagenPruebaCatalogo.png"))); // NOI18N
-
-        lblCategoria6.setFont(new java.awt.Font("Lucida Bright", 0, 26)); // NOI18N
-        lblCategoria6.setText("Camisas");
-
-        javax.swing.GroupLayout panelCategoria6Layout = new javax.swing.GroupLayout(panelCategoria6);
-        panelCategoria6.setLayout(panelCategoria6Layout);
-        panelCategoria6Layout.setHorizontalGroup(
-            panelCategoria6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelCategoria6Layout.createSequentialGroup()
-                .addContainerGap(34, Short.MAX_VALUE)
-                .addGroup(panelCategoria6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria6Layout.createSequentialGroup()
-                        .addComponent(btnImagenCategoria6)
-                        .addGap(30, 30, 30))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria6Layout.createSequentialGroup()
-                        .addComponent(lblCategoria6)
-                        .addGap(60, 60, 60))))
-        );
-        panelCategoria6Layout.setVerticalGroup(
-            panelCategoria6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelCategoria6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnImagenCategoria6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCategoria6)
-                .addContainerGap(12, Short.MAX_VALUE))
-        );
-
-        panelCarrusel.add(panelCategoria6);
-
-        panelCategoria7.setBackground(new java.awt.Color(255, 255, 255));
-
-        btnImagenCategoria7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ImagenPruebaCatalogo.png"))); // NOI18N
-
-        lblCategoria7.setFont(new java.awt.Font("Lucida Bright", 0, 26)); // NOI18N
-        lblCategoria7.setText("Camisas");
-
-        javax.swing.GroupLayout panelCategoria7Layout = new javax.swing.GroupLayout(panelCategoria7);
-        panelCategoria7.setLayout(panelCategoria7Layout);
-        panelCategoria7Layout.setHorizontalGroup(
-            panelCategoria7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelCategoria7Layout.createSequentialGroup()
-                .addContainerGap(34, Short.MAX_VALUE)
-                .addGroup(panelCategoria7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria7Layout.createSequentialGroup()
-                        .addComponent(btnImagenCategoria7)
-                        .addGap(51, 51, 51))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria7Layout.createSequentialGroup()
-                        .addComponent(lblCategoria7)
-                        .addGap(60, 60, 60))))
-        );
-        panelCategoria7Layout.setVerticalGroup(
-            panelCategoria7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelCategoria7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnImagenCategoria7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCategoria7)
-                .addContainerGap(12, Short.MAX_VALUE))
-        );
-
-        panelCarrusel.add(panelCategoria7);
-
-        btnRightCarrusel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/right.png"))); // NOI18N
+        btnRightCarrusel.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/right.png"))); // NOI18N
+        btnRightCarrusel.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/right.png"))); // NOI18N
+        btnRightCarrusel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRightCarruselActionPerformed(evt);
+            }
+        });
         panelCarrusel.add(btnRightCarrusel);
 
         jPanel10.setBackground(new java.awt.Color(255, 255, 255));
@@ -432,7 +482,8 @@ public class PanelHome extends javax.swing.JPanel {
 
         btnColor1.setBackground(new java.awt.Color(255, 102, 51));
 
-        btnVer1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer1.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer1.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
         btnVer1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVer1ActionPerformed(evt);
@@ -507,7 +558,8 @@ public class PanelHome extends javax.swing.JPanel {
 
         btnColor2.setBackground(new java.awt.Color(255, 102, 51));
 
-        btnVer2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer2.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer2.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
         btnVer2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVer2ActionPerformed(evt);
@@ -582,7 +634,8 @@ public class PanelHome extends javax.swing.JPanel {
 
         btnColor3.setBackground(new java.awt.Color(255, 102, 51));
 
-        btnVer3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer3.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer3.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
         btnVer3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVer3ActionPerformed(evt);
@@ -657,7 +710,8 @@ public class PanelHome extends javax.swing.JPanel {
 
         btnColor4.setBackground(new java.awt.Color(255, 102, 51));
 
-        btnVer4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer4.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer4.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
         btnVer4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVer4ActionPerformed(evt);
@@ -732,7 +786,8 @@ public class PanelHome extends javax.swing.JPanel {
 
         btnColor5.setBackground(new java.awt.Color(255, 102, 51));
 
-        btnVer5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer5.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer5.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
         btnVer5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVer5ActionPerformed(evt);
@@ -807,7 +862,8 @@ public class PanelHome extends javax.swing.JPanel {
 
         btnColor6.setBackground(new java.awt.Color(255, 102, 51));
 
-        btnVer6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer6.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer6.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
         btnVer6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVer6ActionPerformed(evt);
@@ -875,16 +931,18 @@ public class PanelHome extends javax.swing.JPanel {
         lblArticulos.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         lblArticulos.setText("Todos (125 articulos)");
 
-        btnRightPagina.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/right.png"))); // NOI18N
         btnRightPagina.setPreferredSize(new java.awt.Dimension(29, 259));
+        btnRightPagina.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/right.png"))); // NOI18N
+        btnRightPagina.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/right.png"))); // NOI18N
         btnRightPagina.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRightPaginaActionPerformed(evt);
             }
         });
 
-        btnLeftPagina1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/left.png"))); // NOI18N
         btnLeftPagina1.setPreferredSize(new java.awt.Dimension(29, 259));
+        btnLeftPagina1.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/left.png"))); // NOI18N
+        btnLeftPagina1.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/left.png"))); // NOI18N
         btnLeftPagina1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLeftPagina1ActionPerformed(evt);
@@ -915,8 +973,8 @@ public class PanelHome extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel42)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtBuscador, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(txtBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -933,33 +991,33 @@ public class PanelHome extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(171, 171, 171)
-                .addComponent(lblCategorias)
-                .addGap(384, 384, 384)
-                .addComponent(lblTitulo)
-                .addGap(249, 249, 249)
-                .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(790, 790, 790)
+                .addComponent(btnLeftPagina1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblPagina1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnRightPagina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelCarrusel, javax.swing.GroupLayout.PREFERRED_SIZE, 1920, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(852, 852, 852)
-                        .addComponent(btnLeftPagina1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblPagina1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnRightPagina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(280, 280, 280)
+                .addComponent(lblCategorias)
+                .addGap(242, 242, 242)
+                .addComponent(lblTitulo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(172, 172, 172))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(panelCarrusel, javax.swing.GroupLayout.PREFERRED_SIZE, 1743, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 1607, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(152, 152, 152))
+                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 1310, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(200, 200, 200))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(324, 324, 324)
                     .addComponent(lblArticulos)
-                    .addContainerGap(1266, Short.MAX_VALUE)))
+                    .addContainerGap(1089, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -975,7 +1033,7 @@ public class PanelHome extends javax.swing.JPanel {
                             .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(panelCarrusel, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(67, 67, 67)
+                .addGap(79, 79, 79)
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -984,7 +1042,7 @@ public class PanelHome extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(lblPagina1)))
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addContainerGap(92, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(508, 508, 508)
@@ -996,7 +1054,9 @@ public class PanelHome extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 6, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1005,27 +1065,38 @@ public class PanelHome extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLeftCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLeftCategoriaActionPerformed
-        if (indiceCarrusel > 0) {
-            indiceCarrusel--;
-            mostrarCategorias();
-        }
+        indiceCarrusel = (indiceCarrusel - 1 + categorias.size()) % categorias.size();
+        mostrarCategorias();
     }//GEN-LAST:event_btnLeftCategoriaActionPerformed
 
     private void btnRightPaginaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRightPaginaActionPerformed
-        // TODO add your handling code here:
+        if (hayMasPaginas) {
+            paginaActual++;
+            cargarVariantes(paginaActual, tamanoPagina, filtroActual);
+        }
     }//GEN-LAST:event_btnRightPaginaActionPerformed
 
     private void btnLeftPagina1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLeftPagina1ActionPerformed
-        // TODO add your handling code here:
+        if (paginaActual > 1) {
+            paginaActual--;
+            cargarVariantes(paginaActual, tamanoPagina, filtroActual);
+        }
     }//GEN-LAST:event_btnLeftPagina1ActionPerformed
 
     private void txtBuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscadorActionPerformed
-        // TODO add your handling code here:
+        filtroActual = txtBuscador.getText().trim();
+        paginaActual = 1;
+        cargarVariantes(paginaActual, tamanoPagina, filtroActual);
     }//GEN-LAST:event_txtBuscadorActionPerformed
 
     private void btnVer1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnVer1ActionPerformed
+
+    private void btnRightCarruselActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRightCarruselActionPerformed
+        indiceCarrusel = (indiceCarrusel + 1 + categorias.size()) % categorias.size();
+        mostrarCategorias();
+    }//GEN-LAST:event_btnRightCarruselActionPerformed
 
     private void btnVer2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer2ActionPerformed
         // TODO add your handling code here:
@@ -1060,8 +1131,6 @@ public class PanelHome extends javax.swing.JPanel {
     private javax.swing.JButton btnImagenCategoria3;
     private javax.swing.JButton btnImagenCategoria4;
     private javax.swing.JButton btnImagenCategoria5;
-    private javax.swing.JButton btnImagenCategoria6;
-    private javax.swing.JButton btnImagenCategoria7;
     private utils.BotonMenu btnLeftCategoria;
     private utils.BotonMenu btnLeftPagina1;
     private utils.BotonMenu btnRightCarrusel;
@@ -1082,8 +1151,6 @@ public class PanelHome extends javax.swing.JPanel {
     private javax.swing.JLabel lblCategoria3;
     private javax.swing.JLabel lblCategoria4;
     private javax.swing.JLabel lblCategoria5;
-    private javax.swing.JLabel lblCategoria6;
-    private javax.swing.JLabel lblCategoria7;
     private javax.swing.JLabel lblCategorias;
     private javax.swing.JLabel lblColor;
     private javax.swing.JLabel lblColor1;
@@ -1129,8 +1196,6 @@ public class PanelHome extends javax.swing.JPanel {
     private javax.swing.JPanel panelCategoria3;
     private javax.swing.JPanel panelCategoria4;
     private javax.swing.JPanel panelCategoria5;
-    private javax.swing.JPanel panelCategoria6;
-    private javax.swing.JPanel panelCategoria7;
     private javax.swing.JTextField txtBuscador;
     // End of variables declaration//GEN-END:variables
 }

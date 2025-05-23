@@ -52,9 +52,12 @@ public class VarianteProducto implements Serializable {
     @Column(name = "precioVenta", nullable = false)
     private BigDecimal precioVenta;
 
-    @Column(name = "eliminado",nullable = false)
+    @Column(name = "eliminado", nullable = false)
     private boolean eliminado = false;
-
+    
+    @Column(name = "urlImagen", length = 255)
+    private String urlImagen;
+    
     @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
@@ -140,6 +143,14 @@ public class VarianteProducto implements Serializable {
 
     public void setEliminado(boolean eliminado) {
         this.eliminado = eliminado;
+    }
+
+    public String getUrlImagen() {
+        return urlImagen;
+    }
+
+    public void setUrlImagen(String urlImagen) {
+        this.urlImagen = urlImagen;
     }
 
     @Override

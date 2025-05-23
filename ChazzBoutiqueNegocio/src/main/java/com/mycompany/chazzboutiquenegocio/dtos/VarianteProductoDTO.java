@@ -20,6 +20,8 @@ public class VarianteProductoDTO {
     private String color;
     private BigDecimal precioVenta;
     private Long productoId;
+    private String nombreProducto;
+    private String urlImagen;
 
     // Constructor
     public VarianteProductoDTO(String codigoBarra, int stock, BigDecimal precioCompra, String talla, BigDecimal precioVenta, Long productoId) {
@@ -78,6 +80,14 @@ public class VarianteProductoDTO {
         this.color = color;
     }
 
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
+    }
+
     public void setPrecioCompra(BigDecimal precioCompra) {
         this.precioCompra = precioCompra;
     }
@@ -92,6 +102,14 @@ public class VarianteProductoDTO {
 
     public BigDecimal getPrecioVenta() {
         return precioVenta;
+    }
+
+    public String getUrlImagen() {
+        return urlImagen;
+    }
+
+    public void setUrlImagen(String urlImagen) {
+        this.urlImagen = urlImagen;
     }
 
     public void setPrecioVenta(BigDecimal precioVenta) {
