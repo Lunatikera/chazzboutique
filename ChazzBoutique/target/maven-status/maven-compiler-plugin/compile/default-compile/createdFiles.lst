@@ -1,4 +1,5 @@
 presentacion\PanelVenta$1.class
+presentacion\PnlAnadirCategoria$5.class
 presentacion\PanelHome$4.class
 utils\ImagenPerfil.class
 utils\SpinnerCellEditor$1.class
@@ -22,6 +23,7 @@ presentacion\PnlVarianteProducto$2.class
 presentacion\PanelCategoriaProducto$1.class
 presentacion\PanelCategoriaProducto$4.class
 presentacion\PanelHome$7.class
+presentacion\PnlAnadirCategoria$2.class
 utils\BotonMenu$1.class
 presentacion\PanelVenta$6.class
 utils\ProductoComboItem.class
@@ -49,6 +51,7 @@ utils\ScrollBar.class
 presentacion\PanelCategoriaProducto$2.class
 presentacion\PanelHome$8.class
 presentacion\FrmInicial.class
+presentacion\PnlAnadirCategoria$1.class
 presentacion\PanelCategoriaProducto$5.class
 presentacion\PanelCategoriaProducto.class
 utils\ButtonRenderer.class
@@ -63,6 +66,7 @@ presentacion\PanelVenta$5.class
 utils\Capitalizador.class
 utils\ModernScrollBarUI$InvisibleScrollBarButton.class
 presentacion\FrmLogin.class
+presentacion\PnlAnadirCategoria$3.class
 presentacion\PanelCategoriaProducto$7.class
 utils\SpinnerCellEditor.class
 presentacion\PanelVenta$11.class
@@ -81,10 +85,12 @@ presentacion\PanelCategoriaProducto$14.class
 presentacion\PanelVenta$10.class
 presentacion\PnlAnadirVarianteProducto.class
 utils\ModeloTablaVentas.class
+presentacion\PnlAnadirCategoria$4.class
 presentacion\PanelEscogerAnadir.class
 presentacion\PanelVenta$3.class
 presentacion\PnlVarianteProducto.class
 presentacion\PanelCategoriaProducto$6.class
 presentacion\FrmVarianteProducto.class
 presentacion\PnlAnadirProducto.class
+presentacion\PnlReporte.class
 presentacion\PanelHome$2.class

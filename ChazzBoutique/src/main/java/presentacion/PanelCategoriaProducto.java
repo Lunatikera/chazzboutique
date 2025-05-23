@@ -38,7 +38,7 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
         initComponents();
         this.frmPrincipal = frmPrincipal;
         this.categoriaSeleccionada = categoria;
-        this.lblTitulo.setText(categoria.getNombreCategoria());
+        this.lblTitulo.setText(capitalizarNombre(categoria.getNombreCategoria()));
         cargarVariantes(paginaActual, tamanoPagina, filtroActual);
         txtBuscador.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override

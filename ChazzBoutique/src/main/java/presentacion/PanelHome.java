@@ -9,6 +9,7 @@ import com.mycompany.chazzboutiquenegocio.dtos.VarianteProductoDTO;
 import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
@@ -118,9 +119,13 @@ public class PanelHome extends javax.swing.JPanel {
                 botones.get(i).setIcon(null); // O imagen por defecto
             }
 
-            CategoriaDTO categoriaSeleccionada = cat;
+            for (ActionListener al : botones.get(i).getActionListeners()) {
+                botones.get(i).removeActionListener(al);
+            }
+
+            CategoriaDTO copiaCategoria = cat;
             botones.get(i).addActionListener(evt -> {
-                PanelCategoriaProducto panelCategoria = new PanelCategoriaProducto(frmPrincipal, categoriaSeleccionada);
+                PanelCategoriaProducto panelCategoria = new PanelCategoriaProducto(frmPrincipal, copiaCategoria);
                 frmPrincipal.pintarPanelPrincipal(panelCategoria);
             });
         }
