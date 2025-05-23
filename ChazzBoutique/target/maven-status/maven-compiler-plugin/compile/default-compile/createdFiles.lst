@@ -16,6 +16,7 @@ utils\SpinnerRenderer.class
 presentacion\PanelCategoriaProducto$13.class
 presentacion\PanelHome$10.class
 presentacion\FrmCategoria$1.class
+presentacion\FrmPrincipal$2.class
 presentacion\PanelHome$13.class
 presentacion\PanelVenta$12.class
 presentacion\PanelVenta$15.class
@@ -33,6 +34,7 @@ presentacion\PanelCategoriaProducto$11.class
 utils\ColorNameDetector.class
 presentacion\PanelVenta$14.class
 utils\ButtonEditor.class
+presentacion\FrmPrincipal$4.class
 presentacion\PanelHome$6.class
 presentacion\FrmProducto$1.class
 presentacion\PanelCategoriaProducto$3.class
@@ -49,6 +51,7 @@ presentacion\PanelHome$11.class
 presentacion\PanelCategoriaProducto$17.class
 presentacion\PanelCategoriaProducto$9.class
 utils\ScrollBar.class
+presentacion\FrmPrincipal$3.class
 presentacion\PanelCategoriaProducto$2.class
 presentacion\PanelHome$8.class
 presentacion\FrmInicial.class

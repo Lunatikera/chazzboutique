@@ -48,7 +48,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         this.usuarioRegistrado = usuarioRegistrado;
 
 
-        this.pintarPanelPrincipal(new PnlReporte(this));
+        this.pintarPanelPrincipal(new PanelHome(this));
     }
 
     public void pintarPanelPrincipal(JPanel panel) {
@@ -130,6 +130,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
         botonMenu1.setForeground(new java.awt.Color(255, 255, 255));
         botonMenu1.setText("Home");
         botonMenu1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        botonMenu1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonMenu1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -187,6 +192,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
         btnCategorias.setForeground(new java.awt.Color(255, 255, 255));
         btnCategorias.setText("Categorias");
         btnCategorias.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        btnCategorias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCategoriasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -239,6 +249,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
         botonMenu5.setForeground(new java.awt.Color(255, 255, 255));
         botonMenu5.setText("Reportes");
         botonMenu5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        botonMenu5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonMenu5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -293,8 +308,20 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonMenu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMenu2ActionPerformed
-        // TODO add your handling code here:
+        this.pintarPanelPrincipal(new PanelVenta(this));
     }//GEN-LAST:event_botonMenu2ActionPerformed
+
+    private void botonMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMenu1ActionPerformed
+        this.pintarPanelPrincipal(new PanelHome(this));
+    }//GEN-LAST:event_botonMenu1ActionPerformed
+
+    private void btnCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCategoriasActionPerformed
+        this.pintarPanelPrincipal(new PnlAnadirCategoria(this));
+    }//GEN-LAST:event_btnCategoriasActionPerformed
+
+    private void botonMenu5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMenu5ActionPerformed
+        this.pintarPanelPrincipal(new PnlReporte(this));
+    }//GEN-LAST:event_botonMenu5ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
