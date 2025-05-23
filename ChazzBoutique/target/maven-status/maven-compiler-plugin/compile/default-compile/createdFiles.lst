@@ -15,6 +15,7 @@ presentacion\PanelHome$13.class
 presentacion\PanelVenta$12.class
 presentacion\PanelVenta$15.class
 presentacion\PanelVenta.class
+presentacion\PnlVarianteProducto$2.class
 presentacion\PanelHome$7.class
 utils\BotonMenu$1.class
 presentacion\PanelVenta$6.class
@@ -26,6 +27,7 @@ utils\ButtonEditor.class
 presentacion\PanelHome$6.class
 presentacion\FrmProducto$1.class
 presentacion\FrmMain.class
+presentacion\PnlVarianteProducto$4.class
 presentacion\PnlAnadirCategoria.class
 utils\BotonMenu.class
 presentacion\PanelHome$5.class
@@ -38,11 +40,13 @@ utils\ScrollBar.class
 presentacion\PanelHome$8.class
 presentacion\FrmInicial.class
 utils\ButtonRenderer.class
+presentacion\PnlVarianteProducto$3.class
 presentacion\PanelVenta$2.class
 com\mycompany\chazzboutique\ChazzBoutique.class
 presentacion\FrmLogin$1.class
 presentacion\PanelVenta$8.class
 presentacion\PanelVenta$5.class
+utils\Capitalizador.class
 utils\ModernScrollBarUI$InvisibleScrollBarButton.class
 presentacion\FrmLogin.class
 utils\SpinnerCellEditor.class
@@ -50,6 +54,7 @@ presentacion\PanelVenta$11.class
 presentacion\PanelVenta$9.class
 presentacion\FrmCategoria.class
 presentacion\PanelHome$9.class
+presentacion\PnlVarianteProducto$1.class
 presentacion\FrmRegistro.class
 presentacion\PanelHome$3.class
 presentacion\FrmProducto.class
@@ -61,6 +66,7 @@ presentacion\PnlAnadirVarianteProducto.class
 utils\ModeloTablaVentas.class
 presentacion\PanelEscogerAnadir.class
 presentacion\PanelVenta$3.class
+presentacion\PnlVarianteProducto.class
 presentacion\FrmVarianteProducto.class
 presentacion\PnlAnadirProducto.class
 presentacion\PanelHome$2.class

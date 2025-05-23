@@ -17,6 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import static utils.Capitalizador.capitalizarNombre;
 
 /**
  *
@@ -32,6 +33,7 @@ public class PanelHome extends javax.swing.JPanel {
     private final int tamanoPagina = 6;
     private String filtroActual = "";
     private boolean hayMasPaginas = true;
+    private List<VarianteProductoDTO> listaActualDeVariantes;
 
     public PanelHome(FrmPrincipal frmPrincipal) {
         initComponents();
@@ -105,7 +107,7 @@ public class PanelHome extends javax.swing.JPanel {
             int index = (indiceCarrusel + i) % total;
             CategoriaDTO cat = categorias.get(index);
 
-            etiquetas.get(i).setText(cat.getNombreCategoria());
+            etiquetas.get(i).setText(capitalizarNombre(cat.getNombreCategoria()));
 
             URL url = getClass().getResource(cat.getImagenCategoria());
             if (url != null) {
@@ -128,7 +130,7 @@ public class PanelHome extends javax.swing.JPanel {
 
             List<VarianteProductoDTO> variantes = frmPrincipal.varianteProductoNegocio
                     .buscarVariantesPorNombreProducto(filtro, pagina, tamañoPagina);
-
+            listaActualDeVariantes = variantes;
             long total = frmPrincipal.varianteProductoNegocio.contarVariantesPorNombreProducto(filtroActual);
             lblArticulos.setText("Todos (" + total + " artículos)");
 
@@ -145,7 +147,7 @@ public class PanelHome extends javax.swing.JPanel {
             for (int i = 0; i < tamañoPagina; i++) {
                 if (i < variantes.size()) {
                     VarianteProductoDTO dto = variantes.get(i);
-                    etiquetasNombre.get(i).setText(dto.getNombreProducto());
+                    etiquetasNombre.get(i).setText(capitalizarNombre(dto.getNombreProducto()));
                     etiquetasTalla.get(i).setText(dto.getTalla());
                     botonesColor.get(i).setBackground(Color.decode(dto.getColor()));
                     URL url = getClass().getResource(dto.getUrlImagen());
@@ -334,8 +336,10 @@ public class PanelHome extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria2Layout.createSequentialGroup()
                 .addContainerGap(34, Short.MAX_VALUE)
                 .addGroup(panelCategoria2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblCategoria2)
-                    .addComponent(btnImagenCategoria2))
+                    .addComponent(btnImagenCategoria2)
+                    .addGroup(panelCategoria2Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(lblCategoria2)))
                 .addGap(30, 30, 30))
         );
         panelCategoria2Layout.setVerticalGroup(
@@ -1090,7 +1094,9 @@ public class PanelHome extends javax.swing.JPanel {
     }//GEN-LAST:event_txtBuscadorActionPerformed
 
     private void btnVer1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer1ActionPerformed
-        // TODO add your handling code here:
+        VarianteProductoDTO seleccionada = listaActualDeVariantes.get(0); // o el índice correspondiente
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer1ActionPerformed
 
     private void btnRightCarruselActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRightCarruselActionPerformed
@@ -1099,24 +1105,31 @@ public class PanelHome extends javax.swing.JPanel {
     }//GEN-LAST:event_btnRightCarruselActionPerformed
 
     private void btnVer2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer2ActionPerformed
-        // TODO add your handling code here:
+        VarianteProductoDTO seleccionada = listaActualDeVariantes.get(1); // o el índice correspondiente
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        frmPrincipal.pintarPanelPrincipal(pnl);        // TODO add your handling code here:
     }//GEN-LAST:event_btnVer2ActionPerformed
 
     private void btnVer3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer3ActionPerformed
-        // TODO add your handling code here:
+        VarianteProductoDTO seleccionada = listaActualDeVariantes.get(2); // o el índice correspondiente
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        frmPrincipal.pintarPanelPrincipal(pnl);        // TODO add your handling code here:
     }//GEN-LAST:event_btnVer3ActionPerformed
 
     private void btnVer4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnVer4ActionPerformed
+        VarianteProductoDTO seleccionada = listaActualDeVariantes.get(3); // o el índice correspondiente
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        frmPrincipal.pintarPanelPrincipal(pnl);    }//GEN-LAST:event_btnVer4ActionPerformed
 
     private void btnVer5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnVer5ActionPerformed
+        VarianteProductoDTO seleccionada = listaActualDeVariantes.get(4); // o el índice correspondiente
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        frmPrincipal.pintarPanelPrincipal(pnl);    }//GEN-LAST:event_btnVer5ActionPerformed
 
     private void btnVer6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnVer6ActionPerformed
+        VarianteProductoDTO seleccionada = listaActualDeVariantes.get(5); // o el índice correspondiente
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        frmPrincipal.pintarPanelPrincipal(pnl);    }//GEN-LAST:event_btnVer6ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
