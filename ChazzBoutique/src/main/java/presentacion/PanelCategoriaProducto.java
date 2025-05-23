@@ -23,28 +23,20 @@ import static utils.Capitalizador.capitalizarNombre;
  *
  * @author carli
  */
-public class PanelHome extends javax.swing.JPanel {
+public class PanelCategoriaProducto extends javax.swing.JPanel {
 
     private FrmPrincipal frmPrincipal;
-    private List<CategoriaDTO> categorias;
-    private int indiceCarrusel = 0;
-    private final int VISTA_MAXIMA = 5;
+
     private int paginaActual = 1;
-    private final int tamanoPagina = 6;
+    private final int tamanoPagina = 12;
     private String filtroActual = "";
     private boolean hayMasPaginas = true;
     private List<VarianteProductoDTO> listaActualDeVariantes;
 
-    public PanelHome(FrmPrincipal frmPrincipal) {
+    public PanelCategoriaProducto(FrmPrincipal frmPrincipal) {
         initComponents();
         this.frmPrincipal = frmPrincipal;
-        cargarCategorias();
         cargarVariantes(paginaActual, tamanoPagina, filtroActual);
-
-        txtBuscador.setForeground(Color.GRAY);
-        txtBuscador.setText("Buscar");
-
-// Manejador de focus
         txtBuscador.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -87,39 +79,6 @@ public class PanelHome extends javax.swing.JPanel {
 
     }
 
-    private void cargarCategorias() {
-        try {
-            categorias = frmPrincipal.categoriaNegocio.obtenerCategorias();
-            mostrarCategorias();
-
-        } catch (NegocioException ex) {
-            Logger.getLogger(PanelHome.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void mostrarCategorias() {
-        List<JLabel> etiquetas = List.of(lblCategoria1, lblCategoria2, lblCategoria3, lblCategoria4, lblCategoria5);
-        List<JButton> botones = List.of(btnImagenCategoria1, btnImagenCategoria2, btnImagenCategoria3, btnImagenCategoria4, btnImagenCategoria5);
-
-        int total = categorias.size();
-
-        for (int i = 0; i < VISTA_MAXIMA; i++) {
-            int index = (indiceCarrusel + i) % total;
-            CategoriaDTO cat = categorias.get(index);
-
-            etiquetas.get(i).setText(capitalizarNombre(cat.getNombreCategoria()));
-
-            URL url = getClass().getResource(cat.getImagenCategoria());
-            if (url != null) {
-                ImageIcon icon = new ImageIcon(url);
-                Image img = icon.getImage().getScaledInstance(166, 247, Image.SCALE_SMOOTH);
-                botones.get(i).setIcon(new ImageIcon(img));
-            } else {
-                botones.get(i).setIcon(null); // O imagen por defecto
-            }
-        }
-    }
-
     private void cargarVariantes(int pagina, int tamañoPagina, String filtro) {
         try {
 
@@ -139,10 +98,10 @@ public class PanelHome extends javax.swing.JPanel {
 
             hayMasPaginas = !siguientePagina.isEmpty();
             // actualizar la interfaz (como ya lo haces)
-            List<JLabel> etiquetasNombre = List.of(lblNombreArticulo1, lblNombreArticulo2, lblNombreArticulo3, lblNombreArticulo4, lblNombreArticulo5, lblNombreArticulo6);
-            List<JLabel> etiquetasTalla = List.of(lblTallaResult1, lblTallaResult2, lblTallaResult3, lblTallaResult4, lblTallaResult5, lblTallaResult6);
-            List<JButton> botonesColor = List.of(btnColor1, btnColor2, btnColor3, btnColor4, btnColor5, btnColor6);
-            List<JLabel> etiquetasImagen = List.of(lblImagenArticulo1, lblImagenArticulo2, lblImagenArticulo3, lblImagenArticulo4, lblImagenArticulo5, lblImagenArticulo6);
+            List<JLabel> etiquetasNombre = List.of(lblNombreArticulo1, lblNombreArticulo2, lblNombreArticulo3, lblNombreArticulo4, lblNombreArticulo5, lblNombreArticulo6, lblNombreArticulo7, lblNombreArticulo8, lblNombreArticulo9, lblNombreArticulo10, lblNombreArticulo11, lblNombreArticulo12);
+            List<JLabel> etiquetasTalla = List.of(lblTallaResult1, lblTallaResult2, lblTallaResult3, lblTallaResult4, lblTallaResult5, lblTallaResult6, lblTallaResult7, lblTallaResult8, lblTallaResult9, lblTallaResult10, lblTallaResult11, lblTallaResult12);
+            List<JButton> botonesColor = List.of(btnColor1, btnColor2, btnColor3, btnColor4, btnColor5, btnColor6, btnColor7, btnColor8, btnColor9, btnColor10, btnColor11, btnColor12);
+            List<JLabel> etiquetasImagen = List.of(lblImagenArticulo1, lblImagenArticulo2, lblImagenArticulo3, lblImagenArticulo4, lblImagenArticulo5, lblImagenArticulo6, lblImagenArticulo7, lblImagenArticulo8, lblImagenArticulo9, lblImagenArticulo10, lblImagenArticulo11, lblImagenArticulo12);
 
             for (int i = 0; i < tamañoPagina; i++) {
                 if (i < variantes.size()) {
@@ -190,24 +149,6 @@ public class PanelHome extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
-        panelCarrusel = new javax.swing.JPanel();
-        btnLeftCategoria = new utils.BotonMenu();
-        panelCategoria1 = new javax.swing.JPanel();
-        btnImagenCategoria1 = new javax.swing.JButton();
-        lblCategoria1 = new javax.swing.JLabel();
-        panelCategoria2 = new javax.swing.JPanel();
-        btnImagenCategoria2 = new javax.swing.JButton();
-        lblCategoria2 = new javax.swing.JLabel();
-        panelCategoria3 = new javax.swing.JPanel();
-        btnImagenCategoria3 = new javax.swing.JButton();
-        lblCategoria3 = new javax.swing.JLabel();
-        panelCategoria4 = new javax.swing.JPanel();
-        btnImagenCategoria4 = new javax.swing.JButton();
-        lblCategoria4 = new javax.swing.JLabel();
-        panelCategoria5 = new javax.swing.JPanel();
-        btnImagenCategoria5 = new javax.swing.JButton();
-        lblCategoria5 = new javax.swing.JLabel();
-        btnRightCarrusel = new utils.BotonMenu();
         jPanel10 = new javax.swing.JPanel();
         panelArticulo1 = new javax.swing.JPanel();
         lblImagenArticulo1 = new javax.swing.JLabel();
@@ -257,7 +198,54 @@ public class PanelHome extends javax.swing.JPanel {
         lblTalla6 = new javax.swing.JLabel();
         btnColor6 = new javax.swing.JButton();
         btnVer6 = new utils.BotonMenu();
-        lblCategorias = new javax.swing.JLabel();
+        panelArticulo7 = new javax.swing.JPanel();
+        lblImagenArticulo7 = new javax.swing.JLabel();
+        lblNombreArticulo7 = new javax.swing.JLabel();
+        lblTallaResult7 = new javax.swing.JLabel();
+        lblColor6 = new javax.swing.JLabel();
+        lblTalla7 = new javax.swing.JLabel();
+        btnColor7 = new javax.swing.JButton();
+        btnVer7 = new utils.BotonMenu();
+        panelArticulo8 = new javax.swing.JPanel();
+        lblImagenArticulo8 = new javax.swing.JLabel();
+        lblNombreArticulo8 = new javax.swing.JLabel();
+        lblTallaResult8 = new javax.swing.JLabel();
+        lblColor7 = new javax.swing.JLabel();
+        lblTalla8 = new javax.swing.JLabel();
+        btnColor8 = new javax.swing.JButton();
+        btnVer8 = new utils.BotonMenu();
+        panelArticulo9 = new javax.swing.JPanel();
+        lblImagenArticulo9 = new javax.swing.JLabel();
+        lblNombreArticulo9 = new javax.swing.JLabel();
+        lblTallaResult9 = new javax.swing.JLabel();
+        lblColor8 = new javax.swing.JLabel();
+        lblTalla9 = new javax.swing.JLabel();
+        btnColor9 = new javax.swing.JButton();
+        btnVer9 = new utils.BotonMenu();
+        panelArticulo10 = new javax.swing.JPanel();
+        lblImagenArticulo10 = new javax.swing.JLabel();
+        lblNombreArticulo10 = new javax.swing.JLabel();
+        lblTallaResult10 = new javax.swing.JLabel();
+        lblColor9 = new javax.swing.JLabel();
+        lblTalla10 = new javax.swing.JLabel();
+        btnColor10 = new javax.swing.JButton();
+        btnVer10 = new utils.BotonMenu();
+        panelArticulo11 = new javax.swing.JPanel();
+        lblImagenArticulo11 = new javax.swing.JLabel();
+        lblNombreArticulo11 = new javax.swing.JLabel();
+        lblTallaResult11 = new javax.swing.JLabel();
+        lblColor10 = new javax.swing.JLabel();
+        lblTalla11 = new javax.swing.JLabel();
+        btnColor11 = new javax.swing.JButton();
+        btnVer11 = new utils.BotonMenu();
+        panelArticulo12 = new javax.swing.JPanel();
+        lblImagenArticulo12 = new javax.swing.JLabel();
+        lblNombreArticulo12 = new javax.swing.JLabel();
+        lblTallaResult12 = new javax.swing.JLabel();
+        lblColor11 = new javax.swing.JLabel();
+        lblTalla12 = new javax.swing.JLabel();
+        btnColor12 = new javax.swing.JButton();
+        btnVer12 = new utils.BotonMenu();
         lblPagina1 = new javax.swing.JLabel();
         lblArticulos = new javax.swing.JLabel();
         btnRightPagina = new utils.BotonMenu();
@@ -269,204 +257,7 @@ public class PanelHome extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 0, 64)); // NOI18N
-        lblTitulo.setText("Catalogo");
-
-        panelCarrusel.setBackground(new java.awt.Color(255, 255, 255));
-        panelCarrusel.setMinimumSize(new java.awt.Dimension(1920, 259));
-
-        btnLeftCategoria.setPreferredSize(new java.awt.Dimension(29, 259));
-        btnLeftCategoria.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/left.png"))); // NOI18N
-        btnLeftCategoria.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/left.png"))); // NOI18N
-        btnLeftCategoria.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLeftCategoriaActionPerformed(evt);
-            }
-        });
-        panelCarrusel.add(btnLeftCategoria);
-
-        panelCategoria1.setBackground(new java.awt.Color(255, 255, 255));
-
-        btnImagenCategoria1.setBackground(new java.awt.Color(248, 253, 253));
-        btnImagenCategoria1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ImagenPruebaCatalogo.png"))); // NOI18N
-        btnImagenCategoria1.setBorderPainted(false);
-        btnImagenCategoria1.setContentAreaFilled(false);
-
-        lblCategoria1.setFont(new java.awt.Font("Lucida Bright", 0, 26)); // NOI18N
-        lblCategoria1.setText("Camisas");
-
-        javax.swing.GroupLayout panelCategoria1Layout = new javax.swing.GroupLayout(panelCategoria1);
-        panelCategoria1.setLayout(panelCategoria1Layout);
-        panelCategoria1Layout.setHorizontalGroup(
-            panelCategoria1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria1Layout.createSequentialGroup()
-                .addContainerGap(34, Short.MAX_VALUE)
-                .addGroup(panelCategoria1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelCategoria1Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(lblCategoria1))
-                    .addComponent(btnImagenCategoria1))
-                .addGap(30, 30, 30))
-        );
-        panelCategoria1Layout.setVerticalGroup(
-            panelCategoria1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelCategoria1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnImagenCategoria1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCategoria1)
-                .addContainerGap(12, Short.MAX_VALUE))
-        );
-
-        panelCarrusel.add(panelCategoria1);
-
-        panelCategoria2.setBackground(new java.awt.Color(255, 255, 255));
-
-        btnImagenCategoria2.setBackground(new java.awt.Color(248, 253, 253));
-        btnImagenCategoria2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ImagenPruebaCatalogo.png"))); // NOI18N
-        btnImagenCategoria2.setBorderPainted(false);
-        btnImagenCategoria2.setContentAreaFilled(false);
-
-        lblCategoria2.setFont(new java.awt.Font("Lucida Bright", 0, 26)); // NOI18N
-        lblCategoria2.setText("Camisas");
-
-        javax.swing.GroupLayout panelCategoria2Layout = new javax.swing.GroupLayout(panelCategoria2);
-        panelCategoria2.setLayout(panelCategoria2Layout);
-        panelCategoria2Layout.setHorizontalGroup(
-            panelCategoria2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria2Layout.createSequentialGroup()
-                .addContainerGap(34, Short.MAX_VALUE)
-                .addGroup(panelCategoria2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnImagenCategoria2)
-                    .addGroup(panelCategoria2Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(lblCategoria2)))
-                .addGap(30, 30, 30))
-        );
-        panelCategoria2Layout.setVerticalGroup(
-            panelCategoria2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelCategoria2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnImagenCategoria2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCategoria2)
-                .addContainerGap(12, Short.MAX_VALUE))
-        );
-
-        panelCarrusel.add(panelCategoria2);
-
-        panelCategoria3.setBackground(new java.awt.Color(255, 255, 255));
-
-        btnImagenCategoria3.setBackground(new java.awt.Color(248, 253, 253));
-        btnImagenCategoria3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ImagenPruebaCatalogo.png"))); // NOI18N
-        btnImagenCategoria3.setBorderPainted(false);
-        btnImagenCategoria3.setContentAreaFilled(false);
-
-        lblCategoria3.setFont(new java.awt.Font("Lucida Bright", 0, 26)); // NOI18N
-        lblCategoria3.setText("Camisas");
-
-        javax.swing.GroupLayout panelCategoria3Layout = new javax.swing.GroupLayout(panelCategoria3);
-        panelCategoria3.setLayout(panelCategoria3Layout);
-        panelCategoria3Layout.setHorizontalGroup(
-            panelCategoria3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria3Layout.createSequentialGroup()
-                .addContainerGap(34, Short.MAX_VALUE)
-                .addGroup(panelCategoria3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelCategoria3Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(lblCategoria3))
-                    .addComponent(btnImagenCategoria3))
-                .addGap(30, 30, 30))
-        );
-        panelCategoria3Layout.setVerticalGroup(
-            panelCategoria3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelCategoria3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnImagenCategoria3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCategoria3)
-                .addContainerGap(12, Short.MAX_VALUE))
-        );
-
-        panelCarrusel.add(panelCategoria3);
-
-        panelCategoria4.setBackground(new java.awt.Color(255, 255, 255));
-
-        btnImagenCategoria4.setBackground(new java.awt.Color(248, 253, 253));
-        btnImagenCategoria4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ImagenPruebaCatalogo.png"))); // NOI18N
-        btnImagenCategoria4.setBorderPainted(false);
-        btnImagenCategoria4.setContentAreaFilled(false);
-
-        lblCategoria4.setFont(new java.awt.Font("Lucida Bright", 0, 26)); // NOI18N
-        lblCategoria4.setText("Camisas");
-
-        javax.swing.GroupLayout panelCategoria4Layout = new javax.swing.GroupLayout(panelCategoria4);
-        panelCategoria4.setLayout(panelCategoria4Layout);
-        panelCategoria4Layout.setHorizontalGroup(
-            panelCategoria4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria4Layout.createSequentialGroup()
-                .addContainerGap(34, Short.MAX_VALUE)
-                .addGroup(panelCategoria4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelCategoria4Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(lblCategoria4))
-                    .addComponent(btnImagenCategoria4))
-                .addGap(30, 30, 30))
-        );
-        panelCategoria4Layout.setVerticalGroup(
-            panelCategoria4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelCategoria4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnImagenCategoria4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCategoria4)
-                .addContainerGap(12, Short.MAX_VALUE))
-        );
-
-        panelCarrusel.add(panelCategoria4);
-
-        panelCategoria5.setBackground(new java.awt.Color(255, 255, 255));
-
-        btnImagenCategoria5.setBackground(new java.awt.Color(248, 253, 253));
-        btnImagenCategoria5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ImagenPruebaCatalogo.png"))); // NOI18N
-        btnImagenCategoria5.setBorderPainted(false);
-        btnImagenCategoria5.setContentAreaFilled(false);
-
-        lblCategoria5.setFont(new java.awt.Font("Lucida Bright", 0, 26)); // NOI18N
-        lblCategoria5.setText("Camisas");
-
-        javax.swing.GroupLayout panelCategoria5Layout = new javax.swing.GroupLayout(panelCategoria5);
-        panelCategoria5.setLayout(panelCategoria5Layout);
-        panelCategoria5Layout.setHorizontalGroup(
-            panelCategoria5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCategoria5Layout.createSequentialGroup()
-                .addContainerGap(34, Short.MAX_VALUE)
-                .addGroup(panelCategoria5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelCategoria5Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(lblCategoria5))
-                    .addComponent(btnImagenCategoria5))
-                .addGap(30, 30, 30))
-        );
-        panelCategoria5Layout.setVerticalGroup(
-            panelCategoria5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelCategoria5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnImagenCategoria5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCategoria5)
-                .addContainerGap(12, Short.MAX_VALUE))
-        );
-
-        panelCarrusel.add(panelCategoria5);
-
-        btnRightCarrusel.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/right.png"))); // NOI18N
-        btnRightCarrusel.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/right.png"))); // NOI18N
-        btnRightCarrusel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRightCarruselActionPerformed(evt);
-            }
-        });
-        panelCarrusel.add(btnRightCarrusel);
+        lblTitulo.setText("Pantalones");
 
         jPanel10.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -926,27 +717,478 @@ public class PanelHome extends javax.swing.JPanel {
 
         jPanel10.add(panelArticulo6);
 
-        lblCategorias.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        lblCategorias.setText("Categorias");
+        lblImagenArticulo7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/imagencatalogo.png"))); // NOI18N
 
-        lblPagina1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        lblNombreArticulo7.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblNombreArticulo7.setText("Blusa con Shorts  en Conjuto");
+
+        lblTallaResult7.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTallaResult7.setText("M");
+
+        lblColor6.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblColor6.setText("Color:");
+
+        lblTalla7.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTalla7.setText("Talla:");
+
+        btnColor7.setBackground(new java.awt.Color(255, 102, 51));
+
+        btnVer7.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer7.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVer7ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelArticulo7Layout = new javax.swing.GroupLayout(panelArticulo7);
+        panelArticulo7.setLayout(panelArticulo7Layout);
+        panelArticulo7Layout.setHorizontalGroup(
+            panelArticulo7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelArticulo7Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(lblImagenArticulo7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelArticulo7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNombreArticulo7)
+                    .addGroup(panelArticulo7Layout.createSequentialGroup()
+                        .addGroup(panelArticulo7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnVer7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelArticulo7Layout.createSequentialGroup()
+                                .addComponent(lblColor6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnColor7, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(39, 39, 39)
+                                .addComponent(lblTalla7)))
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTallaResult7)))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+        panelArticulo7Layout.setVerticalGroup(
+            panelArticulo7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelArticulo7Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(panelArticulo7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelArticulo7Layout.createSequentialGroup()
+                        .addComponent(lblImagenArticulo7)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelArticulo7Layout.createSequentialGroup()
+                        .addComponent(lblNombreArticulo7)
+                        .addGroup(panelArticulo7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelArticulo7Layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(lblColor6))
+                            .addGroup(panelArticulo7Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(btnColor7, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelArticulo7Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panelArticulo7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblTalla7)
+                                    .addComponent(lblTallaResult7))))
+                        .addGap(37, 37, 37)
+                        .addComponent(btnVer7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28))))
+        );
+
+        jPanel10.add(panelArticulo7);
+
+        lblImagenArticulo8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/imagencatalogo.png"))); // NOI18N
+
+        lblNombreArticulo8.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblNombreArticulo8.setText("Blusa con Shorts  en Conjuto");
+
+        lblTallaResult8.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTallaResult8.setText("M");
+
+        lblColor7.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblColor7.setText("Color:");
+
+        lblTalla8.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTalla8.setText("Talla:");
+
+        btnColor8.setBackground(new java.awt.Color(255, 102, 51));
+
+        btnVer8.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer8.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVer8ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelArticulo8Layout = new javax.swing.GroupLayout(panelArticulo8);
+        panelArticulo8.setLayout(panelArticulo8Layout);
+        panelArticulo8Layout.setHorizontalGroup(
+            panelArticulo8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelArticulo8Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(lblImagenArticulo8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelArticulo8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNombreArticulo8)
+                    .addGroup(panelArticulo8Layout.createSequentialGroup()
+                        .addGroup(panelArticulo8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnVer8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelArticulo8Layout.createSequentialGroup()
+                                .addComponent(lblColor7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnColor8, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(39, 39, 39)
+                                .addComponent(lblTalla8)))
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTallaResult8)))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+        panelArticulo8Layout.setVerticalGroup(
+            panelArticulo8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelArticulo8Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(panelArticulo8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelArticulo8Layout.createSequentialGroup()
+                        .addComponent(lblImagenArticulo8)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelArticulo8Layout.createSequentialGroup()
+                        .addComponent(lblNombreArticulo8)
+                        .addGroup(panelArticulo8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelArticulo8Layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(lblColor7))
+                            .addGroup(panelArticulo8Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(btnColor8, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelArticulo8Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panelArticulo8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblTalla8)
+                                    .addComponent(lblTallaResult8))))
+                        .addGap(37, 37, 37)
+                        .addComponent(btnVer8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28))))
+        );
+
+        jPanel10.add(panelArticulo8);
+
+        lblImagenArticulo9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/imagencatalogo.png"))); // NOI18N
+
+        lblNombreArticulo9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblNombreArticulo9.setText("Blusa con Shorts  en Conjuto");
+
+        lblTallaResult9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTallaResult9.setText("M");
+
+        lblColor8.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblColor8.setText("Color:");
+
+        lblTalla9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTalla9.setText("Talla:");
+
+        btnColor9.setBackground(new java.awt.Color(255, 102, 51));
+
+        btnVer9.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer9.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVer9ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelArticulo9Layout = new javax.swing.GroupLayout(panelArticulo9);
+        panelArticulo9.setLayout(panelArticulo9Layout);
+        panelArticulo9Layout.setHorizontalGroup(
+            panelArticulo9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelArticulo9Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(lblImagenArticulo9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelArticulo9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNombreArticulo9)
+                    .addGroup(panelArticulo9Layout.createSequentialGroup()
+                        .addGroup(panelArticulo9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnVer9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelArticulo9Layout.createSequentialGroup()
+                                .addComponent(lblColor8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnColor9, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(39, 39, 39)
+                                .addComponent(lblTalla9)))
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTallaResult9)))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+        panelArticulo9Layout.setVerticalGroup(
+            panelArticulo9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelArticulo9Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(panelArticulo9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelArticulo9Layout.createSequentialGroup()
+                        .addComponent(lblImagenArticulo9)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelArticulo9Layout.createSequentialGroup()
+                        .addComponent(lblNombreArticulo9)
+                        .addGroup(panelArticulo9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelArticulo9Layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(lblColor8))
+                            .addGroup(panelArticulo9Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(btnColor9, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelArticulo9Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panelArticulo9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblTalla9)
+                                    .addComponent(lblTallaResult9))))
+                        .addGap(37, 37, 37)
+                        .addComponent(btnVer9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28))))
+        );
+
+        jPanel10.add(panelArticulo9);
+
+        lblImagenArticulo10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/imagencatalogo.png"))); // NOI18N
+
+        lblNombreArticulo10.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblNombreArticulo10.setText("Blusa con Shorts  en Conjuto");
+
+        lblTallaResult10.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTallaResult10.setText("M");
+
+        lblColor9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblColor9.setText("Color:");
+
+        lblTalla10.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTalla10.setText("Talla:");
+
+        btnColor10.setBackground(new java.awt.Color(255, 102, 51));
+
+        btnVer10.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer10.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVer10ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelArticulo10Layout = new javax.swing.GroupLayout(panelArticulo10);
+        panelArticulo10.setLayout(panelArticulo10Layout);
+        panelArticulo10Layout.setHorizontalGroup(
+            panelArticulo10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelArticulo10Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(lblImagenArticulo10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelArticulo10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNombreArticulo10)
+                    .addGroup(panelArticulo10Layout.createSequentialGroup()
+                        .addGroup(panelArticulo10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnVer10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelArticulo10Layout.createSequentialGroup()
+                                .addComponent(lblColor9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnColor10, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(39, 39, 39)
+                                .addComponent(lblTalla10)))
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTallaResult10)))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+        panelArticulo10Layout.setVerticalGroup(
+            panelArticulo10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelArticulo10Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(panelArticulo10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelArticulo10Layout.createSequentialGroup()
+                        .addComponent(lblImagenArticulo10)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelArticulo10Layout.createSequentialGroup()
+                        .addComponent(lblNombreArticulo10)
+                        .addGroup(panelArticulo10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelArticulo10Layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(lblColor9))
+                            .addGroup(panelArticulo10Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(btnColor10, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelArticulo10Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panelArticulo10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblTalla10)
+                                    .addComponent(lblTallaResult10))))
+                        .addGap(37, 37, 37)
+                        .addComponent(btnVer10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28))))
+        );
+
+        jPanel10.add(panelArticulo10);
+
+        lblImagenArticulo11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/imagencatalogo.png"))); // NOI18N
+
+        lblNombreArticulo11.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblNombreArticulo11.setText("Blusa con Shorts  en Conjuto");
+
+        lblTallaResult11.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTallaResult11.setText("M");
+
+        lblColor10.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblColor10.setText("Color:");
+
+        lblTalla11.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTalla11.setText("Talla:");
+
+        btnColor11.setBackground(new java.awt.Color(255, 102, 51));
+
+        btnVer11.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer11.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVer11ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelArticulo11Layout = new javax.swing.GroupLayout(panelArticulo11);
+        panelArticulo11.setLayout(panelArticulo11Layout);
+        panelArticulo11Layout.setHorizontalGroup(
+            panelArticulo11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelArticulo11Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(lblImagenArticulo11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelArticulo11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNombreArticulo11)
+                    .addGroup(panelArticulo11Layout.createSequentialGroup()
+                        .addGroup(panelArticulo11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnVer11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelArticulo11Layout.createSequentialGroup()
+                                .addComponent(lblColor10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnColor11, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(39, 39, 39)
+                                .addComponent(lblTalla11)))
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTallaResult11)))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+        panelArticulo11Layout.setVerticalGroup(
+            panelArticulo11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelArticulo11Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(panelArticulo11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelArticulo11Layout.createSequentialGroup()
+                        .addComponent(lblImagenArticulo11)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelArticulo11Layout.createSequentialGroup()
+                        .addComponent(lblNombreArticulo11)
+                        .addGroup(panelArticulo11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelArticulo11Layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(lblColor10))
+                            .addGroup(panelArticulo11Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(btnColor11, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelArticulo11Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panelArticulo11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblTalla11)
+                                    .addComponent(lblTallaResult11))))
+                        .addGap(37, 37, 37)
+                        .addComponent(btnVer11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28))))
+        );
+
+        jPanel10.add(panelArticulo11);
+
+        lblImagenArticulo12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/imagencatalogo.png"))); // NOI18N
+
+        lblNombreArticulo12.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblNombreArticulo12.setText("Blusa con Shorts  en Conjuto");
+
+        lblTallaResult12.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTallaResult12.setText("M");
+
+        lblColor11.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblColor11.setText("Color:");
+
+        lblTalla12.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTalla12.setText("Talla:");
+
+        btnColor12.setBackground(new java.awt.Color(255, 102, 51));
+
+        btnVer12.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer12.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVer12ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelArticulo12Layout = new javax.swing.GroupLayout(panelArticulo12);
+        panelArticulo12.setLayout(panelArticulo12Layout);
+        panelArticulo12Layout.setHorizontalGroup(
+            panelArticulo12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelArticulo12Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(lblImagenArticulo12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelArticulo12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNombreArticulo12)
+                    .addGroup(panelArticulo12Layout.createSequentialGroup()
+                        .addGroup(panelArticulo12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnVer12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelArticulo12Layout.createSequentialGroup()
+                                .addComponent(lblColor11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnColor12, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(39, 39, 39)
+                                .addComponent(lblTalla12)))
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTallaResult12)))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+        panelArticulo12Layout.setVerticalGroup(
+            panelArticulo12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelArticulo12Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(panelArticulo12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelArticulo12Layout.createSequentialGroup()
+                        .addComponent(lblImagenArticulo12)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelArticulo12Layout.createSequentialGroup()
+                        .addComponent(lblNombreArticulo12)
+                        .addGroup(panelArticulo12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelArticulo12Layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(lblColor11))
+                            .addGroup(panelArticulo12Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(btnColor12, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelArticulo12Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panelArticulo12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblTalla12)
+                                    .addComponent(lblTallaResult12))))
+                        .addGap(37, 37, 37)
+                        .addComponent(btnVer12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28))))
+        );
+
+        jPanel10.add(panelArticulo12);
+
+        lblPagina1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         lblPagina1.setText("Pagina 1");
 
         lblArticulos.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        lblArticulos.setText("Todos (125 articulos)");
+        lblArticulos.setText("Pantalones (125 articulos)");
 
+        btnRightPagina.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/right.png"))); // NOI18N
         btnRightPagina.setPreferredSize(new java.awt.Dimension(29, 259));
-        btnRightPagina.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/right.png"))); // NOI18N
-        btnRightPagina.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/right.png"))); // NOI18N
         btnRightPagina.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRightPaginaActionPerformed(evt);
             }
         });
 
+        btnLeftPagina1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/left.png"))); // NOI18N
         btnLeftPagina1.setPreferredSize(new java.awt.Dimension(29, 259));
-        btnLeftPagina1.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/left.png"))); // NOI18N
-        btnLeftPagina1.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/left.png"))); // NOI18N
         btnLeftPagina1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLeftPagina1ActionPerformed(evt);
@@ -977,8 +1219,8 @@ public class PanelHome extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel42)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(txtBuscador, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -987,7 +1229,7 @@ public class PanelHome extends javax.swing.JPanel {
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel42, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -995,83 +1237,60 @@ public class PanelHome extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(790, 790, 790)
-                .addComponent(btnLeftPagina1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblPagina1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnRightPagina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(280, 280, 280)
-                .addComponent(lblCategorias)
-                .addGap(242, 242, 242)
-                .addComponent(lblTitulo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(172, 172, 172))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(panelCarrusel, javax.swing.GroupLayout.PREFERRED_SIZE, 1743, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 1310, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(200, 200, 200))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(324, 324, 324)
-                    .addComponent(lblArticulos)
-                    .addContainerGap(1089, Short.MAX_VALUE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 1623, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(205, 205, 205)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblTitulo)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(107, 107, 107)
+                                .addComponent(lblArticulos))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(719, 719, 719)
+                        .addComponent(btnLeftPagina1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblPagina1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnRightPagina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(48, Short.MAX_VALUE)
+                .addComponent(lblTitulo)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(113, 113, 113)
-                        .addComponent(lblCategorias))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 827, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(panelCarrusel, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(79, 79, 79)
-                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(25, 25, 25)
+                        .addComponent(lblArticulos)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnRightPagina, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnLeftPagina1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(lblPagina1)))
-                .addContainerGap(92, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(508, 508, 508)
-                    .addComponent(lblArticulos)
-                    .addContainerGap(621, Short.MAX_VALUE)))
+                .addGap(36, 36, 36))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 6, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnLeftCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLeftCategoriaActionPerformed
-        indiceCarrusel = (indiceCarrusel - 1 + categorias.size()) % categorias.size();
-        mostrarCategorias();
-    }//GEN-LAST:event_btnLeftCategoriaActionPerformed
 
     private void btnRightPaginaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRightPaginaActionPerformed
         if (hayMasPaginas) {
@@ -1099,116 +1318,179 @@ public class PanelHome extends javax.swing.JPanel {
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer1ActionPerformed
 
-    private void btnRightCarruselActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRightCarruselActionPerformed
-        indiceCarrusel = (indiceCarrusel + 1 + categorias.size()) % categorias.size();
-        mostrarCategorias();
-    }//GEN-LAST:event_btnRightCarruselActionPerformed
-
     private void btnVer2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer2ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(1); // o el índice correspondiente
         PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
-        frmPrincipal.pintarPanelPrincipal(pnl);        // TODO add your handling code here:
+        frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer2ActionPerformed
 
     private void btnVer3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer3ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(2); // o el índice correspondiente
         PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
-        frmPrincipal.pintarPanelPrincipal(pnl);        // TODO add your handling code here:
+        frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer3ActionPerformed
 
     private void btnVer4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer4ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(3); // o el índice correspondiente
         PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
-        frmPrincipal.pintarPanelPrincipal(pnl);    }//GEN-LAST:event_btnVer4ActionPerformed
+        frmPrincipal.pintarPanelPrincipal(pnl);
+    }//GEN-LAST:event_btnVer4ActionPerformed
 
     private void btnVer5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer5ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(4); // o el índice correspondiente
         PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
-        frmPrincipal.pintarPanelPrincipal(pnl);    }//GEN-LAST:event_btnVer5ActionPerformed
+        frmPrincipal.pintarPanelPrincipal(pnl);
+    }//GEN-LAST:event_btnVer5ActionPerformed
 
     private void btnVer6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer6ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(5); // o el índice correspondiente
         PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
-        frmPrincipal.pintarPanelPrincipal(pnl);    }//GEN-LAST:event_btnVer6ActionPerformed
+        frmPrincipal.pintarPanelPrincipal(pnl);
+    }//GEN-LAST:event_btnVer6ActionPerformed
+
+    private void btnVer7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer7ActionPerformed
+        VarianteProductoDTO seleccionada = listaActualDeVariantes.get(6); // o el índice correspondiente
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        frmPrincipal.pintarPanelPrincipal(pnl);
+    }//GEN-LAST:event_btnVer7ActionPerformed
+
+    private void btnVer8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer8ActionPerformed
+        VarianteProductoDTO seleccionada = listaActualDeVariantes.get(7); // o el índice correspondiente
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        frmPrincipal.pintarPanelPrincipal(pnl);
+    }//GEN-LAST:event_btnVer8ActionPerformed
+
+    private void btnVer9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer9ActionPerformed
+        VarianteProductoDTO seleccionada = listaActualDeVariantes.get(8); // o el índice correspondiente
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        frmPrincipal.pintarPanelPrincipal(pnl);
+    }//GEN-LAST:event_btnVer9ActionPerformed
+
+    private void btnVer10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer10ActionPerformed
+        VarianteProductoDTO seleccionada = listaActualDeVariantes.get(9); // o el índice correspondiente
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        frmPrincipal.pintarPanelPrincipal(pnl);
+    }//GEN-LAST:event_btnVer10ActionPerformed
+
+    private void btnVer11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer11ActionPerformed
+        VarianteProductoDTO seleccionada = listaActualDeVariantes.get(10); // o el índice correspondiente
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        frmPrincipal.pintarPanelPrincipal(pnl);
+    }//GEN-LAST:event_btnVer11ActionPerformed
+
+    private void btnVer12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer12ActionPerformed
+        VarianteProductoDTO seleccionada = listaActualDeVariantes.get(11); // o el índice correspondiente
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada);
+        frmPrincipal.pintarPanelPrincipal(pnl);
+    }//GEN-LAST:event_btnVer12ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnColor1;
+    private javax.swing.JButton btnColor10;
+    private javax.swing.JButton btnColor11;
+    private javax.swing.JButton btnColor12;
     private javax.swing.JButton btnColor2;
     private javax.swing.JButton btnColor3;
     private javax.swing.JButton btnColor4;
     private javax.swing.JButton btnColor5;
     private javax.swing.JButton btnColor6;
-    private javax.swing.JButton btnImagenCategoria1;
-    private javax.swing.JButton btnImagenCategoria2;
-    private javax.swing.JButton btnImagenCategoria3;
-    private javax.swing.JButton btnImagenCategoria4;
-    private javax.swing.JButton btnImagenCategoria5;
-    private utils.BotonMenu btnLeftCategoria;
+    private javax.swing.JButton btnColor7;
+    private javax.swing.JButton btnColor8;
+    private javax.swing.JButton btnColor9;
     private utils.BotonMenu btnLeftPagina1;
-    private utils.BotonMenu btnRightCarrusel;
     private utils.BotonMenu btnRightPagina;
     private utils.BotonMenu btnVer1;
+    private utils.BotonMenu btnVer10;
+    private utils.BotonMenu btnVer11;
+    private utils.BotonMenu btnVer12;
     private utils.BotonMenu btnVer2;
     private utils.BotonMenu btnVer3;
     private utils.BotonMenu btnVer4;
     private utils.BotonMenu btnVer5;
     private utils.BotonMenu btnVer6;
+    private utils.BotonMenu btnVer7;
+    private utils.BotonMenu btnVer8;
+    private utils.BotonMenu btnVer9;
     private javax.swing.JLabel jLabel42;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel17;
     private javax.swing.JLabel lblArticulos;
-    private javax.swing.JLabel lblCategoria1;
-    private javax.swing.JLabel lblCategoria2;
-    private javax.swing.JLabel lblCategoria3;
-    private javax.swing.JLabel lblCategoria4;
-    private javax.swing.JLabel lblCategoria5;
-    private javax.swing.JLabel lblCategorias;
     private javax.swing.JLabel lblColor;
     private javax.swing.JLabel lblColor1;
+    private javax.swing.JLabel lblColor10;
+    private javax.swing.JLabel lblColor11;
     private javax.swing.JLabel lblColor2;
     private javax.swing.JLabel lblColor3;
     private javax.swing.JLabel lblColor4;
     private javax.swing.JLabel lblColor5;
+    private javax.swing.JLabel lblColor6;
+    private javax.swing.JLabel lblColor7;
+    private javax.swing.JLabel lblColor8;
+    private javax.swing.JLabel lblColor9;
     private javax.swing.JLabel lblImagenArticulo1;
+    private javax.swing.JLabel lblImagenArticulo10;
+    private javax.swing.JLabel lblImagenArticulo11;
+    private javax.swing.JLabel lblImagenArticulo12;
     private javax.swing.JLabel lblImagenArticulo2;
     private javax.swing.JLabel lblImagenArticulo3;
     private javax.swing.JLabel lblImagenArticulo4;
     private javax.swing.JLabel lblImagenArticulo5;
     private javax.swing.JLabel lblImagenArticulo6;
+    private javax.swing.JLabel lblImagenArticulo7;
+    private javax.swing.JLabel lblImagenArticulo8;
+    private javax.swing.JLabel lblImagenArticulo9;
     private javax.swing.JLabel lblNombreArticulo1;
+    private javax.swing.JLabel lblNombreArticulo10;
+    private javax.swing.JLabel lblNombreArticulo11;
+    private javax.swing.JLabel lblNombreArticulo12;
     private javax.swing.JLabel lblNombreArticulo2;
     private javax.swing.JLabel lblNombreArticulo3;
     private javax.swing.JLabel lblNombreArticulo4;
     private javax.swing.JLabel lblNombreArticulo5;
     private javax.swing.JLabel lblNombreArticulo6;
+    private javax.swing.JLabel lblNombreArticulo7;
+    private javax.swing.JLabel lblNombreArticulo8;
+    private javax.swing.JLabel lblNombreArticulo9;
     private javax.swing.JLabel lblPagina1;
     private javax.swing.JLabel lblTalla1;
+    private javax.swing.JLabel lblTalla10;
+    private javax.swing.JLabel lblTalla11;
+    private javax.swing.JLabel lblTalla12;
     private javax.swing.JLabel lblTalla2;
     private javax.swing.JLabel lblTalla3;
     private javax.swing.JLabel lblTalla4;
     private javax.swing.JLabel lblTalla5;
     private javax.swing.JLabel lblTalla6;
+    private javax.swing.JLabel lblTalla7;
+    private javax.swing.JLabel lblTalla8;
+    private javax.swing.JLabel lblTalla9;
     private javax.swing.JLabel lblTallaResult1;
+    private javax.swing.JLabel lblTallaResult10;
+    private javax.swing.JLabel lblTallaResult11;
+    private javax.swing.JLabel lblTallaResult12;
     private javax.swing.JLabel lblTallaResult2;
     private javax.swing.JLabel lblTallaResult3;
     private javax.swing.JLabel lblTallaResult4;
     private javax.swing.JLabel lblTallaResult5;
     private javax.swing.JLabel lblTallaResult6;
+    private javax.swing.JLabel lblTallaResult7;
+    private javax.swing.JLabel lblTallaResult8;
+    private javax.swing.JLabel lblTallaResult9;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JPanel panelArticulo1;
+    private javax.swing.JPanel panelArticulo10;
+    private javax.swing.JPanel panelArticulo11;
+    private javax.swing.JPanel panelArticulo12;
     private javax.swing.JPanel panelArticulo2;
     private javax.swing.JPanel panelArticulo3;
     private javax.swing.JPanel panelArticulo4;
     private javax.swing.JPanel panelArticulo5;
     private javax.swing.JPanel panelArticulo6;
-    private javax.swing.JPanel panelCarrusel;
-    private javax.swing.JPanel panelCategoria1;
-    private javax.swing.JPanel panelCategoria2;
-    private javax.swing.JPanel panelCategoria3;
-    private javax.swing.JPanel panelCategoria4;
-    private javax.swing.JPanel panelCategoria5;
+    private javax.swing.JPanel panelArticulo7;
+    private javax.swing.JPanel panelArticulo8;
+    private javax.swing.JPanel panelArticulo9;
     private javax.swing.JTextField txtBuscador;
     // End of variables declaration//GEN-END:variables
 }

@@ -48,6 +48,7 @@ public class ChazzBoutique {
                     varianteProductoNegocio, 
                     productoNegocio, 
                     categoriaNegocio, 
+
                     proveedorNegocio, 
                     usuarioRegistrado
             );

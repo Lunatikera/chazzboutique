@@ -108,7 +108,7 @@ public class VarianteProductoNegocio implements IVarianteProductoNegocio {
         }
     }
 
-       private VarianteProductoDTO convertirA_DTO(VarianteProducto variante) {
+    private VarianteProductoDTO convertirA_DTO(VarianteProducto variante) {
         VarianteProductoDTO dto = new VarianteProductoDTO(
                 variante.getCodigoBarra(),
                 variante.getStock(),
@@ -130,4 +130,44 @@ public class VarianteProductoNegocio implements IVarianteProductoNegocio {
         entidad.setTalla(dto.getTalla());
         entidad.setColor(dto.getColor());
     }
+
+    @Override
+    public List<VarianteProductoDTO> buscarVariantesPorNombreProducto(String terminoBusqueda, int pagina, int tamanoPagina) throws NegocioException {
+        try {
+            List<VarianteProducto> variantes = varianteProductoDAO.buscarVariantesPorNombreProducto(terminoBusqueda, pagina, tamanoPagina);
+            List<VarianteProductoDTO> resultado = new ArrayList<>();
+
+            for (VarianteProducto variante : variantes) {
+                VarianteProductoDTO dto = new VarianteProductoDTO(
+                        variante.getCodigoBarra(),
+                        variante.getStock(),
+                        variante.getPrecioCompra(),
+                        variante.getTalla(),
+                        variante.getColor(),
+                        variante.getPrecioVenta(),
+                        variante.getProducto().getId()
+                );
+
+                dto.setId(variante.getId());
+                dto.setNombreProducto(variante.getProducto().getNombre());
+                dto.setUrlImagen(variante.getUrlImagen()); // Ajusta según tu estructura
+
+                resultado.add(dto);
+            }
+
+            return resultado;
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error al obtener variantes filtradas paginadas", ex);
+        }
+    }
+
+    @Override
+    public long contarVariantesPorNombreProducto(String terminoBusqueda) throws NegocioException {
+        try {
+            return varianteProductoDAO.contarVariantesPorNombreProducto(terminoBusqueda);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al contar variantes", e);
+        }
+    }
+
 }

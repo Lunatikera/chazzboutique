@@ -26,5 +26,8 @@ public interface IVarianteProductoDAO {
 
     public void eliminarVarianteProducto(Long id) throws PersistenciaException;
 
+    public List<VarianteProducto> buscarVariantesPorNombreProducto(String terminoBusqueda, int pagina, int tamañoPagina) throws PersistenciaException;
+
+    public long contarVariantesPorNombreProducto(String terminoBusqueda) throws PersistenciaException;
 
 }
