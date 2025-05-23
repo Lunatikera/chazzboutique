@@ -10,11 +10,14 @@ package presentacion;
  */
 public class PanelEscogerAnadir extends javax.swing.JPanel {
 
+    private FrmPrincipal frmPrincipal;
+
     /**
      * Creates new form PanelHome
      */
-    public PanelEscogerAnadir() {
+    public PanelEscogerAnadir(FrmPrincipal frmPrincipal) {
         initComponents();
+        this.frmPrincipal = frmPrincipal;
     }
 
     /**
@@ -30,10 +33,12 @@ public class PanelEscogerAnadir extends javax.swing.JPanel {
         jPanel17 = new javax.swing.JPanel();
         jButton14 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jButtonElegirAnadirProducto = new javax.swing.JButton();
         jPanel19 = new javax.swing.JPanel();
         jButton16 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jButtonVarianteProducto = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -47,6 +52,13 @@ public class PanelEscogerAnadir extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel1.setText("Añadir Producto");
 
+        jButtonElegirAnadirProducto.setText("Elegir");
+        jButtonElegirAnadirProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonElegirAnadirProductoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
         jPanel17.setLayout(jPanel17Layout);
         jPanel17Layout.setHorizontalGroup(
@@ -56,8 +68,13 @@ public class PanelEscogerAnadir extends javax.swing.JPanel {
                 .addComponent(jButton14)
                 .addGap(56, 56, 56))
             .addGroup(jPanel17Layout.createSequentialGroup()
-                .addGap(123, 123, 123)
-                .addComponent(jLabel1)
+                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel17Layout.createSequentialGroup()
+                        .addGap(123, 123, 123)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel17Layout.createSequentialGroup()
+                        .addGap(206, 206, 206)
+                        .addComponent(jButtonElegirAnadirProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel17Layout.setVerticalGroup(
@@ -67,6 +84,8 @@ public class PanelEscogerAnadir extends javax.swing.JPanel {
                 .addComponent(jButton14)
                 .addGap(69, 69, 69)
                 .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonElegirAnadirProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -81,6 +100,13 @@ public class PanelEscogerAnadir extends javax.swing.JPanel {
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel4.setText("Añadir variantes a un");
+
+        jButtonVarianteProducto.setText("Elegir");
+        jButtonVarianteProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVarianteProductoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
         jPanel19.setLayout(jPanel19Layout);
@@ -97,6 +123,10 @@ public class PanelEscogerAnadir extends javax.swing.JPanel {
                             .addComponent(jLabel4)
                             .addComponent(jLabel3))))
                 .addContainerGap(39, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel19Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButtonVarianteProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(174, 174, 174))
         );
         jPanel19Layout.setVerticalGroup(
             jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,7 +137,9 @@ public class PanelEscogerAnadir extends javax.swing.JPanel {
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                 .addComponent(jLabel3)
-                .addGap(53, 53, 53))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonVarianteProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23))
         );
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 64)); // NOI18N
@@ -153,10 +185,20 @@ public class PanelEscogerAnadir extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonElegirAnadirProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonElegirAnadirProductoActionPerformed
+        frmPrincipal.pintarPanelPrincipal(new PnlAnadirProducto());
+    }//GEN-LAST:event_jButtonElegirAnadirProductoActionPerformed
+
+    private void jButtonVarianteProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVarianteProductoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonVarianteProductoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton16;
+    private javax.swing.JButton jButtonElegirAnadirProducto;
+    private javax.swing.JButton jButtonVarianteProducto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

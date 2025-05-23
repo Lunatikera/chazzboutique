@@ -14,6 +14,7 @@ utils\SpinnerRenderer.class
 presentacion\PanelCategoriaProducto$13.class
 presentacion\PanelHome$10.class
 presentacion\FrmCategoria$1.class
+presentacion\FrmPrincipal$2.class
 presentacion\PanelHome$13.class
 presentacion\PanelVenta$12.class
 presentacion\PanelVenta$15.class
@@ -22,7 +23,9 @@ presentacion\PnlVarianteProducto$2.class
 presentacion\PanelCategoriaProducto$1.class
 presentacion\PanelCategoriaProducto$4.class
 presentacion\PanelHome$7.class
+presentacion\PanelEscogerAnadir$2.class
 utils\BotonMenu$1.class
+presentacion\FrmPrincipal$5.class
 presentacion\PanelVenta$6.class
 presentacion\PnlVarianteProducto$5.class
 utils\ProductoComboItem.class
@@ -31,6 +34,7 @@ presentacion\PanelCategoriaProducto$11.class
 utils\ColorNameDetector.class
 presentacion\PanelVenta$14.class
 utils\ButtonEditor.class
+presentacion\FrmPrincipal$4.class
 presentacion\PanelHome$6.class
 presentacion\FrmProducto$1.class
 presentacion\PanelCategoriaProducto$3.class
@@ -47,6 +51,7 @@ presentacion\PanelHome$11.class
 presentacion\PanelCategoriaProducto$17.class
 presentacion\PanelCategoriaProducto$9.class
 utils\ScrollBar.class
+presentacion\FrmPrincipal$3.class
 presentacion\PanelCategoriaProducto$2.class
 presentacion\PanelHome$8.class
 presentacion\FrmInicial.class
@@ -83,6 +88,7 @@ presentacion\PanelCategoriaProducto$14.class
 presentacion\PanelVenta$10.class
 presentacion\PnlAnadirVarianteProducto.class
 utils\ModeloTablaVentas.class
+presentacion\PanelEscogerAnadir$1.class
 presentacion\PanelEscogerAnadir.class
 presentacion\PanelVenta$3.class
 presentacion\PnlVarianteProducto.class
