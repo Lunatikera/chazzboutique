@@ -45,7 +45,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         this.usuarioRegistrado = usuarioRegistrado;
 
 
-        this.pintarPanelPrincipal(new PanelVenta(this));
+        this.pintarPanelPrincipal(new PanelHome(this));
     }
 
     public void pintarPanelPrincipal(JPanel panel) {

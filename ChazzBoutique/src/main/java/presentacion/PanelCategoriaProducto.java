@@ -33,7 +33,7 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
     private boolean hayMasPaginas = true;
     private List<VarianteProductoDTO> listaActualDeVariantes;
 
-    public PanelCategoriaProducto(FrmPrincipal frmPrincipal) {
+    public PanelCategoriaProducto(FrmPrincipal frmPrincipal,CategoriaDTO categoriaDTO) {
         initComponents();
         this.frmPrincipal = frmPrincipal;
         cargarVariantes(paginaActual, tamanoPagina, filtroActual);
@@ -84,7 +84,7 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
 
             List<JPanel> panelesArticulo = List.of(
                     panelArticulo1, panelArticulo2, panelArticulo3,
-                    panelArticulo4, panelArticulo5, panelArticulo6
+                    panelArticulo4, panelArticulo5, panelArticulo6,panelArticulo7,panelArticulo8,panelArticulo9,panelArticulo10,panelArticulo11,panelArticulo12
             );
 
             List<VarianteProductoDTO> variantes = frmPrincipal.varianteProductoNegocio

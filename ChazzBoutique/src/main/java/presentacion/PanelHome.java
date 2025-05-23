@@ -117,7 +117,13 @@ public class PanelHome extends javax.swing.JPanel {
             } else {
                 botones.get(i).setIcon(null); // O imagen por defecto
             }
+             final long idCategoria = cat.getId();
+    botones.get(i).addActionListener(e -> {
+        PanelCategoriaProducto pnlCategoria = new PanelCategoriaProducto(frmPrincipal, idCategoria);
+        frmPrincipal.pintarPanelPrincipal(pnlCategoria);
+    });
         }
+        
     }
 
     private void cargarVariantes(int pagina, int tamañoPagina, String filtro) {
