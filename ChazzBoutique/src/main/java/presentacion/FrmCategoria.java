@@ -1,5 +1,7 @@
 package presentacion;
 
+import utils.ButtonEditor;
+import utils.ButtonRenderer;
 import com.mycompany.chazzboutiquenegocio.dtos.CategoriaDTO;
 import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.ICategoriaNegocio;

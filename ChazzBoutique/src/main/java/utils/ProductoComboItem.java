@@ -1,4 +1,4 @@
-package presentacion;
+package utils;
 
 public class ProductoComboItem {
     private Long id;

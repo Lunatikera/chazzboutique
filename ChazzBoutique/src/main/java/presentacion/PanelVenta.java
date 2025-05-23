@@ -93,7 +93,7 @@ import utils.SpinnerRenderer;
  */
 public class PanelVenta extends javax.swing.JPanel {
 
-    FrmMain frmPrincipal;
+    FrmPrincipal frmPrincipal;
     DefaultTableModel modelo;
     private boolean descuentoAplicado = false;
     private BigDecimal descuentoActual = BigDecimal.ZERO;
@@ -102,7 +102,7 @@ public class PanelVenta extends javax.swing.JPanel {
     private File ultimoTicketGenerado = null;
     private boolean busquedaPorNombre = false;
 
-    public PanelVenta(FrmMain frmPrincipal) {
+    public PanelVenta(FrmPrincipal frmPrincipal) {
         initComponents();
         this.frmPrincipal = frmPrincipal;
         this.modelo = (DefaultTableModel) jTable.getModel();

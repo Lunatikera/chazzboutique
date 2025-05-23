@@ -1,5 +1,6 @@
 package presentacion;
 
+import utils.ProductoComboItem;
 import com.mycompany.chazzboutiquenegocio.dtos.ProductoDTO;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.*;
 
