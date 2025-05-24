@@ -110,17 +110,15 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            VarianteProducto v = em.find(VarianteProducto.class, id);
-            if (v != null) {
-                v.setEliminado(true);
-                em.merge(v);
-            }
+            em.createQuery("DELETE FROM VarianteProducto v WHERE v.id = :id")
+                    .setParameter("id", id)
+                    .executeUpdate();
             tx.commit();
         } catch (Exception e) {
             if (tx.isActive()) {
                 tx.rollback();
             }
-            throw new PersistenciaException("Error al hacer soft delete de la variante", e);
+            throw new PersistenciaException("Error al eliminar variante", e);
         } finally {
             em.close();
         }
@@ -176,6 +174,7 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
         } finally {
             em.close();
         }
+<<<<<<< HEAD
     }
 
     @Override
@@ -215,6 +214,8 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
         } catch (Exception e) {
             throw new PersistenciaException("Error al contar variantes por categoría y nombre", e);
         }
+=======
+>>>>>>> carlos4
     }
 
 }
