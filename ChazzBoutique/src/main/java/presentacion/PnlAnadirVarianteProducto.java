@@ -274,16 +274,10 @@ public class PnlAnadirVarianteProducto extends javax.swing.JPanel {
             BigDecimal precioVenta = new BigDecimal(txtPrecioVenta.getText().trim());
             Color color = btnColor.getBackground();
             String hexColor = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+            String imagen = this.imagen != null ? this.imagen : " ";
 
             VarianteProductoDTO dto = new VarianteProductoDTO(
-                    codigoBarra,
-                    10, // stock fijo
-                    precioCompra,
-                    talla,
-                    hexColor,
-                    precioVenta,
-                    productoId
-            );
+                    codigoBarra, 0, precioCompra, talla, hexColor, precioVenta, productoId, imagen);
 
             varianteNegocio.crearVariante(dto);
             JOptionPane.showMessageDialog(this, "Variante creada correctamente.");
@@ -340,7 +334,7 @@ public class PnlAnadirVarianteProducto extends javax.swing.JPanel {
 
             try {
                 String nombreArchivo = imagenSeleccionada.getName();
-                File carpetaDestino = new File("src/main/resources/images/varianteProducto/");
+                File carpetaDestino = new File("src/main/resources/variantesProductos/");
                 if (!carpetaDestino.exists()) {
                     carpetaDestino.mkdirs();
                 }
@@ -348,7 +342,7 @@ public class PnlAnadirVarianteProducto extends javax.swing.JPanel {
                 File destino = new File(carpetaDestino, nombreArchivo);
                 Files.copy(imagenSeleccionada.toPath(), destino.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-                imagen = "/images/varianteProducto/" + nombreArchivo;
+                imagen = "/variantesProductos/" + nombreArchivo;
 
                 ImageIcon icon = new ImageIcon(destino.getAbsolutePath());
                 Image img = icon.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_SMOOTH);
@@ -376,40 +370,41 @@ public class PnlAnadirVarianteProducto extends javax.swing.JPanel {
         txtCodigoBarras1ActionPerformed(null);
     }//GEN-LAST:event_btnGenerarCodigoBarrasActionPerformed
 
-    private void btnAgregarImagenActionPerformed(java.awt.event.ActionEvent evt) {JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setDialogTitle("Seleccionar Imagen");
-    fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Imágenes", "jpg", "jpeg", "png", "gif"));
+    private void btnAgregarImagenActionPerformed(java.awt.event.ActionEvent evt) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Seleccionar Imagen");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Imágenes", "jpg", "jpeg", "png", "gif"));
 
-    int resultado = fileChooser.showOpenDialog(this);
-    if (resultado == JFileChooser.APPROVE_OPTION) {
-        File imagenSeleccionada = fileChooser.getSelectedFile();
+        int resultado = fileChooser.showOpenDialog(this);
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            File imagenSeleccionada = fileChooser.getSelectedFile();
 
-        try {
-            String nombreArchivo = imagenSeleccionada.getName();
-            File carpetaDestino = new File("src/main/resources/images/");
-            if (!carpetaDestino.exists()) {
-                carpetaDestino.mkdirs();
+            try {
+                String nombreArchivo = imagenSeleccionada.getName();
+                File carpetaDestino = new File("src/main/resources/variantesProductos/");
+                if (!carpetaDestino.exists()) {
+                    carpetaDestino.mkdirs();
+                }
+
+                File destino = new File(carpetaDestino, nombreArchivo);
+                java.nio.file.Files.copy(
+                        imagenSeleccionada.toPath(),
+                        destino.toPath(),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING
+                );
+
+                imagen = "/variantesProductos/" + nombreArchivo;
+
+                ImageIcon icon = new ImageIcon(destino.getAbsolutePath());
+                Image img = icon.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_SMOOTH);
+                lblImagen.setIcon(new ImageIcon(img));
+                lblImagen.setText("");
+
+            } catch (IOException e) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Error al copiar la imagen: " + e.getMessage());
             }
-
-            File destino = new File(carpetaDestino, nombreArchivo);
-            java.nio.file.Files.copy(
-                imagenSeleccionada.toPath(),
-                destino.toPath(),
-                java.nio.file.StandardCopyOption.REPLACE_EXISTING
-            );
-
-            imagen = "/images/" + nombreArchivo;
-
-            ImageIcon icon = new ImageIcon(destino.getAbsolutePath());
-            Image img = icon.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_SMOOTH);
-            lblImagen.setIcon(new ImageIcon(img));
-            lblImagen.setText("");
-
-        } catch (IOException e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error al copiar la imagen: " + e.getMessage());
         }
     }
-    }                                                
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

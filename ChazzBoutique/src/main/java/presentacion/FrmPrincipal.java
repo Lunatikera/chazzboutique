@@ -15,6 +15,7 @@ import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVentaNegocio
 import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import utils.ScrollBar;
 
 /**
  *
@@ -48,6 +49,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         this.proveedorNegocio = proveedorNegocio;
         this.reporteNegocio = reporteNegocio;
         this.usuarioRegistrado = usuarioRegistrado;
+        this.jScrollPane1.setVerticalScrollBar(new ScrollBar());
 
         this.pintarPanelPrincipal(new PanelHome(this));
     }
@@ -87,7 +89,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         return proveedorNegocio;
     }
 
-
     public ICategoriaNegocio getCategoriaNegocio() {
         return categoriaNegocio;
     }
@@ -95,7 +96,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
     public IReporteNegocio getReporteNegocio() {
         return reporteNegocio;
     }
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

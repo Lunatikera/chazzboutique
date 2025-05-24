@@ -34,7 +34,7 @@ public class PnlProductoParaVariante extends javax.swing.JPanel {
         this.frmPrincipal = frmPrincipal;
 
         tableModel = new DefaultTableModel(
-                new Object[]{"ID", "Nombre", "Descripción", "Fecha", "Categoría", "Proveedor", "Agregar Variante" }, 0
+                new Object[]{"ID", "Nombre", "Descripción", "Fecha", "Categoría", "Proveedor", "Agregar Variante"}, 0
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -51,7 +51,7 @@ public class PnlProductoParaVariante extends javax.swing.JPanel {
 
                 java.awt.Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-                if (value instanceof String && column != 6 ) { // excluye columnas "Editar" y "Eliminar"
+                if (value instanceof String && column != 6) { // excluye columnas "Editar" y "Eliminar"
                     String textoOriginal = (String) value;
                     String textoFormateado = formatearTitulo(textoOriginal);
                     setText(textoFormateado);
@@ -76,14 +76,9 @@ public class PnlProductoParaVariante extends javax.swing.JPanel {
         tblProductos.getColumn("Agregar Variante").setCellEditor(
                 new ButtonEditor(new JCheckBox(), "Agregar Variante", row -> agregarVariante(row))
         );
-       
-            
 
-      
         cargarProductos();
     }
-
-    
 
     private void cargarProductos() {
         try {
@@ -131,9 +126,10 @@ public class PnlProductoParaVariante extends javax.swing.JPanel {
         return "Desconocido";
     }
 
-    
     private void agregarVariante(int row) {
-     
+        Long idProducto = (Long) tableModel.getValueAt(row, 0);
+        PnlAnadirVarianteProducto pnl = new PnlAnadirVarianteProducto(idProducto, frmPrincipal.getVarianteProductoNegocio());
+        frmPrincipal.pintarPanelPrincipal(pnl);
     }
 
     private String formatearTitulo(String texto) {
@@ -148,8 +144,6 @@ public class PnlProductoParaVariante extends javax.swing.JPanel {
         }
         return sb.toString().trim();
     }
-
-   
 
     /**
      * This method is called from within the constructor to initialize the form.

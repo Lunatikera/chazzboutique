@@ -1,5 +1,6 @@
 presentacion\PnlProductoParaVariante.class
 presentacion\PanelVenta$1.class
+presentacion\PnlAnadirVarianteProducto$2.class
 presentacion\PnlAnadirCategoria$5.class
 presentacion\PnlAnadirProducto$1.class
 presentacion\PanelHome$4.class
@@ -40,6 +41,7 @@ presentacion\PanelHome$12.class
 presentacion\PanelCategoriaProducto$11.class
 utils\ColorNameDetector.class
 presentacion\PanelVenta$14.class
+presentacion\PnlAnadirVarianteProducto$7.class
 utils\ButtonEditor.class
 presentacion\PnlProductoParaVariante$1.class
 presentacion\FrmPrincipal$4.class
@@ -52,10 +54,12 @@ utils\BotonMenu.class
 presentacion\PanelHome$5.class
 presentacion\FrmPrincipal.class
 presentacion\PanelVenta$7.class
+presentacion\PnlAnadirVarianteProducto$1.class
 presentacion\PanelVenta$13.class
 presentacion\PnlAnadirProducto$5.class
 utils\BotonToggle.class
 presentacion\PanelHome$11.class
+presentacion\PnlAnadirVarianteProducto$8.class
 presentacion\PanelCategoriaProducto$17.class
 presentacion\PanelCategoriaProducto$9.class
 utils\ScrollBar.class
@@ -67,17 +71,20 @@ presentacion\PanelCategoriaProducto$5.class
 presentacion\PanelCategoriaProducto.class
 utils\ButtonRenderer.class
 presentacion\PnlVarianteProducto$3.class
+presentacion\PnlAnadirVarianteProducto$3.class
 presentacion\PanelCategoriaProducto$8.class
 presentacion\PanelCategoriaProducto$12.class
 presentacion\PnlVarianteProducto$6.class
 presentacion\PnlProductoParaVariante$2.class
 presentacion\PanelVenta$2.class
+presentacion\PnlAnadirVarianteProducto$6.class
 com\mycompany\chazzboutique\ChazzBoutique.class
 presentacion\FrmLogin$1.class
 presentacion\PanelVenta$8.class
 presentacion\PanelVenta$5.class
 utils\Capitalizador.class
 utils\ModernScrollBarUI$InvisibleScrollBarButton.class
+presentacion\PnlAnadirVarianteProducto$4.class
 presentacion\FrmLogin.class
 presentacion\PnlAnadirCategoria$3.class
 presentacion\PanelCategoriaProducto$7.class
@@ -99,6 +106,7 @@ presentacion\PnlReporte$3.class
 presentacion\PanelVenta$10.class
 presentacion\PnlAnadirVarianteProducto.class
 utils\ButtonRenderer$1.class
+presentacion\PnlAnadirVarianteProducto$5.class
 utils\ModeloTablaVentas.class
 presentacion\PanelEscogerAnadir$1.class
 presentacion\PnlAnadirCategoria$4.class
