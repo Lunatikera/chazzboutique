@@ -20,15 +20,16 @@ import javax.swing.JScrollPane;
  * @author carli
  */
 public class FrmPrincipal extends javax.swing.JFrame {
-  public IUsuarioNegocio usuarioNegocio;
+
+    public IUsuarioNegocio usuarioNegocio;
     public IVentaNegocio ventaNegocio;
     public IVarianteProductoNegocio varianteProductoNegocio;
     public IProductoNegocio productoNegocio;
     public ICategoriaNegocio categoriaNegocio;
     public IProveedorNegocio proveedorNegocio;
     private UsuarioDTO usuarioRegistrado;
-    
-     public FrmPrincipal(IUsuarioNegocio usuarioNegocio, IVentaNegocio ventaNegocio,
+
+    public FrmPrincipal(IUsuarioNegocio usuarioNegocio, IVentaNegocio ventaNegocio,
             IVarianteProductoNegocio varianteProductoNegocio,
             IProductoNegocio productoNegocio, ICategoriaNegocio categoriaNegocio,
             IProveedorNegocio proveedorNegocio, UsuarioDTO usuarioRegistrado) {
@@ -43,7 +44,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         this.categoriaNegocio = categoriaNegocio;
         this.proveedorNegocio = proveedorNegocio;
         this.usuarioRegistrado = usuarioRegistrado;
-
 
         this.pintarPanelPrincipal(new PanelHome(this));
     }
@@ -82,7 +82,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     public IProveedorNegocio getProveedorNegocio() {
         return proveedorNegocio;
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -302,20 +302,24 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVentaActionPerformed
-        // TODO add your handling code here:
+        this.pintarPanelPrincipal(new PanelVenta(this));
     }//GEN-LAST:event_botonVentaActionPerformed
 
     private void botonMenuProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMenuProductoActionPerformed
-       PanelEscogerAnadir panel = new PanelEscogerAnadir(this);
-       this.pintarPanelPrincipal(panel);
+        PanelEscogerAnadir panel = new PanelEscogerAnadir(this);
+        this.pintarPanelPrincipal(panel);
     }//GEN-LAST:event_botonMenuProductoActionPerformed
 
     private void btnCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCategoriasActionPerformed
-        // TODO add your handling code here:
+        PnlAnadirCategoria panel = new PnlAnadirCategoria(this);
+        this.pintarPanelPrincipal(panel);
+       
     }//GEN-LAST:event_btnCategoriasActionPerformed
 
     private void botonMenuHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMenuHomeActionPerformed
-        // TODO add your handling code here:
+        this.pintarPanelPrincipal(new PanelHome(this));
+        
+        
     }//GEN-LAST:event_botonMenuHomeActionPerformed
 
     private void botonReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonReportesActionPerformed

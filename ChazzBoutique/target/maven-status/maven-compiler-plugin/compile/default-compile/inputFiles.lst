@@ -1,36 +1,3 @@
-<<<<<<< HEAD
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\com\mycompany\chazzboutique\ChazzBoutique.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\FrmCategoria.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\FrmInicial.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\FrmLogin.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\FrmMain.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\FrmPrincipal.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\FrmProducto.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\FrmRegistro.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\FrmVarianteProducto.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\PanelCategoriaProducto.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\PanelEscogerAnadir.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\PanelHome.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\PanelVenta.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\PnlAnadirCategoria.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\PnlAnadirProducto.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\PnlAnadirVarianteProducto.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\PnlReporte.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\presentacion\PnlVarianteProducto.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\utils\BotonMenu.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\utils\BotonToggle.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\utils\ButtonEditor.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\utils\ButtonRenderer.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\utils\Capitalizador.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\utils\ColorNameDetector.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\utils\ImagenPerfil.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\utils\ModeloTablaVentas.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\utils\ModernScrollBarUI.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\utils\ProductoComboItem.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\utils\ScrollBar.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\utils\SpinnerCellEditor.java
-C:\Users\carli\OneDrive\Documentos\GitHub\chazzboutique\ChazzBoutique\src\main\java\utils\SpinnerRenderer.java
-=======
 D:\Proyectos\chazzboutique\ChazzBoutique\src\main\java\com\mycompany\chazzboutique\ChazzBoutique.java
 D:\Proyectos\chazzboutique\ChazzBoutique\src\main\java\presentacion\FrmCategoria.java
 D:\Proyectos\chazzboutique\ChazzBoutique\src\main\java\presentacion\FrmInicial.java
@@ -62,4 +29,3 @@ D:\Proyectos\chazzboutique\ChazzBoutique\src\main\java\utils\ProductoComboItem.j
 D:\Proyectos\chazzboutique\ChazzBoutique\src\main\java\utils\ScrollBar.java
 D:\Proyectos\chazzboutique\ChazzBoutique\src\main\java\utils\SpinnerCellEditor.java
 D:\Proyectos\chazzboutique\ChazzBoutique\src\main\java\utils\SpinnerRenderer.java
->>>>>>> carlos4

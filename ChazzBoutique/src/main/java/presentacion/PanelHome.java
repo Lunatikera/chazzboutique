@@ -10,7 +10,6 @@ import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVarianteProductoNegocio;
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
@@ -37,14 +36,14 @@ public class PanelHome extends javax.swing.JPanel {
     private String filtroActual = "";
     private boolean hayMasPaginas = true;
     private List<VarianteProductoDTO> listaActualDeVariantes;
-    
+
     public PanelHome(FrmPrincipal frmPrincipal) {
         initComponents();
         this.frmPrincipal = frmPrincipal;
         this.varianteNegocio = frmPrincipal.varianteProductoNegocio;
         cargarCategorias();
         cargarVariantes(paginaActual, tamanoPagina, filtroActual);
-        
+
         txtBuscador.setForeground(Color.GRAY);
         txtBuscador.setText("Buscar");
 
@@ -57,7 +56,7 @@ public class PanelHome extends javax.swing.JPanel {
                     txtBuscador.setForeground(Color.WHITE);
                 }
             }
-            
+
             @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 if (txtBuscador.getText().isBlank()) {
@@ -70,15 +69,15 @@ public class PanelHome extends javax.swing.JPanel {
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
                 buscar();
             }
-            
+
             public void removeUpdate(javax.swing.event.DocumentEvent e) {
                 buscar();
             }
-            
+
             public void changedUpdate(javax.swing.event.DocumentEvent e) {
                 buscar();
             }
-            
+
             private void buscar() {
                 String texto = txtBuscador.getText().trim();
                 if (!texto.equalsIgnoreCase("Buscar")) {
@@ -88,31 +87,31 @@ public class PanelHome extends javax.swing.JPanel {
                 }
             }
         });
-        
+
     }
-    
+
     private void cargarCategorias() {
         try {
             categorias = frmPrincipal.categoriaNegocio.obtenerCategorias();
             mostrarCategorias();
-            
+
         } catch (NegocioException ex) {
             Logger.getLogger(PanelHome.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void mostrarCategorias() {
         List<JLabel> etiquetas = List.of(lblCategoria1, lblCategoria2, lblCategoria3, lblCategoria4, lblCategoria5);
         List<JButton> botones = List.of(btnImagenCategoria1, btnImagenCategoria2, btnImagenCategoria3, btnImagenCategoria4, btnImagenCategoria5);
-        
+
         int total = categorias.size();
-        
+
         for (int i = 0; i < VISTA_MAXIMA; i++) {
             int index = (indiceCarrusel + i) % total;
             CategoriaDTO cat = categorias.get(index);
-            
+
             etiquetas.get(i).setText(capitalizarNombre(cat.getNombreCategoria()));
-            
+
             URL url = getClass().getResource(cat.getImagenCategoria());
             if (url != null) {
                 ImageIcon icon = new ImageIcon(url);
@@ -121,43 +120,33 @@ public class PanelHome extends javax.swing.JPanel {
             } else {
                 botones.get(i).setIcon(null); // O imagen por defecto
             }
-
-            for (ActionListener al : botones.get(i).getActionListeners()) {
-                botones.get(i).removeActionListener(al);
-            }
-
-            CategoriaDTO copiaCategoria = cat;
-            botones.get(i).addActionListener(evt -> {
-                PanelCategoriaProducto panelCategoria = new PanelCategoriaProducto(frmPrincipal, copiaCategoria);
-                frmPrincipal.pintarPanelPrincipal(panelCategoria);
-            });
         }
     }
-    
+
     private void cargarVariantes(int pagina, int tamañoPagina, String filtro) {
         try {
-            
+
             List<JPanel> panelesArticulo = List.of(
                     panelArticulo1, panelArticulo2, panelArticulo3,
                     panelArticulo4, panelArticulo5, panelArticulo6
             );
-            
+
             List<VarianteProductoDTO> variantes = frmPrincipal.varianteProductoNegocio
                     .buscarVariantesPorNombreProducto(filtro, pagina, tamañoPagina);
             listaActualDeVariantes = variantes;
             long total = frmPrincipal.varianteProductoNegocio.contarVariantesPorNombreProducto(filtroActual);
             lblArticulos.setText("Todos (" + total + " artículos)");
-            
+
             List<VarianteProductoDTO> siguientePagina = frmPrincipal.varianteProductoNegocio
                     .buscarVariantesPorNombreProducto(filtro, pagina + 1, tamañoPagina);
-            
+
             hayMasPaginas = !siguientePagina.isEmpty();
             // actualizar la interfaz (como ya lo haces)
             List<JLabel> etiquetasNombre = List.of(lblNombreArticulo1, lblNombreArticulo2, lblNombreArticulo3, lblNombreArticulo4, lblNombreArticulo5, lblNombreArticulo6);
             List<JLabel> etiquetasTalla = List.of(lblTallaResult1, lblTallaResult2, lblTallaResult3, lblTallaResult4, lblTallaResult5, lblTallaResult6);
             List<JButton> botonesColor = List.of(btnColor1, btnColor2, btnColor3, btnColor4, btnColor5, btnColor6);
             List<JLabel> etiquetasImagen = List.of(lblImagenArticulo1, lblImagenArticulo2, lblImagenArticulo3, lblImagenArticulo4, lblImagenArticulo5, lblImagenArticulo6);
-            
+
             for (int i = 0; i < tamañoPagina; i++) {
                 if (i < variantes.size()) {
                     VarianteProductoDTO dto = variantes.get(i);
@@ -175,7 +164,7 @@ public class PanelHome extends javax.swing.JPanel {
                     } else {
                         etiquetasImagen.get(i).setIcon(new ImageIcon(getClass().getResource("/images/default.png")));
                     }
-                    
+
                     panelesArticulo.get(i).setVisible(true); // Mostrar panel
                 } else {
                     etiquetasNombre.get(i).setText("");
@@ -191,10 +180,10 @@ public class PanelHome extends javax.swing.JPanel {
             // actualizar visibilidad de botones
             btnRightPagina.setEnabled(hayMasPaginas);
             btnLeftPagina1.setEnabled(paginaActual > 1);
-            
+
         } catch (NegocioException ex) {
             lblArticulos.setText("Todos (0 artículos)");
-            
+
         }
     }
 

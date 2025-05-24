@@ -104,20 +104,31 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
             List<JLabel> etiquetasTalla = List.of(lblTallaResult1, lblTallaResult2, lblTallaResult3, lblTallaResult4, lblTallaResult5, lblTallaResult6, lblTallaResult7, lblTallaResult8, lblTallaResult9, lblTallaResult10, lblTallaResult11, lblTallaResult12);
             List<JButton> botonesColor = List.of(btnColor1, btnColor2, btnColor3, btnColor4, btnColor5, btnColor6, btnColor7, btnColor8, btnColor9, btnColor10, btnColor11, btnColor12);
             List<JLabel> etiquetasImagen = List.of(lblImagenArticulo1, lblImagenArticulo2, lblImagenArticulo3, lblImagenArticulo4, lblImagenArticulo5, lblImagenArticulo6, lblImagenArticulo7, lblImagenArticulo8, lblImagenArticulo9, lblImagenArticulo10, lblImagenArticulo11, lblImagenArticulo12);
-
-            for (int i = 0; i < tamañoPagina; i++) {
+            int limite = Math.min(tamañoPagina, panelesArticulo.size());
+            for (int i = 0; i < limite; i++) {
                 if (i < variantes.size()) {
                     VarianteProductoDTO dto = variantes.get(i);
                     etiquetasNombre.get(i).setText(capitalizarNombre(dto.getNombreProducto()));
                     etiquetasTalla.get(i).setText(dto.getTalla());
                     botonesColor.get(i).setBackground(Color.decode(dto.getColor()));
-                    URL url = getClass().getResource(dto.getUrlImagen());
-                    if (url != null) {
-                        ImageIcon icon = new ImageIcon(url);
-                        etiquetasImagen.get(i).setIcon(new ImageIcon(icon.getImage().getScaledInstance(83, 123, Image.SCALE_SMOOTH)));
+                    String urlImagen = dto.getUrlImagen();
+                    ImageIcon iconoEscalado;
+
+                    if (urlImagen != null) {
+                        URL url = getClass().getResource(urlImagen);
+                        if (url != null) {
+                            ImageIcon icon = new ImageIcon(url);
+                            iconoEscalado = new ImageIcon(icon.getImage().getScaledInstance(83, 123, Image.SCALE_SMOOTH));
+                        } else {
+                            System.out.println("⚠ Imagen no encontrada en recursos: " + urlImagen);
+                            iconoEscalado = getIconoPorDefecto();
+                        }
                     } else {
-                        etiquetasImagen.get(i).setIcon(null);
+                        System.out.println("⚠ URL de imagen nula para producto: " + dto.getId());
+                        iconoEscalado = getIconoPorDefecto();
                     }
+
+                    etiquetasImagen.get(i).setIcon(iconoEscalado);
                     panelesArticulo.get(i).setVisible(true); // Mostrar panel
                 } else {
                     etiquetasNombre.get(i).setText("");
@@ -137,6 +148,17 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
         } catch (NegocioException ex) {
             lblArticulos.setText("Todos (0 artículos)");
 
+        }
+    }
+
+    private ImageIcon getIconoPorDefecto() {
+        URL defaultUrl = getClass().getResource("/images/no_image.png");
+        if (defaultUrl != null) {
+            ImageIcon icon = new ImageIcon(defaultUrl);
+            return new ImageIcon(icon.getImage().getScaledInstance(83, 123, Image.SCALE_SMOOTH));
+        } else {
+            System.out.println("⚠ Imagen por defecto no encontrada en /images/no_image.png");
+            return null;
         }
     }
 
@@ -208,14 +230,6 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
         lblTalla7 = new javax.swing.JLabel();
         btnColor7 = new javax.swing.JButton();
         btnVer7 = new utils.BotonMenu();
-        panelArticulo8 = new javax.swing.JPanel();
-        lblImagenArticulo8 = new javax.swing.JLabel();
-        lblNombreArticulo8 = new javax.swing.JLabel();
-        lblTallaResult8 = new javax.swing.JLabel();
-        lblColor7 = new javax.swing.JLabel();
-        lblTalla8 = new javax.swing.JLabel();
-        btnColor8 = new javax.swing.JButton();
-        btnVer8 = new utils.BotonMenu();
         panelArticulo9 = new javax.swing.JPanel();
         lblImagenArticulo9 = new javax.swing.JLabel();
         lblNombreArticulo9 = new javax.swing.JLabel();
@@ -224,6 +238,14 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
         lblTalla9 = new javax.swing.JLabel();
         btnColor9 = new javax.swing.JButton();
         btnVer9 = new utils.BotonMenu();
+        panelArticulo8 = new javax.swing.JPanel();
+        lblImagenArticulo8 = new javax.swing.JLabel();
+        lblNombreArticulo8 = new javax.swing.JLabel();
+        lblTallaResult8 = new javax.swing.JLabel();
+        lblColor7 = new javax.swing.JLabel();
+        lblTalla8 = new javax.swing.JLabel();
+        btnColor8 = new javax.swing.JButton();
+        btnVer8 = new utils.BotonMenu();
         panelArticulo10 = new javax.swing.JPanel();
         lblImagenArticulo10 = new javax.swing.JLabel();
         lblNombreArticulo10 = new javax.swing.JLabel();
@@ -795,6 +817,30 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
 
         jPanel10.add(panelArticulo7);
 
+        lblImagenArticulo9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/imagencatalogo.png"))); // NOI18N
+
+        lblNombreArticulo9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblNombreArticulo9.setText("Blusa con Shorts  en Conjuto");
+
+        lblTallaResult9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTallaResult9.setText("M");
+
+        lblColor8.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblColor8.setText("Color:");
+
+        lblTalla9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTalla9.setText("Talla:");
+
+        btnColor9.setBackground(new java.awt.Color(255, 102, 51));
+
+        btnVer9.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer9.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVer9ActionPerformed(evt);
+            }
+        });
+
         lblImagenArticulo8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/imagencatalogo.png"))); // NOI18N
 
         lblNombreArticulo8.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
@@ -869,38 +915,13 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
                         .addGap(28, 28, 28))))
         );
 
-        jPanel10.add(panelArticulo8);
-
-        lblImagenArticulo9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/imagencatalogo.png"))); // NOI18N
-
-        lblNombreArticulo9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
-        lblNombreArticulo9.setText("Blusa con Shorts  en Conjuto");
-
-        lblTallaResult9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
-        lblTallaResult9.setText("M");
-
-        lblColor8.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
-        lblColor8.setText("Color:");
-
-        lblTalla9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
-        lblTalla9.setText("Talla:");
-
-        btnColor9.setBackground(new java.awt.Color(255, 102, 51));
-
-        btnVer9.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
-        btnVer9.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
-        btnVer9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVer9ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panelArticulo9Layout = new javax.swing.GroupLayout(panelArticulo9);
         panelArticulo9.setLayout(panelArticulo9Layout);
         panelArticulo9Layout.setHorizontalGroup(
             panelArticulo9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelArticulo9Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addComponent(panelArticulo8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
                 .addComponent(lblImagenArticulo9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelArticulo9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -925,7 +946,7 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
                 .addGroup(panelArticulo9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelArticulo9Layout.createSequentialGroup()
                         .addComponent(lblImagenArticulo9)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(53, Short.MAX_VALUE))
                     .addGroup(panelArticulo9Layout.createSequentialGroup()
                         .addComponent(lblNombreArticulo9)
                         .addGroup(panelArticulo9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -943,6 +964,9 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
                         .addGap(37, 37, 37)
                         .addComponent(btnVer9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(28, 28, 28))))
+            .addGroup(panelArticulo9Layout.createSequentialGroup()
+                .addComponent(panelArticulo8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         jPanel10.add(panelArticulo9);
@@ -1316,43 +1340,43 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
 
     private void btnVer1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer1ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(0); // o el índice correspondiente
-      PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer1ActionPerformed
 
     private void btnVer2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer2ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(1); // o el índice correspondiente
-       PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer2ActionPerformed
 
     private void btnVer3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer3ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(2); // o el índice correspondiente
-       PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer3ActionPerformed
 
     private void btnVer4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer4ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(3); // o el índice correspondiente
-       PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer4ActionPerformed
 
     private void btnVer5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer5ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(4); // o el índice correspondiente
-       PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer5ActionPerformed
 
     private void btnVer6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer6ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(5); // o el índice correspondiente
-      PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer6ActionPerformed
 
     private void btnVer7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer7ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(6); // o el índice correspondiente
-      PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer7ActionPerformed
 
@@ -1364,7 +1388,7 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
 
     private void btnVer9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer9ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(8); // o el índice correspondiente
-      PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer9ActionPerformed
 
@@ -1376,7 +1400,7 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
 
     private void btnVer11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer11ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(10); // o el índice correspondiente
-       PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer11ActionPerformed
 
