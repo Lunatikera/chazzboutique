@@ -87,37 +87,37 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
         }
     }
 
-    private void seleccionarImagen() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Seleccionar Imagen");
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Imágenes", "jpg", "jpeg", "png", "gif"));
+  private void seleccionarImagen() {
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Seleccionar Imagen");
+    fileChooser.setFileFilter(new FileNameExtensionFilter("Imágenes", "jpg", "jpeg", "png", "gif"));
 
-        int resultado = fileChooser.showOpenDialog(this);
-        if (resultado == JFileChooser.APPROVE_OPTION) {
-            File imagenSeleccionada = fileChooser.getSelectedFile();
+    int resultado = fileChooser.showOpenDialog(this);
+    if (resultado == JFileChooser.APPROVE_OPTION) {
+        File imagenSeleccionada = fileChooser.getSelectedFile();
 
-            try {
-
-                String nombreArchivo = imagenSeleccionada.getName();
-                File carpetaDestino = new File("src/main/resources/categorias/");
-                if (!carpetaDestino.exists()) {
-                    carpetaDestino.mkdirs();
-                }
-
-                File destino = new File(carpetaDestino, nombreArchivo);
-                Files.copy(imagenSeleccionada.toPath(), destino.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-                imagen = "/categorias/" + nombreArchivo;
-                ImageIcon icon = new ImageIcon(destino.getAbsolutePath());
-                Image img = icon.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_SMOOTH);
-                lblImagen.setIcon(new ImageIcon(img));
-                lblImagen.setText("");
-
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error al copiar la imagen: " + e.getMessage());
+        try {
+            String nombreArchivo = imagenSeleccionada.getName();
+            File carpetaDestino = new File("src/main/resources/images/");
+            if (!carpetaDestino.exists()) {
+                carpetaDestino.mkdirs();
             }
+
+            File destino = new File(carpetaDestino, nombreArchivo);
+            Files.copy(imagenSeleccionada.toPath(), destino.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            imagen = "/images/" + nombreArchivo; // Ruta relativa para guardar en el DTO
+            ImageIcon icon = new ImageIcon(destino.getAbsolutePath());
+            Image img = icon.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_SMOOTH);
+            lblImagen.setIcon(new ImageIcon(img));
+            lblImagen.setText("");
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error al copiar la imagen: " + e.getMessage());
         }
     }
+}
+
 
     private void cargarCategorias() {
         tableModel.setRowCount(0);

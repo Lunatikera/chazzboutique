@@ -174,7 +174,7 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
         } finally {
             em.close();
         }
-<<<<<<< HEAD
+
     }
 
     @Override
@@ -214,8 +214,7 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
         } catch (Exception e) {
             throw new PersistenciaException("Error al contar variantes por categoría y nombre", e);
         }
-=======
->>>>>>> carlos4
+
     }
 
 }
