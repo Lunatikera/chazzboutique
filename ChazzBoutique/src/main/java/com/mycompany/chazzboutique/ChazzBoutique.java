@@ -9,7 +9,6 @@ import com.mycompany.chazzboutiquepersistencia.conexion.ConexionBD;
 import com.mycompany.chazzboutiquepersistencia.conexion.IConexionBD;
 import com.mycompany.chazzboutiquepersistencia.daos.*;
 import com.mycompany.chazzboutiquepersistencia.interfacesDAO.*;
-import presentacion.FrmMain;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

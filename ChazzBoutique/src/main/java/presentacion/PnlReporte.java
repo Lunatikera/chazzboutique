@@ -24,6 +24,7 @@ import javax.swing.table.JTableHeader;
 public class PnlReporte extends javax.swing.JPanel {
 
     FrmPrincipal frmPrincipal;
+    private List<ReporteInventarioDTO> inventarioActual;
 
     public PnlReporte(FrmPrincipal frmPrincipal) {
         initComponents();
@@ -72,6 +73,15 @@ public class PnlReporte extends javax.swing.JPanel {
             fechaFin.setDate(dateFin);
         });
 
+        cbxTipoReporte1.addActionListener(e -> {
+            String tipo = (String) cbxTipoReporte1.getSelectedItem();
+            cbxPeriodo.setSelectedIndex(1);
+            boolean esInventario = "Inventario actual".equals(tipo);
+            fechaInicio.setEnabled(!esInventario);
+            fechaFin.setEnabled(!esInventario);
+            cbxPeriodo.setEnabled(!esInventario);
+        });
+
         tblReporte.setRowHeight(40);
 
         // Configurar header
@@ -80,6 +90,22 @@ public class PnlReporte extends javax.swing.JPanel {
         header.setForeground(Color.WHITE);
         header.setBackground(Color.BLACK);
         header.setPreferredSize(new Dimension(header.getWidth(), 35));
+
+        tblReporte.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+
+                java.awt.Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                if (value instanceof String) {
+                    String textoFormateado = formatearTitulo((String) value);
+                    setText(textoFormateado);
+                }
+
+                return c;
+            }
+        });
 
     }
 
@@ -170,21 +196,24 @@ public class PnlReporte extends javax.swing.JPanel {
                     break;
 
                 case "Inventario actual":
-                    List<ReporteInventarioDTO> inventario = reporteNegocio.obtenerInventarioActual();
+                    this.inventarioActual = reporteNegocio.obtenerInventarioActual();
                     model.addColumn("Producto");
-                    model.addColumn("Variante");
+                    model.addColumn("Talla");
+                    model.addColumn("Color");
                     model.addColumn("Stock");
                     model.addColumn("Precio Unitario");
                     model.addColumn("Valor Total");
-
-                    for (ReporteInventarioDTO item : inventario) {
+                    String campoVacion = "";
+                    for (ReporteInventarioDTO item : inventarioActual) {
                         model.addRow(new Object[]{
                             item.getNombreProducto(),
-                            item.getVariante(),
+                            item.getTalla(),
+                            campoVacion,
                             item.getStock(),
                             "$" + item.getPrecioUnitario().setScale(2, RoundingMode.HALF_UP),
                             "$" + item.getValorTotal().setScale(2, RoundingMode.HALF_UP)
                         });
+                        System.out.println(item.getColor());
                     }
                     break;
 
@@ -193,6 +222,29 @@ public class PnlReporte extends javax.swing.JPanel {
             }
 
             tblReporte.setModel(model);
+            int columnaVariante = 2; // Índice de columna "Variante"
+
+            tblReporte.getColumnModel().getColumn(columnaVariante).setCellRenderer(new javax.swing.table.DefaultTableCellRenderer() {
+                @Override
+                public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value,
+                        boolean isSelected, boolean hasFocus, int row, int column) {
+
+                    java.awt.Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                    if (!isSelected && inventarioActual != null && row < inventarioActual.size()) {
+                        String colorHex = inventarioActual.get(row).getColor(); // ejemplo "#FFC107"
+                        try {
+                            c.setBackground(Color.decode(colorHex));
+                        } catch (Exception e) {
+                            c.setBackground(Color.WHITE); // si el color es inválido
+                        }
+                    } else {
+                        c.setBackground(table.getSelectionBackground());
+                    }
+
+                    return c;
+                }
+            });
 
         } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this,
@@ -212,6 +264,19 @@ public class PnlReporte extends javax.swing.JPanel {
                     JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
+    }
+
+    private String formatearTitulo(String texto) {
+        String[] palabras = texto.trim().toLowerCase().split("\\s+");
+        StringBuilder sb = new StringBuilder();
+        for (String palabra : palabras) {
+            if (!palabra.isEmpty()) {
+                sb.append(Character.toUpperCase(palabra.charAt(0)));
+                sb.append(palabra.substring(1));
+                sb.append(" ");
+            }
+        }
+        return sb.toString().trim();
     }
 
     /**
@@ -268,10 +333,13 @@ public class PnlReporte extends javax.swing.JPanel {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
+        cbxPeriodo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cbxPeriodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Rango de Fechas", "Semanal", "Mensual", "Anual" }));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel5.setText("Periodo");
+
+        fechaInicio.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         btnGenerarReporte.setBackground(new java.awt.Color(0, 0, 0));
         btnGenerarReporte.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
@@ -289,6 +357,8 @@ public class PnlReporte extends javax.swing.JPanel {
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel3.setText("Desde");
+
+        fechaFin.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         btnConfirmar.setBackground(new java.awt.Color(0, 0, 0));
         btnConfirmar.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
@@ -311,6 +381,7 @@ public class PnlReporte extends javax.swing.JPanel {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel7.setText("Tipo de reporte");
 
+        cbxTipoReporte1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cbxTipoReporte1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ventas", "Productos más vendidos", "Ingresos por categoría", "Inventario actual" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -324,23 +395,23 @@ public class PnlReporte extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
+                        .addGap(65, 65, 65)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbxTipoReporte1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7))
-                        .addGap(18, 18, 18)
+                        .addGap(38, 38, 38)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbxPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5))
-                        .addGap(63, 63, 63)
+                        .addGap(43, 43, 43)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(fechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
-                        .addGap(61, 61, 61)
+                        .addGap(48, 48, 48)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(fechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(87, 87, 87)
+                                .addGap(75, 75, 75)
                                 .addComponent(btnGenerarReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel6)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -351,24 +422,29 @@ public class PnlReporte extends javax.swing.JPanel {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(fechaFin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(fechaInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnGenerarReporte, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE))
-                            .addComponent(cbxPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btnGenerarReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(fechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbxTipoReporte1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbxPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbxTipoReporte1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(fechaInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(27, 27, 27)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 595, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)

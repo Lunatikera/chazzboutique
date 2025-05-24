@@ -330,7 +330,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_botonMenu5ActionPerformed
 
     private void botonMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMenu4ActionPerformed
-        this.pintarPanelPrincipal(new PnlAnadirProducto(this));
+        this.pintarPanelPrincipal(new PanelEscogerAnadir(this));
 
     }//GEN-LAST:event_botonMenu4ActionPerformed
 

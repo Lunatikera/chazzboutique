@@ -13,15 +13,17 @@ import java.math.BigDecimal;
 public class ReporteInventarioDTO {
 
     private String nombreProducto;
-    private String variante;
+    private String talla;
+    private String color;
     private Integer stock;
     private BigDecimal precioUnitario;
     private BigDecimal valorTotal;
 
-    public ReporteInventarioDTO(String nombreProducto, String variante, Integer stock,
+    public ReporteInventarioDTO(String nombreProducto, String talla, String color, Integer stock,
             BigDecimal precioUnitario, BigDecimal valorTotal) {
         this.nombreProducto = nombreProducto;
-        this.variante = variante;
+        this.talla = talla;
+        this.color= color;
         this.stock = stock;
         this.precioUnitario = precioUnitario;
         this.valorTotal = valorTotal;
@@ -35,14 +37,23 @@ public class ReporteInventarioDTO {
         this.nombreProducto = nombreProducto;
     }
 
-    public String getVariante() {
-        return variante;
+    public String getTalla() {
+        return talla;
     }
 
-    public void setVariante(String variante) {
-        this.variante = variante;
+    public void setTalla(String talla) {
+        this.talla = talla;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+   
     public Integer getStock() {
         return stock;
     }

@@ -124,7 +124,7 @@ public class ReporteDAO implements IReporteDAO {
     public List<ReporteInventarioDTO> obtenerInventarioActual() throws PersistenceException {
         EntityManager em = conexionBD.getEntityManager();
         try {
-            String jpql = "SELECT new com.mycompany.chazzboutiquepersistencia.dtoReportes.ReporteInventarioDTO(p.nombreProducto, p.descripcionProducto, "
+            String jpql = "SELECT new com.mycompany.chazzboutiquepersistencia.dtoReportes.ReporteInventarioDTO(p.nombreProducto, vp.talla, vp.color, "
                     + "vp.stock, vp.precioVenta, vp.precioVenta * vp.stock) "
                     + "FROM VarianteProducto vp "
                     + "JOIN vp.producto p "
