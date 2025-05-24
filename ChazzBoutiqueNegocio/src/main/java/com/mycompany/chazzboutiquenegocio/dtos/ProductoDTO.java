@@ -9,8 +9,9 @@ public class ProductoDTO {
     private String descripcionProducto;
     private LocalDate fechaCreacion;
 
-    private Long categoriaId;     
-    private Long proveedorId;    
+    private Long categoriaId;
+    private Long proveedorId;
+
     public ProductoDTO() {
     }
 
@@ -44,11 +45,8 @@ public class ProductoDTO {
         this.categoriaId = categoriaId;
         this.proveedorId = proveedorId;
     }
-    
-    
 
     // Getters y Setters
-
     public Long getId() {
         return id;
     }

@@ -25,7 +25,8 @@ import static utils.Capitalizador.capitalizarNombre;
  * @author carli
  */
 public class PanelHome extends javax.swing.JPanel {
-private IVarianteProductoNegocio varianteNegocio;
+
+    private IVarianteProductoNegocio varianteNegocio;
     private FrmPrincipal frmPrincipal;
     private List<CategoriaDTO> categorias;
     private int indiceCarrusel = 0;
@@ -35,14 +36,14 @@ private IVarianteProductoNegocio varianteNegocio;
     private String filtroActual = "";
     private boolean hayMasPaginas = true;
     private List<VarianteProductoDTO> listaActualDeVariantes;
-
+    
     public PanelHome(FrmPrincipal frmPrincipal) {
         initComponents();
         this.frmPrincipal = frmPrincipal;
-        this.varianteNegocio= frmPrincipal.varianteProductoNegocio;
+        this.varianteNegocio = frmPrincipal.varianteProductoNegocio;
         cargarCategorias();
         cargarVariantes(paginaActual, tamanoPagina, filtroActual);
-
+        
         txtBuscador.setForeground(Color.GRAY);
         txtBuscador.setText("Buscar");
 
@@ -55,7 +56,7 @@ private IVarianteProductoNegocio varianteNegocio;
                     txtBuscador.setForeground(Color.WHITE);
                 }
             }
-
+            
             @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 if (txtBuscador.getText().isBlank()) {
@@ -68,15 +69,15 @@ private IVarianteProductoNegocio varianteNegocio;
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
                 buscar();
             }
-
+            
             public void removeUpdate(javax.swing.event.DocumentEvent e) {
                 buscar();
             }
-
+            
             public void changedUpdate(javax.swing.event.DocumentEvent e) {
                 buscar();
             }
-
+            
             private void buscar() {
                 String texto = txtBuscador.getText().trim();
                 if (!texto.equalsIgnoreCase("Buscar")) {
@@ -86,31 +87,31 @@ private IVarianteProductoNegocio varianteNegocio;
                 }
             }
         });
-
+        
     }
-
+    
     private void cargarCategorias() {
         try {
             categorias = frmPrincipal.categoriaNegocio.obtenerCategorias();
             mostrarCategorias();
-
+            
         } catch (NegocioException ex) {
             Logger.getLogger(PanelHome.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     private void mostrarCategorias() {
         List<JLabel> etiquetas = List.of(lblCategoria1, lblCategoria2, lblCategoria3, lblCategoria4, lblCategoria5);
         List<JButton> botones = List.of(btnImagenCategoria1, btnImagenCategoria2, btnImagenCategoria3, btnImagenCategoria4, btnImagenCategoria5);
-
+        
         int total = categorias.size();
-
+        
         for (int i = 0; i < VISTA_MAXIMA; i++) {
             int index = (indiceCarrusel + i) % total;
             CategoriaDTO cat = categorias.get(index);
-
+            
             etiquetas.get(i).setText(capitalizarNombre(cat.getNombreCategoria()));
-
+            
             URL url = getClass().getResource(cat.getImagenCategoria());
             if (url != null) {
                 ImageIcon icon = new ImageIcon(url);
@@ -121,44 +122,49 @@ private IVarianteProductoNegocio varianteNegocio;
             }
         }
     }
-
+    
     private void cargarVariantes(int pagina, int tamañoPagina, String filtro) {
         try {
-
+            
             List<JPanel> panelesArticulo = List.of(
                     panelArticulo1, panelArticulo2, panelArticulo3,
                     panelArticulo4, panelArticulo5, panelArticulo6
             );
-
+            
             List<VarianteProductoDTO> variantes = frmPrincipal.varianteProductoNegocio
                     .buscarVariantesPorNombreProducto(filtro, pagina, tamañoPagina);
             listaActualDeVariantes = variantes;
             long total = frmPrincipal.varianteProductoNegocio.contarVariantesPorNombreProducto(filtroActual);
             lblArticulos.setText("Todos (" + total + " artículos)");
-
+            
             List<VarianteProductoDTO> siguientePagina = frmPrincipal.varianteProductoNegocio
                     .buscarVariantesPorNombreProducto(filtro, pagina + 1, tamañoPagina);
-
+            
             hayMasPaginas = !siguientePagina.isEmpty();
             // actualizar la interfaz (como ya lo haces)
             List<JLabel> etiquetasNombre = List.of(lblNombreArticulo1, lblNombreArticulo2, lblNombreArticulo3, lblNombreArticulo4, lblNombreArticulo5, lblNombreArticulo6);
             List<JLabel> etiquetasTalla = List.of(lblTallaResult1, lblTallaResult2, lblTallaResult3, lblTallaResult4, lblTallaResult5, lblTallaResult6);
             List<JButton> botonesColor = List.of(btnColor1, btnColor2, btnColor3, btnColor4, btnColor5, btnColor6);
             List<JLabel> etiquetasImagen = List.of(lblImagenArticulo1, lblImagenArticulo2, lblImagenArticulo3, lblImagenArticulo4, lblImagenArticulo5, lblImagenArticulo6);
-
+            
             for (int i = 0; i < tamañoPagina; i++) {
                 if (i < variantes.size()) {
                     VarianteProductoDTO dto = variantes.get(i);
                     etiquetasNombre.get(i).setText(capitalizarNombre(dto.getNombreProducto()));
                     etiquetasTalla.get(i).setText(dto.getTalla());
                     botonesColor.get(i).setBackground(Color.decode(dto.getColor()));
-                    URL url = getClass().getResource(dto.getUrlImagen());
+                    String rutaImagen = dto.getUrlImagen();
+                    URL url = null;
+                    if (rutaImagen != null && !rutaImagen.isBlank()) {
+                        url = getClass().getResource(rutaImagen);
+                    }
                     if (url != null) {
                         ImageIcon icon = new ImageIcon(url);
                         etiquetasImagen.get(i).setIcon(new ImageIcon(icon.getImage().getScaledInstance(83, 123, Image.SCALE_SMOOTH)));
                     } else {
-                        etiquetasImagen.get(i).setIcon(null);
+                        etiquetasImagen.get(i).setIcon(new ImageIcon(getClass().getResource("/images/default.png")));
                     }
+                    
                     panelesArticulo.get(i).setVisible(true); // Mostrar panel
                 } else {
                     etiquetasNombre.get(i).setText("");
@@ -174,10 +180,10 @@ private IVarianteProductoNegocio varianteNegocio;
             // actualizar visibilidad de botones
             btnRightPagina.setEnabled(hayMasPaginas);
             btnLeftPagina1.setEnabled(paginaActual > 1);
-
+            
         } catch (NegocioException ex) {
             lblArticulos.setText("Todos (0 artículos)");
-
+            
         }
     }
 
@@ -1097,7 +1103,7 @@ private IVarianteProductoNegocio varianteNegocio;
 
     private void btnVer1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer1ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(0); // o el índice correspondiente
-        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio,frmPrincipal);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);
     }//GEN-LAST:event_btnVer1ActionPerformed
 
@@ -1120,12 +1126,12 @@ private IVarianteProductoNegocio varianteNegocio;
 
     private void btnVer4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer4ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(3); // o el índice correspondiente
-       PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);    }//GEN-LAST:event_btnVer4ActionPerformed
 
     private void btnVer5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer5ActionPerformed
         VarianteProductoDTO seleccionada = listaActualDeVariantes.get(4); // o el índice correspondiente
-       PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
+        PnlVarianteProducto pnl = new PnlVarianteProducto(seleccionada, varianteNegocio, frmPrincipal);
         frmPrincipal.pintarPanelPrincipal(pnl);    }//GEN-LAST:event_btnVer5ActionPerformed
 
     private void btnVer6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer6ActionPerformed

@@ -23,6 +23,9 @@ public class VarianteProductoDTO {
     private String nombreProducto;
     private String urlImagen;
 
+    public VarianteProductoDTO() {
+    }
+
     // Constructor
     public VarianteProductoDTO(String codigoBarra, int stock, BigDecimal precioCompra, String talla, BigDecimal precioVenta, Long productoId) {
         this.codigoBarra = codigoBarra;

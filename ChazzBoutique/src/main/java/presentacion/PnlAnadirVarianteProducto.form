@@ -197,6 +197,9 @@
               <Font name="Helvetica Neue" size="18" style="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPrecioCompraActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
@@ -230,6 +233,9 @@
               <Border info="null"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnConfirmarActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnGenerarCodigoBarras">
           <Properties>
@@ -247,6 +253,9 @@
               <Border info="null"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGenerarCodigoBarrasActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnColor">
           <Properties>
@@ -260,6 +269,9 @@
               </Border>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnColorActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
@@ -280,6 +292,9 @@
               </StringArray>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxTallasActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -298,6 +313,9 @@
               <Font name="Helvetica Neue" size="18" style="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtCodigoBarras1ActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="txtPrecioVenta">
           <Properties>
@@ -305,6 +323,9 @@
               <Font name="Helvetica Neue" size="18" style="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPrecioVentaActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblImagen">
           <Properties>
