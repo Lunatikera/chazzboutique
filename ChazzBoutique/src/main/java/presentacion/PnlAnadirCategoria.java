@@ -140,7 +140,7 @@ public class PnlAnadirCategoria extends javax.swing.JPanel {
             try {
 
                 String nombreArchivo = imagenSeleccionada.getName();
-                File carpetaDestino = new File("src/main/resources/categorias/");
+                File carpetaDestino = new File("imagenes/categorias/");
                 if (!carpetaDestino.exists()) {
                     carpetaDestino.mkdirs();
                 }

@@ -323,37 +323,7 @@ public class PnlAnadirVarianteProducto extends javax.swing.JPanel {
         cbxTallas.addItem("XXL");
     }
 
-    private void seleccionarImagen() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Seleccionar Imagen");
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Imágenes", "jpg", "jpeg", "png", "gif"));
-
-        int resultado = fileChooser.showOpenDialog(this);
-        if (resultado == JFileChooser.APPROVE_OPTION) {
-            File imagenSeleccionada = fileChooser.getSelectedFile();
-
-            try {
-                String nombreArchivo = imagenSeleccionada.getName();
-                File carpetaDestino = new File("src/main/resources/variantesProductos/");
-                if (!carpetaDestino.exists()) {
-                    carpetaDestino.mkdirs();
-                }
-
-                File destino = new File(carpetaDestino, nombreArchivo);
-                Files.copy(imagenSeleccionada.toPath(), destino.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-                imagen = "/variantesProductos/" + nombreArchivo;
-
-                ImageIcon icon = new ImageIcon(destino.getAbsolutePath());
-                Image img = icon.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_SMOOTH);
-                lblImagen.setIcon(new ImageIcon(img));
-                lblImagen.setText("");
-
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error al copiar la imagen: " + e.getMessage());
-            }
-        }
-    }
+   
     private void cbxTallasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTallasActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbxTallasActionPerformed
@@ -381,7 +351,7 @@ public class PnlAnadirVarianteProducto extends javax.swing.JPanel {
 
             try {
                 String nombreArchivo = imagenSeleccionada.getName();
-                File carpetaDestino = new File("src/main/resources/variantesProductos/");
+                File carpetaDestino = new File("imagenes/variantesProductos/");
                 if (!carpetaDestino.exists()) {
                     carpetaDestino.mkdirs();
                 }

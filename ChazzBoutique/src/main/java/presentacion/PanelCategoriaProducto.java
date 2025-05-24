@@ -9,6 +9,7 @@ import com.mycompany.chazzboutiquenegocio.dtos.VarianteProductoDTO;
 import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
 import java.awt.Color;
 import java.awt.Image;
+import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
@@ -87,7 +88,7 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
 
             List<JPanel> panelesArticulo = List.of(
                     panelArticulo1, panelArticulo2, panelArticulo3,
-                    panelArticulo4, panelArticulo5, panelArticulo6,panelArticulo7,panelArticulo8,panelArticulo9,panelArticulo10,panelArticulo11,panelArticulo12
+                    panelArticulo4, panelArticulo5, panelArticulo6, panelArticulo7, panelArticulo8, panelArticulo9, panelArticulo10, panelArticulo11, panelArticulo12
             );
 
             List<VarianteProductoDTO> variantes = frmPrincipal.getVarianteProductoNegocio()
@@ -113,12 +114,13 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
                     etiquetasNombre.get(i).setText(capitalizarNombre(dto.getNombreProducto()));
                     etiquetasTalla.get(i).setText(dto.getTalla());
                     botonesColor.get(i).setBackground(Color.decode(dto.getColor()));
-                    URL url = getClass().getResource(dto.getUrlImagen());
-                    if (url != null) {
-                        ImageIcon icon = new ImageIcon(url);
-                        etiquetasImagen.get(i).setIcon(new ImageIcon(icon.getImage().getScaledInstance(83, 123, Image.SCALE_SMOOTH)));
+                    File archivoImagen = new File("imagenes/" + dto.getUrlImagen());
+                    if (archivoImagen.exists()) {
+                        ImageIcon icon = new ImageIcon(archivoImagen.getAbsolutePath());
+                        Image img = icon.getImage().getScaledInstance(83, 123, Image.SCALE_SMOOTH);
+                        etiquetasImagen.get(i).setIcon(new ImageIcon(img));
                     } else {
-                        etiquetasImagen.get(i).setIcon(null);
+                        etiquetasImagen.get(i).setIcon(null); // O una imagen por defecto si quieres
                     }
                     panelesArticulo.get(i).setVisible(true); // Mostrar panel
                 } else {
@@ -210,14 +212,6 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
         lblTalla7 = new javax.swing.JLabel();
         btnColor7 = new javax.swing.JButton();
         btnVer7 = new utils.BotonMenu();
-        panelArticulo8 = new javax.swing.JPanel();
-        lblImagenArticulo8 = new javax.swing.JLabel();
-        lblNombreArticulo8 = new javax.swing.JLabel();
-        lblTallaResult8 = new javax.swing.JLabel();
-        lblColor7 = new javax.swing.JLabel();
-        lblTalla8 = new javax.swing.JLabel();
-        btnColor8 = new javax.swing.JButton();
-        btnVer8 = new utils.BotonMenu();
         panelArticulo9 = new javax.swing.JPanel();
         lblImagenArticulo9 = new javax.swing.JLabel();
         lblNombreArticulo9 = new javax.swing.JLabel();
@@ -226,6 +220,14 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
         lblTalla9 = new javax.swing.JLabel();
         btnColor9 = new javax.swing.JButton();
         btnVer9 = new utils.BotonMenu();
+        panelArticulo8 = new javax.swing.JPanel();
+        lblImagenArticulo8 = new javax.swing.JLabel();
+        lblNombreArticulo8 = new javax.swing.JLabel();
+        lblTallaResult8 = new javax.swing.JLabel();
+        lblColor7 = new javax.swing.JLabel();
+        lblTalla8 = new javax.swing.JLabel();
+        btnColor8 = new javax.swing.JButton();
+        btnVer8 = new utils.BotonMenu();
         panelArticulo10 = new javax.swing.JPanel();
         lblImagenArticulo10 = new javax.swing.JLabel();
         lblNombreArticulo10 = new javax.swing.JLabel();
@@ -797,6 +799,30 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
 
         jPanel10.add(panelArticulo7);
 
+        lblImagenArticulo9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/imagencatalogo.png"))); // NOI18N
+
+        lblNombreArticulo9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblNombreArticulo9.setText("Blusa con Shorts  en Conjuto");
+
+        lblTallaResult9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTallaResult9.setText("M");
+
+        lblColor8.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblColor8.setText("Color:");
+
+        lblTalla9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
+        lblTalla9.setText("Talla:");
+
+        btnColor9.setBackground(new java.awt.Color(255, 102, 51));
+
+        btnVer9.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer9.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
+        btnVer9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVer9ActionPerformed(evt);
+            }
+        });
+
         lblImagenArticulo8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/imagencatalogo.png"))); // NOI18N
 
         lblNombreArticulo8.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
@@ -871,38 +897,13 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
                         .addGap(28, 28, 28))))
         );
 
-        jPanel10.add(panelArticulo8);
-
-        lblImagenArticulo9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/imagencatalogo.png"))); // NOI18N
-
-        lblNombreArticulo9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
-        lblNombreArticulo9.setText("Blusa con Shorts  en Conjuto");
-
-        lblTallaResult9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
-        lblTallaResult9.setText("M");
-
-        lblColor8.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
-        lblColor8.setText("Color:");
-
-        lblTalla9.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
-        lblTalla9.setText("Talla:");
-
-        btnColor9.setBackground(new java.awt.Color(255, 102, 51));
-
-        btnVer9.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
-        btnVer9.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ver.png"))); // NOI18N
-        btnVer9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVer9ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panelArticulo9Layout = new javax.swing.GroupLayout(panelArticulo9);
         panelArticulo9.setLayout(panelArticulo9Layout);
         panelArticulo9Layout.setHorizontalGroup(
             panelArticulo9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelArticulo9Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addComponent(panelArticulo8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
                 .addComponent(lblImagenArticulo9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelArticulo9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -927,7 +928,7 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
                 .addGroup(panelArticulo9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelArticulo9Layout.createSequentialGroup()
                         .addComponent(lblImagenArticulo9)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(53, Short.MAX_VALUE))
                     .addGroup(panelArticulo9Layout.createSequentialGroup()
                         .addComponent(lblNombreArticulo9)
                         .addGroup(panelArticulo9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -945,6 +946,9 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
                         .addGap(37, 37, 37)
                         .addComponent(btnVer9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(28, 28, 28))))
+            .addGroup(panelArticulo9Layout.createSequentialGroup()
+                .addComponent(panelArticulo8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         jPanel10.add(panelArticulo9);
@@ -1183,16 +1187,18 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
         lblArticulos.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         lblArticulos.setText("Pantalones (125 articulos)");
 
-        btnRightPagina.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/right.png"))); // NOI18N
         btnRightPagina.setPreferredSize(new java.awt.Dimension(29, 259));
+        btnRightPagina.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/right.png"))); // NOI18N
+        btnRightPagina.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/right.png"))); // NOI18N
         btnRightPagina.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRightPaginaActionPerformed(evt);
             }
         });
 
-        btnLeftPagina1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/left.png"))); // NOI18N
         btnLeftPagina1.setPreferredSize(new java.awt.Dimension(29, 259));
+        btnLeftPagina1.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/left.png"))); // NOI18N
+        btnLeftPagina1.setSimpleIcon(new javax.swing.ImageIcon(getClass().getResource("/images/left.png"))); // NOI18N
         btnLeftPagina1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLeftPagina1ActionPerformed(evt);
@@ -1299,6 +1305,8 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
     private void btnRightPaginaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRightPaginaActionPerformed
         if (hayMasPaginas) {
             paginaActual++;
+            lblPagina1.setText("Pagina " + paginaActual);
+
             cargarVariantes(paginaActual, tamanoPagina, filtroActual);
         }
     }//GEN-LAST:event_btnRightPaginaActionPerformed
@@ -1306,6 +1314,7 @@ public class PanelCategoriaProducto extends javax.swing.JPanel {
     private void btnLeftPagina1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLeftPagina1ActionPerformed
         if (paginaActual > 1) {
             paginaActual--;
+            lblPagina1.setText("Pagina " + paginaActual);
             cargarVariantes(paginaActual, tamanoPagina, filtroActual);
         }
     }//GEN-LAST:event_btnLeftPagina1ActionPerformed
