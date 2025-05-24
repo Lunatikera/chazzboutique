@@ -29,6 +29,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private ICategoriaNegocio categoriaNegocio;
     private IProveedorNegocio proveedorNegocio;
     private IReporteNegocio reporteNegocio;
+
     private UsuarioDTO usuarioRegistrado;
 
     public FrmPrincipal(IUsuarioNegocio usuarioNegocio, IVentaNegocio ventaNegocio,
@@ -47,7 +48,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         this.proveedorNegocio = proveedorNegocio;
         this.reporteNegocio = reporteNegocio;
         this.usuarioRegistrado = usuarioRegistrado;
-
 
         this.pintarPanelPrincipal(new PanelHome(this));
     }
@@ -87,6 +87,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         return proveedorNegocio;
     }
 
+
     public ICategoriaNegocio getCategoriaNegocio() {
         return categoriaNegocio;
     }
@@ -94,6 +95,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     public IReporteNegocio getReporteNegocio() {
         return reporteNegocio;
     }
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -328,6 +330,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private void botonMenu5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMenu5ActionPerformed
         this.pintarPanelPrincipal(new PnlReporte(this));
     }//GEN-LAST:event_botonMenu5ActionPerformed
+
 
     private void botonMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMenu4ActionPerformed
         this.pintarPanelPrincipal(new PanelEscogerAnadir(this));

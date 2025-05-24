@@ -4,9 +4,11 @@ import com.itextpdf.text.Font;
 import com.mycompany.chazzboutiquenegocio.dtos.CategoriaDTO;
 import com.mycompany.chazzboutiquenegocio.dtos.ProductoDTO;
 import com.mycompany.chazzboutiquenegocio.dtos.ProveedorDTO;
+import com.mycompany.chazzboutiquenegocio.dtos.VarianteProductoDTO;
 import com.mycompany.chazzboutiquenegocio.excepciones.NegocioException;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import javax.swing.JCheckBox;
@@ -34,12 +36,12 @@ public class PnlAnadirProducto extends javax.swing.JPanel {
         this.frmPrincipal = frmPrincipal;
 
         tableModel = new DefaultTableModel(
-                new Object[]{"ID", "Nombre", "Descripción", "Fecha", "Categoría", "Proveedor", "Editar", "Eliminar"}, 0
+                new Object[]{"ID", "Nombre", "Descripción", "Fecha", "Categoría", "Proveedor", "Editar", "Eliminar", "Variante"}, 0
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 // Solo las columnas "Editar" (índice 6) y "Eliminar" (índice 7) son editables
-                return column == 6 || column == 7;
+                return column == 6 || column == 7 || column == 8;
             }
         };
 
@@ -73,7 +75,10 @@ public class PnlAnadirProducto extends javax.swing.JPanel {
         // Configurar renderers y editores para botones
         tblProductos.getColumn("Editar").setCellRenderer(new ButtonRenderer("Editar"));
         tblProductos.getColumn("Eliminar").setCellRenderer(new ButtonRenderer("Eliminar"));
-
+        tblProductos.getColumn("Variante").setCellRenderer(new ButtonRenderer("Variante"));
+        tblProductos.getColumn("Variante").setCellEditor(
+                new ButtonEditor(new JCheckBox(), "Variante", row -> abrirVarianteProducto(row))
+        );
         tblProductos.getColumn("Editar").setCellEditor(
                 new ButtonEditor(new JCheckBox(), "Editar", row -> editarProducto(row))
         );
@@ -112,6 +117,12 @@ public class PnlAnadirProducto extends javax.swing.JPanel {
         cargarCategorias();
         cargarProveedores();
         cargarProductos();
+    }
+
+    private void abrirVarianteProducto(int row) {
+        Long idProducto = (Long) tableModel.getValueAt(row, 0);
+        PnlAnadirVarianteProducto pnl = new PnlAnadirVarianteProducto(idProducto, frmPrincipal.getVarianteProductoNegocio());
+        frmPrincipal.pintarPanelPrincipal(pnl);
     }
 
     private void cargarCategorias() {
