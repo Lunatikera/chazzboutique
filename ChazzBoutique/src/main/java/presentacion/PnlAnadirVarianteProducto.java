@@ -268,24 +268,68 @@ public class PnlAnadirVarianteProducto extends javax.swing.JPanel {
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {
         try {
+            // Validar campos obligatorios
             String codigoBarra = txtCodigoBarras1.getText().trim();
-            String talla = cbxTallas.getSelectedItem().toString();
-            BigDecimal precioCompra = new BigDecimal(txtPrecioCompra.getText().trim());
-            BigDecimal precioVenta = new BigDecimal(txtPrecioVenta.getText().trim());
+            if (codigoBarra.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Debes ingresar o generar un código de barras.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            String talla = cbxTallas.getSelectedItem() != null ? cbxTallas.getSelectedItem().toString() : "";
+            if (talla.isBlank()) {
+                JOptionPane.showMessageDialog(this, "Debes seleccionar una talla.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            String precioCompraStr = txtPrecioCompra.getText().trim();
+            if (precioCompraStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Debes ingresar el precio de compra.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            String precioVentaStr = txtPrecioVenta.getText().trim();
+            if (precioVentaStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Debes ingresar el precio de venta.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (btnColor.getBackground().equals(new Color(238, 238, 238))) { // color por defecto
+                JOptionPane.showMessageDialog(this, "Debes seleccionar un color.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (imagen == null || imagen.isBlank()) {
+                JOptionPane.showMessageDialog(this, "Debes seleccionar una imagen para la variante.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Conversión de precios
+            BigDecimal precioCompra = new BigDecimal(precioCompraStr);
+            BigDecimal precioVenta = new BigDecimal(precioVentaStr);
+
+            // Obtener color en formato hexadecimal
             Color color = btnColor.getBackground();
             String hexColor = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
-            String imagen = this.imagen != null ? this.imagen : " ";
 
+            // Crear DTO
             VarianteProductoDTO dto = new VarianteProductoDTO(
-                    codigoBarra, 0, precioCompra, talla, hexColor, precioVenta, productoId, imagen);
+                    codigoBarra, 0, precioCompra, talla, hexColor, precioVenta, productoId, imagen
+            );
 
             varianteNegocio.crearVariante(dto);
             JOptionPane.showMessageDialog(this, "Variante creada correctamente.");
 
+            // Limpiar campos
             txtCodigoBarras1.setText("");
             txtPrecioCompra.setText("");
             txtPrecioVenta.setText("");
+            cbxTallas.setSelectedIndex(0);
+            btnColor.setBackground(new Color(238, 238, 238)); // color por defecto
+            imagen = null;
+            lblImagen.setIcon(null);
 
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El precio de compra o de venta no tiene un formato válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "Error de negocio: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
