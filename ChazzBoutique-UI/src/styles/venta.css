@@ -1,52 +1,17 @@
-:root{
-  --radius: 18px;
-  --radius-sm: 14px;
-  --radius-xs: 12px;
-
-  --bg: #f6f7fb;
-  --card: #ffffff;
-  --text: #101828;
-  --muted:#667085;
-  --border:#e6e8ef;
-
-  --shadow: 0 16px 40px rgba(16,24,40,.08);
-  --shadow-2: 0 22px 70px rgba(16,24,40,.12);
-
-  --brand:#b03235;
-  --brand2:#7f1d1f;
-
-  --focus: rgba(176,50,53,.55);
-  --focusRing: rgba(176,50,53,.14);
-
-  --blackHead: #0b0c10;
-  --softRow: #f9fafb;
-
-  --ok: #10b981;
-  --warn: #f59e0b;
-
-  --sb-collapsed: 92px;
-}
-
-*{ box-sizing: border-box; }
-html,body,#root{ height: 100%; }
-
-body{
-  margin:0;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-  color: var(--text);
-  background: var(--bg);
-}
-
 /* Layout */
 .venta{
-  display:flex;
-  flex-direction:column;
-  gap: 20px;
+  display: flex;
+    flex-direction: column;
+    gap: clamp(14px, 2vw, 20px);
+    width: 100%;
+    max-width: var(--contentMax);
+    margin: 0;
+    padding: var(--gutter);
 }
 
 /* Hero */
 .venta__header{
-  padding: 18px;
+ padding: clamp(14px, 2.2vw, 20px);
   border-radius: var(--radius);
   border: 1px solid rgba(230,232,239,.95);
   background: rgba(255,255,255,.92);
