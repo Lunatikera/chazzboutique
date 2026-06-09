@@ -8,7 +8,6 @@ import com.mycompany.chazzboutiquepersistencia.dominio.VarianteProducto;
 import com.mycompany.chazzboutiquepersistencia.excepciones.PersistenciaException;
 import com.mycompany.chazzboutiquepersistencia.interfacesDAO.IProductoDAO;
 import com.mycompany.chazzboutiquepersistencia.interfacesDAO.IVarianteProductoDAO;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,7 +119,6 @@ public class VarianteProductoNegocio implements IVarianteProductoNegocio {
         );
         dto.setId(variante.getId());
         dto.setNombreProducto(variante.getProducto() != null ? variante.getProducto().getNombre() : null);
-        
         return dto;
     }
 
@@ -155,7 +153,7 @@ public class VarianteProductoNegocio implements IVarianteProductoNegocio {
 
                 dto.setId(variante.getId());
                 dto.setNombreProducto(variante.getProducto().getNombre());
-                dto.setUrlImagen(variante.getUrlImagen()); // Ajusta según tu estructura
+                dto.setUrlImagen(variante.getUrlImagen());
 
                 resultado.add(dto);
             }
@@ -186,7 +184,7 @@ public class VarianteProductoNegocio implements IVarianteProductoNegocio {
         dto.setColor(variante.getColor());
         dto.setUrlImagen(variante.getUrlImagen());
         dto.setProductoId(variante.getProducto().getId());
-        dto.setNombreProducto(variante.getProducto().getNombre()); // asegúrate que `getNombre()` existe
+        dto.setNombreProducto(variante.getProducto().getNombre());
         return dto;
     }
 
@@ -223,4 +221,22 @@ public class VarianteProductoNegocio implements IVarianteProductoNegocio {
         }
     }
 
+    @Override
+    public List<VarianteProductoDTO> buscarVariantesPorNombreProductoYCategoria(String filtro, int categoriaId, int page, int pageSize) throws NegocioException {
+        if (categoriaId <= 0) {
+            throw new NegocioException("El ID de la categoría debe ser mayor que cero");
+        }
+        if (page < 1 || pageSize < 1) {
+            throw new NegocioException("Parámetros de paginación inválidos");
+        }
+        return buscarVariantesPorCategoriaYNombreProducto(categoriaId, filtro, page, pageSize);
+    }
+
+    @Override
+    public long contarVariantesPorNombreProductoYCategoria(String filtro, int categoriaId) throws NegocioException {
+        if (categoriaId <= 0) {
+            throw new NegocioException("El ID de la categoría debe ser mayor que cero");
+        }
+        return contarVariantesPorCategoriaYNombreProducto(categoriaId, filtro);
+    }
 }

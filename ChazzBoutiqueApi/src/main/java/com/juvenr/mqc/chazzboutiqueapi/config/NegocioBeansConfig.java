@@ -1,8 +1,10 @@
 package com.juvenr.mqc.chazzboutiqueapi.config;
 
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.ICategoriaNegocio;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProductoNegocio;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVarianteProductoNegocio;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVentaNegocio;
+import com.mycompany.chazzboutiquenegocio.objetosNegocio.CategoriaNegocio;
 import com.mycompany.chazzboutiquenegocio.objetosNegocio.ProductoNegocio;
 import com.mycompany.chazzboutiquenegocio.objetosNegocio.VarianteProductoNegocio;
 import com.mycompany.chazzboutiquenegocio.objetosNegocio.VentaNegocio;
@@ -57,16 +59,16 @@ public class NegocioBeansConfig {
     public IProductoDAO productoDAO(IConexionBD conexionBD) {
         return new ProductoDAO(conexionBD);
     }
-    
-        @Bean
+
+    @Bean
     public ICategoriaDAO categoriaDAO(IConexionBD conexionBD) {
         return new CategoriaDAO(conexionBD);
     }
-       @Bean
+
+    @Bean
     public IProveedorDAO proveedorDAO(IConexionBD conexionBD) {
         return new ProveedorDAO(conexionBD);
     }
-
 
     @Bean
     public IVentaNegocio ventaNegocio(
@@ -88,7 +90,12 @@ public class NegocioBeansConfig {
 
     @Bean
     public IProductoNegocio productoNegocio(IProductoDAO productoDAO, ICategoriaDAO categoriaDAO, IProveedorDAO proveedorDAO) {
-        return new ProductoNegocio(productoDAO,categoriaDAO, proveedorDAO);
+        return new ProductoNegocio(productoDAO, categoriaDAO, proveedorDAO);
+    }
+
+    @Bean
+    public ICategoriaNegocio categoriaNegocio(ICategoriaDAO categoriaDAO) {
+        return new CategoriaNegocio(categoriaDAO);
     }
 
 }

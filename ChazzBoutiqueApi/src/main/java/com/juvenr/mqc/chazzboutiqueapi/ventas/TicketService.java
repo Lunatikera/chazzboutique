@@ -2,6 +2,7 @@ package com.juvenr.mqc.chazzboutiqueapi.ventas;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.juvenr.mqc.chazzboutiqueapi.shared.errors.NotFoundException;
 import com.mycompany.chazzboutiquenegocio.dtos.DetalleVentaDTO;
 import com.mycompany.chazzboutiquenegocio.dtos.VarianteProductoDTO;
 import com.mycompany.chazzboutiquenegocio.dtos.VentaDTO;
@@ -156,7 +157,7 @@ public class TicketService {
             return baos.toByteArray();
 
         } catch (Exception e) {
-            throw new RuntimeException("Error generando ticket PDF: " + e.getMessage(), e);
+            throw new NotFoundException("ERROR_TICKET", "No se pudo encontrar ticket");
         }
     }
 

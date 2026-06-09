@@ -1,14 +1,23 @@
+/* Sidebar.css */
 
+*{ box-sizing: border-box; }
+
+/* =========================
+   DESKTOP hover zone
+   ========================= */
 .sb-zone{
   position: fixed;
   left: 0;
   top: 0;
   bottom: 0;
-  width: 14px;                 
-  z-index: 49;                 
+  width: 14px;
+  z-index: 49;
   background: transparent;
 }
 
+/* =========================
+   SIDEBAR BASE (desktop)
+   ========================= */
 .sb{
   --sb-red-1:#b03235;
   --sb-red-2:#7f1d1f;
@@ -47,6 +56,7 @@
   will-change: width;
 }
 
+/* Brand */
 .sb__brand{
   height: 112px;
   padding: 12px 10px;
@@ -71,6 +81,7 @@
   opacity: .98;
 }
 
+/* Nav */
 .sb__nav{
   margin: 14px 10px 16px;
   display:flex;
@@ -133,20 +144,9 @@
   transition: color 200ms ease, filter 220ms ease;
 }
 
-.sb__labelSlot{
-  display:block;
-  min-width: 0;
-}
-
-.sb__labelSlot.is-open{
-  width: 164px;
-  overflow: hidden;
-}
-
-.sb__labelSlot.is-closed{
-  width: 0;
-  overflow: hidden;
-}
+.sb__labelSlot{ display:block; min-width: 0; }
+.sb__labelSlot.is-open{ width: 164px; overflow: hidden; }
+.sb__labelSlot.is-closed{ width: 0; overflow: hidden; }
 
 .sb__label{
   display:inline-block;
@@ -177,9 +177,7 @@
   box-shadow: 0 12px 22px rgba(0,0,0,.16);
 }
 
-.sb__item:hover .sb__icon{
-  color: rgba(255,255,255,.86);
-}
+.sb__item:hover .sb__icon{ color: rgba(255,255,255,.86); }
 
 .sb__item.is-active{
   background: #111522;
@@ -189,13 +187,10 @@
     inset 0 0 0 1px rgba(255,255,255,.04);
 }
 
-.sb__item.is-active .sb__icon{
-  color: rgba(255,255,255,.94);
-}
+.sb__item.is-active .sb__icon{ color: rgba(255,255,255,.94); }
 
-
-
-.sb.is-closed .sb__item.is-active {
+/* Active polish on collapsed */
+.sb.is-closed .sb__item.is-active{
   background: #11141b;
   border-color: rgba(255,255,255,.14);
   box-shadow:
@@ -205,7 +200,7 @@
   position: relative;
 }
 
-.sb.is-closed .sb__item.is-active::before {
+.sb.is-closed .sb__item.is-active::before{
   content: "";
   position: absolute;
   inset: 8px;
@@ -222,7 +217,7 @@
   pointer-events: none;
 }
 
-.sb.is-closed .sb__item.is-active .sb__iconWrap {
+.sb.is-closed .sb__item.is-active .sb__iconWrap{
   background: radial-gradient(
     circle at center,
     rgba(255,90,92,0.18) 0%,
@@ -234,12 +229,12 @@
     0 10px 18px rgba(0,0,0,.22);
 }
 
-.sb.is-closed .sb__item.is-active .sb__icon {
+.sb.is-closed .sb__item.is-active .sb__icon{
   color: rgba(255,255,255,.98);
   filter: drop-shadow(0 0 6px rgba(255,90,92,.25));
 }
 
-
+/* Active rail */
 .sb__activeRail{
   position:absolute;
   left: 10px;
@@ -286,6 +281,7 @@
     0 12px 22px rgba(0,0,0,.18);
 }
 
+/* reduced motion */
 @media (prefers-reduced-motion: reduce){
   .sb__brandLogo,
   .sb__item,
@@ -293,5 +289,107 @@
   .sb__iconWrap,
   .sb__label{
     transition: none;
+  }
+}
+
+/* =========================================================
+   MOBILE: CONVERT TO BOTTOM BAR
+   (cuando el TSX pone .sb.is-mobile)
+   ========================================================= */
+@media (max-width: 900px){
+  /* ya no ocupamos el hover zone en mobile */
+  .sb-zone{ display:none; }
+
+  .sb.is-mobile{
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 0;
+
+    height: auto;
+    min-height: 68px;
+    width: 100% !important;
+
+    padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
+    overflow: visible;
+
+    border-right: none;
+    border-top: 1px solid rgba(0,0,0,.38);
+
+    /* más “app bar” */
+     background: linear-gradient(180deg, var(--sb-red-1), var(--sb-red-2));
+
+    box-shadow: 0 -14px 46px rgba(16,24,40,.22);
+
+    z-index: 60;
+  }
+
+  /* hide brand en mobile (lo hacemos en TSX también, pero por si acaso) */
+  .sb.is-mobile .sb__brand{ display:none; }
+
+  .sb.is-mobile .sb__nav{
+    margin: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  /* cada item como “tab” */
+  .sb.is-mobile .sb__item{
+    height: 50px;
+    flex: 1 1 0;
+    padding: 0;
+    border-radius: 16px;
+
+    display: grid;
+    place-items: center;
+
+  background: var(--panel);
+    border: 1px solid rgba(255,255,255,.10);
+    box-shadow: none;
+
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .sb.is-mobile .sb__iconWrap{
+    margin-left: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .sb.is-mobile .sb__icon{
+    width: 22px;
+    height: 22px;
+    color: rgba(255,255,255,.82);
+  }
+
+  /* sin labels en bottom bar */
+  .sb.is-mobile .sb__labelSlot,
+  .sb.is-mobile .sb__label,
+  .sb.is-mobile .sb__activeRail{
+    display:none !important;
+  }
+
+  /* active tab */
+  .sb.is-mobile .sb__item.is-active{
+  background: var(--panel);
+    border-color: rgba(255,90,92,.35);
+    box-shadow: 0 10px 22px rgba(0,0,0,.22);
+  }
+
+  .sb.is-mobile .sb__item.is-active .sb__icon{
+    color: rgba(255,255,255,.98);
+    filter: drop-shadow(0 0 10px rgba(255,90,92,.20));
+  }
+
+  /* hover off en touch devices, pero no estorba */
+  .sb.is-mobile .sb__item:hover{
+    background: rgba(255,255,255,.08);
+    border-color: rgba(255,255,255,.14);
+    box-shadow: none;
   }
 }

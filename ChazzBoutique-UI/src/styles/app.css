@@ -1,15 +1,4 @@
-:root{
-  --bg: #f6f7fb;
-  --card: #ffffff;
-  --text: #101828;
-  --muted:#667085;
-  --border:#e6e8ef;
-  --shadow: 0 16px 40px rgba(16,24,40,.08);
-  --brand:#b03235;
-  --brand2:#7f1d1f;
-
-  --sb-collapsed: 92px;
-}
+/* AppShell layout */
 
 *{ box-sizing: border-box; }
 
@@ -20,6 +9,7 @@ body{
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
   color: var(--text);
   background: var(--bg);
+  overflow: hidden;
 }
 
 .app-shell{
@@ -27,14 +17,24 @@ body{
   min-height: 100vh;
   display:flex;
   align-items: stretch;
+  overflow: hidden;
 }
 
 .app-content{
   flex: 1;
   min-width: 0;
-  overflow: auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
   padding: 22px;
   margin-left: var(--sb-collapsed);
+}
+
+@media (max-width: 900px){
+  .app-content{
+    margin-left: 0;
+    padding-bottom: calc(var(--bb-h) + env(safe-area-inset-bottom));
+  }
 }
 
 .page-placeholder{
@@ -43,4 +43,23 @@ body{
   border-radius: 18px;
   padding: 28px;
   box-shadow: var(--shadow);
+}
+
+html.is-resizing *,
+html.is-resizing *::before,
+html.is-resizing *::after{
+  transition: none !important;
+  animation: none !important;
+  scroll-behavior: auto !important;
+}
+
+html.is-resizing .productGrid.is-dim{
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+html.is-resizing .homeToast,
+html.is-resizing .pChip,
+html.is-resizing .gridOverlay{
+  backdrop-filter: none !important;
 }

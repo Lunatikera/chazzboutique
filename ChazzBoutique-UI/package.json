@@ -6,6 +6,9 @@
   "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
+    "dev:api:deps": "mvn -f ../ChazzBoutiquePersistencia/pom.xml install -DskipTests && mvn -f ../ChazzBoutiqueNegocio/pom.xml install -DskipTests",
+    "dev:api": "npm run dev:api:deps && mvn -f ../ChazzBoutiqueApi/pom.xml spring-boot:run",
+    "dev:full": "concurrently -k -n API,VITE,ELECTRON -c green,cyan,magenta \"npm run dev:api\" \"vite\" \"wait-on http://localhost:5173 tcp:localhost:8080 && electron .\"",
     "dev:electron": "concurrently -k \"vite\" \"wait-on http://localhost:5173 && electron .\"",
     "build": "tsc -b && vite build",
     "start": "electron .",

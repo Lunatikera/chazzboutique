@@ -1,7 +1,5 @@
 import { http } from "./http";
 
-const API_BASE =
-  import.meta.env.DEV ? "" : (import.meta.env.VITE_API_BASE_URL || "");
 
 // ===== Tipos =====
 
@@ -59,10 +57,7 @@ export function crearVenta(payload: CrearVentaRequest) {
 }
 
 export function ticketPdfUrl(ventaId: number) {
-  const base = import.meta.env.DEV
-    ? "http://localhost:8080"
-    : (import.meta.env.VITE_API_BASE_URL || "");
-
+  const base = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
   return `${base}/api/ventas/${ventaId}/ticket.pdf`;
 }
 
@@ -80,5 +75,28 @@ export function buscarProductosPorNombre(nombre: string, limit = 15) {
 export function obtenerVariantesPorProducto(productoId: number) {
   return http.get<VarianteRow[]>(
     `/api/productos/${productoId}/variantes`
+  );
+}
+
+
+export function buscarVariantes(params: {
+  filtro?: string;
+  pagina: number;
+  tamanoPagina: number;
+}) {
+  return http.get<VarianteRow[]>(
+    `/api/variantes/buscar`,
+    {
+      filtro: params.filtro ?? "",
+      pagina: params.pagina,
+      tamanoPagina: params.tamanoPagina,
+    }
+  );
+}
+
+export function contarVariantes(filtro?: string) {
+  return http.get<number>(
+    `/api/variantes/contar`,
+    { filtro: filtro ?? "" }
   );
 }

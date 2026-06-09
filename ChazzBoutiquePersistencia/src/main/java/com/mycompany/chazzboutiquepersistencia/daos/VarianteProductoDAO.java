@@ -185,21 +185,24 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
     @Override
     public List<VarianteProducto> buscarVariantesPorCategoriaYNombreProducto(int idCategoria, String nombre, int pagina, int tamañoPagina) throws PersistenciaException {
         EntityManager em = conexionBD.getEntityManager();
-
         try {
+            String filtro = (nombre == null) ? "" : nombre.toLowerCase();
+
             return em.createQuery("""
             SELECT v FROM VarianteProducto v
             WHERE v.producto.categoria.id = :idCategoria
             AND v.eliminado = false
             AND LOWER(v.producto.nombreProducto) LIKE :nombre
         """, VarianteProducto.class)
-                    .setParameter("idCategoria", (long) idCategoria)
-                    .setParameter("nombre", "%" + nombre.toLowerCase() + "%")
+                    .setParameter("idCategoria", idCategoria)
+                    .setParameter("nombre", "%" + filtro + "%")
                     .setFirstResult((pagina - 1) * tamañoPagina)
                     .setMaxResults(tamañoPagina)
                     .getResultList();
         } catch (Exception e) {
             throw new PersistenciaException("Error al buscar variantes por categoría y nombre", e);
+        } finally {
+            em.close();
         }
     }
 
@@ -207,17 +210,21 @@ public class VarianteProductoDAO implements IVarianteProductoDAO {
     public long contarVariantesPorCategoriaYNombreProducto(int idCategoria, String nombre) throws PersistenciaException {
         EntityManager em = conexionBD.getEntityManager();
         try {
+            String filtro = (nombre == null) ? "" : nombre.toLowerCase();
+
             return em.createQuery("""
             SELECT COUNT(v) FROM VarianteProducto v
             WHERE v.producto.categoria.id = :idCategoria
             AND v.eliminado = false
             AND LOWER(v.producto.nombreProducto) LIKE :nombre
         """, Long.class)
-                    .setParameter("idCategoria", (long) idCategoria)
-                    .setParameter("nombre", "%" + nombre.toLowerCase() + "%")
+                    .setParameter("idCategoria", idCategoria)
+                    .setParameter("nombre", "%" + filtro + "%")
                     .getSingleResult();
         } catch (Exception e) {
             throw new PersistenciaException("Error al contar variantes por categoría y nombre", e);
+        } finally {
+            em.close();
         }
     }
 

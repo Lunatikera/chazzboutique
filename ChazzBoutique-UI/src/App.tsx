@@ -1,25 +1,19 @@
 import { useMemo, useState } from "react";
-import Sidebar, { type MenuKey } from "./components/Sidebar";
+import AppShell from "./components/layout/AppShell";
+import { useDisableEffectsWhileResizing } from "./components/layout/useDisableEffectsWhileResizing";
+import type { MenuKey } from "./components/Sidebar";
 import VentaPage from "./pages/VentaPage";
+import HomePage from "./pages/HomePage";
 
 export default function App() {
+  useDisableEffectsWhileResizing();
+
   const [active, setActive] = useState<MenuKey>("venta");
 
   const content = useMemo(() => {
-    if (active === "venta") return <VentaPage />;
-
-    return (
-      <div className="page-placeholder">
-        <h1>{active.toUpperCase()}</h1>
-        <p>Panel pendiente.</p>
-      </div>
-    );
+    if (active === "home") return <HomePage />;
+    return <VentaPage />;
   }, [active]);
 
-  return (
-    <div className="app-shell">
-      <Sidebar active={active} onChange={setActive} />
-      <main className="app-content">{content}</main>
-    </div>
-  );
+  return <AppShell active={active} onChange={setActive}>{content}</AppShell>;
 }
