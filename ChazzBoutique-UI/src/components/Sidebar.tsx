@@ -2,11 +2,18 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import "./Sidebar.css";
 
-export type MenuKey = "home" | "venta";
+export type MenuKey =
+  | "home"
+  | "venta"
+  | "productos"
+  | "categorias"
+  | "reportes"
+  | "proveedores";
 
 type Props = {
   active: MenuKey;
   onChange: (k: MenuKey) => void;
+  onLogout: () => void;
 };
 
 function useMediaQuery(query: string) {
@@ -67,17 +74,74 @@ function Icon({ name, active }: { name: MenuKey; active: boolean }) {
           <path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.6L22 8H6.2" />
         </svg>
       );
+    case "productos":
+      return (
+        <svg {...common}>
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+          <line x1="12" y1="22.08" x2="12" y2="12" />
+        </svg>
+      );
+    case "categorias":
+      return (
+        <svg {...common}>
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+          <line x1="7" y1="7" x2="7.01" y2="7" />
+        </svg>
+      );
+    case "reportes":
+      return (
+        <svg {...common}>
+          <line x1="18" y1="20" x2="18" y2="10" />
+          <line x1="12" y1="20" x2="12" y2="4" />
+          <line x1="6" y1="20" x2="6" y2="14" />
+        </svg>
+      );
+    case "proveedores":
+      return (
+        <svg {...common}>
+          <rect x="1" y="3" width="15" height="13" />
+          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+          <circle cx="5.5" cy="18.5" r="2.5" />
+          <circle cx="18.5" cy="18.5" r="2.5" />
+        </svg>
+      );
     default:
       return null;
   }
 }
 
+function LogoutIcon() {
+  return (
+    <svg
+      width={18}
+      height={18}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="sb__icon"
+      aria-hidden="true"
+    >
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <polyline points="16 17 21 12 16 7" />
+      <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+  );
+}
+
 const items: { key: MenuKey; label: string }[] = [
   { key: "venta", label: "Venta" },
   { key: "home", label: "Catálogo" },
+  { key: "productos", label: "Productos" },
+  { key: "categorias", label: "Categorías" },
+  { key: "reportes", label: "Reportes" },
+  { key: "proveedores", label: "Proveedores" },
 ];
 
-export default function Sidebar({ active, onChange }: Props) {
+export default function Sidebar({ active, onChange, onLogout }: Props) {
   const isMobile = useMediaQuery("(max-width: 900px)");
 
   // Desktop hover open
@@ -207,6 +271,23 @@ export default function Sidebar({ active, onChange }: Props) {
               </button>
             );
           })}
+
+          <button
+            type="button"
+            title="Cerrar sesión"
+            onClick={onLogout}
+            className="sb__item sb__logout"
+          >
+            <span className="sb__iconWrap" aria-hidden="true">
+              <LogoutIcon />
+            </span>
+
+            {!isMobile && (
+              <span className={`sb__labelSlot ${expanded ? "is-open" : "is-closed"}`}>
+                <span className="sb__label">Cerrar sesión</span>
+              </span>
+            )}
+          </button>
         </nav>
       </motion.aside>
     </>

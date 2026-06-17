@@ -122,6 +122,9 @@
   padding: 0;
 }
 
+/* Cerrar sesión: anclado al fondo en desktop */
+.sb__logout{ margin-top: auto; }
+
 .sb__iconWrap{
   margin-left: 10px;
   width: 42px;

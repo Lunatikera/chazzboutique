@@ -2,10 +2,12 @@ package com.juvenr.mqc.chazzboutiqueapi.config;
 
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.ICategoriaNegocio;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IProductoNegocio;
+import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IUsuarioNegocio;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVarianteProductoNegocio;
 import com.mycompany.chazzboutiquenegocio.interfacesObjetosNegocio.IVentaNegocio;
 import com.mycompany.chazzboutiquenegocio.objetosNegocio.CategoriaNegocio;
 import com.mycompany.chazzboutiquenegocio.objetosNegocio.ProductoNegocio;
+import com.mycompany.chazzboutiquenegocio.objetosNegocio.UsuarioNegocio;
 import com.mycompany.chazzboutiquenegocio.objetosNegocio.VarianteProductoNegocio;
 import com.mycompany.chazzboutiquenegocio.objetosNegocio.VentaNegocio;
 import com.mycompany.chazzboutiquepersistencia.conexion.ConexionBD;
@@ -96,6 +98,11 @@ public class NegocioBeansConfig {
     @Bean
     public ICategoriaNegocio categoriaNegocio(ICategoriaDAO categoriaDAO) {
         return new CategoriaNegocio(categoriaDAO);
+    }
+
+    @Bean
+    public IUsuarioNegocio usuarioNegocio(IUsuarioDAO usuarioDAO) {
+        return new UsuarioNegocio(usuarioDAO);
     }
 
 }

@@ -3,14 +3,15 @@ import * as posApi from "../../api/pos";
 import type { CrearVentaRequest, ProductoLite, VarianteLookup, VarianteRow } from "../../api/pos";
 import type { VentaOk, VentaRow, VentaToast } from "./types";
 import { dropRecordKey, money, onlyDigits, parseIntSafe } from "./utils";
-
-const USUARIO_ID = 1;
+import { useAuth } from "../../auth/AuthContext";
 
 function getNombreVariante(v: VarianteLookup | null, fallback = ""): string {
   return v?.nombreProducto ?? fallback;
 }
 
 export function useVenta() {
+  const { user } = useAuth();
+
   const [modoNombre, setModoNombre] = useState(false);
 
   const [codigo, setCodigo] = useState("");
@@ -249,6 +250,11 @@ export function useVenta() {
   async function onPagar() {
     if (rows.length === 0) return;
 
+    if (!user) {
+      showToast("error", "Sesión no válida. Inicia sesión de nuevo.");
+      return;
+    }
+
     if (montoPago < total) {
       showToast("error", `Pago insuficiente. Falta: ${money(total - montoPago)}`);
       return;
@@ -257,7 +263,7 @@ export function useVenta() {
     setLoadingPay(true);
     try {
       const payload: CrearVentaRequest = {
-        usuarioId: USUARIO_ID,
+        usuarioId: user.usuarioId,
         descuento,
         montoPago,
         detalles: rows.map((r) => ({ codigoBarras: r.codigoBarras, cantidad: r.cantidad })),
